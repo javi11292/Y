@@ -4,9 +4,9 @@
 
 	export let title: string;
 	export let fields: ({ name: string } & ComponentProps<Input>)[];
+	export let values: Record<string, string> = {};
 
 	let inputs: Record<string, HTMLInputElement> = {};
-	let values: Record<string, string> = {};
 </script>
 
 <div class="form">
@@ -15,6 +15,8 @@
 	{#each fields as { name, ...field }}
 		<Input bind:input={inputs[name]} bind:value={values[name]} {...field} />
 	{/each}
+
+	<slot />
 </div>
 
 <style lang="scss">
@@ -22,7 +24,7 @@
 		display: grid;
 		gap: 0.5rem;
 		padding: 1rem;
-		max-width: 768px;
+		max-width: 640px;
 	}
 
 	.title {
