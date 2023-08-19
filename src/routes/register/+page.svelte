@@ -15,7 +15,7 @@
 
 	const validate = () => {
 		if (values.password !== values.confirmPassword) {
-			throw { error: "Las contraseñas no coinciden" };
+			throw { message: "Las contraseñas no coinciden" };
 		}
 	};
 
