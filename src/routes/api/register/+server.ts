@@ -1,7 +1,8 @@
 import { addUser } from "$lib/server/database/user";
+import { setSessionToken } from "$lib/server/utils/session";
 import { json } from "@sveltejs/kit";
 
-export const POST = async ({ request }) => {
+export const POST = async ({ request, cookies }) => {
 	const { username, password } = await request.json();
 
 	if (!username) {
@@ -13,6 +14,7 @@ export const POST = async ({ request }) => {
 	}
 
 	const { id } = await addUser(username, password);
+	setSessionToken(cookies, id);
 
 	return json({ id });
 };

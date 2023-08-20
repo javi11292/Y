@@ -1,26 +1,66 @@
 <script lang="ts">
+	import Button from "$lib/commons/components/button";
 	import Input from "$lib/commons/components/input";
+	import { showError } from "$lib/utils/message";
 	import type { ComponentProps } from "svelte";
 
 	export let title: string;
 	export let fields: ({ name: string } & ComponentProps<Input>)[];
-	export let values: Record<string, string> = {};
+	export let onSubmit: (values: Record<string, string>) => Promise<void>;
 
-	let inputs: Record<string, HTMLInputElement> = {};
+	let values: Record<string, string> = {};
+	let elements: HTMLInputElement[] = [];
+	let loading = false;
+
+	const handleClick = async () => {
+		loading = true;
+
+		try {
+			await onSubmit(values);
+		} catch (error) {
+			showError(error);
+		}
+
+		loading = false;
+	};
+
+	const handleKeyPress = (index: number) => (event: KeyboardEvent) => {
+		if (event.key !== "Enter") {
+			return;
+		}
+
+		if (index === elements.length - 1) {
+			elements[index].click();
+		}
+
+		elements[index].focus();
+	};
 </script>
 
 <div class="form">
 	<div class="title">{title}</div>
 
-	{#each fields as { name, ...field }}
-		<Input bind:input={inputs[name]} bind:value={values[name]} {...field} />
+	{#each fields as { name, ...field }, index}
+		<Input
+			bind:element={elements[index]}
+			bind:value={values[name]}
+			{...field}
+			on:keypress={handleKeyPress(index + 1)}
+		/>
 	{/each}
 
-	<slot />
+	<div class="button">
+		<Button bind:element={elements[elements.length]} {loading} on:click={handleClick}>
+			Continuar
+		</Button>
+	</div>
 </div>
 
 <style lang="scss">
 	.form {
+		position: relative;
+		left: 50%;
+		translate: -50%;
 		display: grid;
 		gap: 0.5rem;
 		padding: 1rem;
@@ -29,5 +69,10 @@
 
 	.title {
 		font-size: 2rem;
+	}
+
+	.button {
+		display: contents;
+		text-align: center;
 	}
 </style>
