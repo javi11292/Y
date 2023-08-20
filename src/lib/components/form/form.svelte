@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
 	import Input from "$lib/commons/components/input";
 	import { showError } from "$lib/utils/message";
@@ -17,6 +18,7 @@
 
 		try {
 			await onSubmit(values);
+			invalidateAll();
 		} catch (error) {
 			showError(error);
 		}
@@ -44,8 +46,8 @@
 		<Input
 			bind:element={elements[index]}
 			bind:value={values[name]}
-			{...field}
 			on:keypress={handleKeyPress(index + 1)}
+			{...field}
 		/>
 	{/each}
 

@@ -10,7 +10,7 @@
 
 	const handleSubmit = async (values: Record<string, string>) => {
 		if (values.password !== values.confirmPassword) {
-			throw { message: "Las contraseñas no coinciden" };
+			throw new Error("Las contraseñas no coinciden");
 		}
 
 		await post("/api/register", { username: values.username, password: values.password });
