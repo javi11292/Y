@@ -1,6 +1,8 @@
 import { NODE_ENV, SESSION_SECRET } from "$env/static/private";
 import type { Cookies } from "@sveltejs/kit";
-import { sign, verify } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
+
+const { sign, verify } = jsonwebtoken;
 
 const KEY = "session";
 
@@ -14,5 +16,14 @@ export const setSessionToken = (cookies: Cookies, payload: string) => {
 
 export const getSessionToken = (cookies: Cookies) => {
 	const token = cookies.get(KEY) || "";
-	return verify(token, SESSION_SECRET);
+
+	try {
+		return verify(token, SESSION_SECRET) as string;
+	} catch {
+		return null;
+	}
+};
+
+export const removeSessionToken = (cookies: Cookies) => {
+	cookies.delete(KEY, { path: "/" });
 };

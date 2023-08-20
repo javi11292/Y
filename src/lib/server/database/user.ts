@@ -7,11 +7,10 @@ type User = {
 };
 
 const collection = database.collection<User>("users");
-
 collection.createIndex({ username: 1 }, { unique: true });
 
 export const getUser = (username: string) => {
-	return collection.aggregate([{ $match: { username } }, { $project: { id: "$_id" } }]);
+	return collection.findOne({ username }, { projection: { _id: 0 } });
 };
 
 export const addUser = async (username: string, password: string) => {
@@ -20,7 +19,5 @@ export const addUser = async (username: string, password: string) => {
 		password: await hashPassword(password),
 	};
 
-	const { insertedId } = await collection.insertOne(user);
-
-	return { id: insertedId.toString() };
+	await collection.insertOne(user);
 };
