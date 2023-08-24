@@ -1,22 +1,40 @@
 <script lang="ts">
+	import { invalidate } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
+	import { post } from "$lib/commons/utils/fetch";
+	import { showError } from "$lib/utils/message";
 	import { fade, fly } from "svelte/transition";
 
 	const MAX_LENGTH = 280;
 
 	let open = false;
-	let post = "";
+	let loading = false;
+	let content = "";
 
 	$: {
 		if (!open) {
-			post = "";
+			content = "";
 		}
 	}
 
-	$: amount = Math.max(1 - post.length / MAX_LENGTH, 0);
+	$: amount = Math.max(1 - content.length / MAX_LENGTH, 0);
 
 	const focus = (node: HTMLElement) => {
 		node.focus();
+	};
+
+	const handleClick = async () => {
+		loading = true;
+
+		try {
+			await post("/api/post", { content });
+			await invalidate("/api/post");
+		} catch (error) {
+			showError(error);
+		}
+
+		loading = false;
+		open = false;
 	};
 </script>
 
@@ -28,13 +46,23 @@
 	<div class="post" transition:fly={{ y: "100%" }}>
 		<div class="actions">
 			<Button icon="arrowRight" mirror on:click={() => (open = false)} />
-			<Button variant="contained" disableUpperCase size="sm" rounded>Enviar</Button>
+			<Button
+				on:click={handleClick}
+				variant="contained"
+				disableUpperCase
+				size="sm"
+				rounded
+				disabled={!content}
+				{loading}
+			>
+				Enviar
+			</Button>
 		</div>
 
 		<div
 			contenteditable
 			class="editable"
-			bind:textContent={post}
+			bind:textContent={content}
 			use:focus
 			placeholder="¿Que está pasando?"
 		/>
@@ -42,8 +70,8 @@
 		<hr />
 
 		<div class="counter">
-			{#if MAX_LENGTH - post.length <= 10}
-				<span transition:fade>{MAX_LENGTH - post.length}</span>
+			{#if MAX_LENGTH - content.length <= 10}
+				<span transition:fade>{MAX_LENGTH - content.length}</span>
 			{/if}
 			<svg
 				class="icon"
