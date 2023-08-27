@@ -8,24 +8,17 @@ export default defineConfig({
 		{
 			name: "workbox",
 			writeBundle: async () => {
-				const options = {
-					cacheName: "cache",
-				};
-
 				await generateSW({
 					swDest: ".svelte-kit/output/client/service-worker.js",
 					sourcemap: false,
 					skipWaiting: true,
 					runtimeCaching: [
 						{
-							urlPattern: ({ url }) => /^\/api/.test(url.pathname),
-							handler: "NetworkFirst",
-							options,
-						},
-						{
 							urlPattern: ({ url }) => !/^\/_app\/immutable/.test(url.pathname),
-							handler: "CacheFirst",
-							options: { ...options, expiration: { maxAgeSeconds: 600 } },
+							handler: "NetworkFirst",
+							options: {
+								cacheName: "cache",
+							},
 						},
 					],
 				});
