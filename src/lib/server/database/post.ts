@@ -7,10 +7,16 @@ type Post = {
 
 const collection = database.collection<Post>("posts");
 
-export const getPosts = () => {
+const PAGE_SIZE = 20;
+
+export const getPosts = (page: number) => {
 	return collection
-		.find({}, { projection: { _id: 0 } })
-		.sort({ _id: -1 })
+		.aggregate([
+			{ $sort: { _id: -1 } },
+			{ $skip: page * PAGE_SIZE },
+			{ $limit: PAGE_SIZE },
+			{ $project: { _id: 0 } },
+		])
 		.toArray();
 };
 
