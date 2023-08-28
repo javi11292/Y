@@ -1,7 +1,5 @@
 import { redirect } from "@sveltejs/kit";
 
-export const prerender = true;
-
 export const load = async ({ fetch, url }) => {
 	const response = await fetch("/api/user");
 
