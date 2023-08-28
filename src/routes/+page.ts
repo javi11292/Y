@@ -1,7 +1,13 @@
+import { browser } from "$app/environment";
+
 export const prerender = false;
 
 export const load = ({ fetch }) => {
+	if (!browser) {
+		return;
+	}
+
 	return {
-		streamed: { posts: fetch("/api/post").then((response) => response.json()) },
+		posts: fetch("/api/post").then((response) => response.json()),
 	};
 };

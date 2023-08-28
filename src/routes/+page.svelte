@@ -6,8 +6,10 @@
 
 <Post />
 
-{#await data.streamed.posts then posts}
-	{#each posts as post}
-		<div>{post.content}</div>
-	{/each}
-{/await}
+{#if data.posts}
+	{#await data.posts then posts}
+		{#each posts as post}
+			<div>{post.content}</div>
+		{/each}
+	{/await}
+{/if}
