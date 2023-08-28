@@ -36,7 +36,7 @@
 </script>
 
 <div use:portal hidden class="button">
-	<Button icon="add" variant="contained" on:click={() => (open = true)} />
+	<Button size="lg" icon="add" variant="contained" on:click={() => (open = true)} />
 </div>
 
 {#if open}
