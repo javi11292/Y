@@ -3,10 +3,9 @@
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
 	import { portal } from "$lib/commons/utils/portal";
+	import { MAX_LENGTH } from "$lib/constants";
 	import { showError } from "$lib/utils/message";
 	import { fade, fly } from "svelte/transition";
-
-	const MAX_LENGTH = 280;
 
 	let open = false;
 	let loading = false;
@@ -56,7 +55,7 @@
 				disableUpperCase
 				size="sm"
 				rounded
-				disabled={!content}
+				disabled={!content || content.length > MAX_LENGTH}
 				{loading}
 			>
 				Enviar
