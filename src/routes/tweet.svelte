@@ -125,6 +125,8 @@
 
 			.icon {
 				@include classes.active;
+
+				scale: 95%;
 			}
 		}
 	}
