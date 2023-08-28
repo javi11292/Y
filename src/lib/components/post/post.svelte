@@ -160,7 +160,7 @@
 		outline: none;
 		margin-top: 0.5rem;
 		max-height: 50vh;
-		overflow-y: scroll;
+		overflow-y: auto;
 		cursor: text;
 
 		&:empty:before {
