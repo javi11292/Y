@@ -15,5 +15,5 @@ export const getPosts = (id?: string) => {
 };
 
 export const addPost = async (content: string, author: string) => {
-	await collection.insertOne({ content, author });
+	await collection.insertOne({ content, author, date: Date.now().toString(), likes: 0 });
 };
