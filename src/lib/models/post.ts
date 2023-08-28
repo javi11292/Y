@@ -1,7 +1,7 @@
 export type Post = {
 	content: string;
 	author: string;
-	date: string;
+	date: Date;
 	likes: number;
 };
 

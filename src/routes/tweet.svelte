@@ -19,15 +19,13 @@
 		};
 	};
 
-	const now = Date.now();
-
-	const getDate = (iso: string) => {
+	const getDate = (iso: Date) => {
 		if (!iso) {
 			return "";
 		}
 
 		const date = new Date(iso);
-		let diff = Math.floor((now - date.getTime()) / 1000);
+		let diff = Math.floor((Date.now() - date.getTime()) / 1000);
 
 		if (diff < 60) {
 			return `${diff}s`;

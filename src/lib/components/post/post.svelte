@@ -1,16 +1,31 @@
 <script lang="ts">
-	import { invalidate } from "$app/navigation";
+	import { afterNavigate, goto, invalidate } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
 	import { portal } from "$lib/commons/utils/portal";
 	import { MAX_LENGTH } from "$lib/constants";
 	import { showError } from "$lib/utils/message";
+	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
 
 	let open = false;
 	let loading = false;
 	let content = "";
 	let input: HTMLDivElement;
+
+	onMount(() => {
+		const handlePopState = () => {
+			open = location.hash === "#post";
+		};
+
+		window.addEventListener("popstate", handlePopState);
+
+		return () => window.removeEventListener("popstate", handlePopState);
+	});
+
+	afterNavigate(() => {
+		open = location.hash === "#post";
+	});
 
 	$: {
 		if (!open) {
@@ -31,12 +46,14 @@
 		}
 
 		loading = false;
-		open = false;
+		close();
 	};
+
+	const close = () => history.back();
 </script>
 
 <div use:portal hidden class="button">
-	<Button size="lg" icon="add" variant="contained" on:click={() => (open = true)} />
+	<Button size="lg" icon="add" variant="contained" on:click={() => goto("#post")} />
 </div>
 
 {#if open}
@@ -48,7 +65,7 @@
 		on:introend={() => input.focus()}
 	>
 		<div class="actions">
-			<Button icon="arrowRight" mirror on:click={() => (open = false)} />
+			<Button icon="arrowRight" mirror on:click={close} />
 			<Button
 				on:click={handleClick}
 				variant="contained"
