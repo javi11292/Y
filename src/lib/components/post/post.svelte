@@ -2,6 +2,7 @@
 	import { invalidate } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
+	import { portal } from "$lib/commons/utils/portal";
 	import { showError } from "$lib/utils/message";
 	import { fade, fly } from "svelte/transition";
 
@@ -10,6 +11,7 @@
 	let open = false;
 	let loading = false;
 	let content = "";
+	let input: HTMLDivElement;
 
 	$: {
 		if (!open) {
@@ -18,10 +20,6 @@
 	}
 
 	$: amount = Math.max(1 - content.length / MAX_LENGTH, 0);
-
-	const focus = (node: HTMLElement) => {
-		node.focus();
-	};
 
 	const handleClick = async () => {
 		loading = true;
@@ -38,12 +36,18 @@
 	};
 </script>
 
-<div class="button">
+<div use:portal hidden class="button">
 	<Button icon="add" variant="contained" on:click={() => (open = true)} />
 </div>
 
 {#if open}
-	<div class="post" transition:fly={{ y: "100%" }}>
+	<div
+		use:portal
+		hidden
+		class="post"
+		transition:fly={{ y: "100%" }}
+		on:introend={() => input.focus()}
+	>
 		<div class="actions">
 			<Button icon="arrowRight" mirror on:click={() => (open = false)} />
 			<Button
@@ -62,8 +66,8 @@
 		<div
 			contenteditable
 			class="editable"
+			bind:this={input}
 			bind:textContent={content}
-			use:focus
 			placeholder="¿Que está pasando?"
 		/>
 
@@ -158,6 +162,7 @@
 		margin-top: 0.5rem;
 		max-height: 50vh;
 		overflow-y: scroll;
+		cursor: text;
 
 		&:empty:before {
 			content: attr(placeholder);
