@@ -28,7 +28,7 @@
 
 		try {
 			await post("/api/post", { content });
-			await invalidate("/api/post");
+			await invalidate("posts");
 		} catch (error) {
 			showError(error);
 		}
