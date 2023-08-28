@@ -1,22 +1,16 @@
+import type { Post } from "$lib/models/post";
+import { ObjectId } from "mongodb";
 import { database } from ".";
-
-type Post = {
-	content: string;
-	author: string;
-};
 
 const collection = database.collection<Post>("posts");
 
 const PAGE_SIZE = 20;
 
-export const getPosts = (page: number) => {
+export const getPosts = (id?: string) => {
 	return collection
-		.aggregate([
-			{ $sort: { _id: -1 } },
-			{ $skip: page * PAGE_SIZE },
-			{ $limit: PAGE_SIZE },
-			{ $project: { _id: 0 } },
-		])
+		.find(id ? { _id: { $lt: new ObjectId(id) } } : {})
+		.sort({ _id: -1 })
+		.limit(PAGE_SIZE)
 		.toArray();
 };
 

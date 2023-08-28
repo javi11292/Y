@@ -5,7 +5,7 @@ import { error, json } from "@sveltejs/kit";
 
 export const GET = async ({ params }) => {
 	const { page } = params;
-	return json(await getPosts(page ? parseInt(page) : 0));
+	return json(await getPosts(page));
 };
 
 export const POST = async ({ request, cookies }) => {
