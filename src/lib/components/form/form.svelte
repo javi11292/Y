@@ -60,13 +60,9 @@
 
 <style lang="scss">
 	.form {
-		position: relative;
-		left: 50%;
-		translate: -50%;
 		display: grid;
 		gap: 0.5rem;
 		padding: 1rem;
-		max-width: 640px;
 	}
 
 	.title {
