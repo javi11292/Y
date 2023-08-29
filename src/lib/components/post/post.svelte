@@ -15,7 +15,7 @@
 
 	onMount(() => {
 		const handlePopState = () => {
-			open = location.hash === "#post";
+			open = location.hash === "?post";
 		};
 
 		window.addEventListener("popstate", handlePopState);
@@ -24,7 +24,7 @@
 	});
 
 	afterNavigate(() => {
-		open = location.hash === "#post";
+		open = location.search === "?post";
 	});
 
 	$: {
@@ -53,7 +53,12 @@
 </script>
 
 <div use:portal hidden class="button">
-	<Button size="lg" icon="add" variant="contained" on:click={() => goto("#post")} />
+	<Button
+		size="lg"
+		icon="add"
+		variant="contained"
+		on:click={() => goto("?post", { noScroll: true })}
+	/>
 </div>
 
 {#if open}
