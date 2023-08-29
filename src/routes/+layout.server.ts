@@ -1,3 +1,4 @@
+import type { User } from "$lib/models/user";
 import { redirect } from "@sveltejs/kit";
 
 export const load = async ({ fetch, url }) => {
@@ -11,5 +12,7 @@ export const load = async ({ fetch, url }) => {
 		throw redirect(307, "/");
 	}
 
-	return response.json();
+	const user = (await response.json()) as User;
+
+	return { username: user.username, likedPosts: new Set(user.likedPosts) };
 };

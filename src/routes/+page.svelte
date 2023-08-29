@@ -43,7 +43,7 @@
 <Post />
 
 {#each posts as post, index}
-	<Tweet {post} {observer} observe={index + 1 === posts.length} />
+	<Tweet tweet={post} {observer} observe={index + 1 === posts.length} />
 {/each}
 
 {#if loading}

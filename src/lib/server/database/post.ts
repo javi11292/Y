@@ -15,18 +15,20 @@ export const getPosts = (id?: string) => {
 		.toArray();
 };
 
-export const likePost = async (id: string, user: string) => {
+export const likePost = async (id: string, username: string, like: boolean) => {
 	const session = client.startSession();
+	const operator = like ? "$push" : "$pull";
 	try {
 		session.startTransaction();
-
-		await collection.updateOne({ _id: new ObjectId(id) }, { $inc: { likes: 1 } }, { session });
-		await userCollection.updateOne(
-			{ _id: new ObjectId(user) },
-			{ $push: { likedPosts: id } },
+		await collection.updateOne(
+			{ _id: new ObjectId(id) },
+			{ $inc: { likes: like ? 1 : -1 } },
 			{ session }
 		);
-	} catch {
+		await userCollection.updateOne({ username }, { [operator]: { likedPosts: id } }, { session });
+		await session.commitTransaction();
+	} catch (error) {
+		console.error(error);
 		await session.abortTransaction();
 	} finally {
 		await session.endSession();

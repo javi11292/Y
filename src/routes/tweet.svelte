@@ -1,11 +1,13 @@
 <svelte:options immutable />
 
 <script lang="ts">
+	import { page } from "$app/stores";
 	import Icon from "$lib/commons/components/icon";
-	import type { Post } from "$lib/models/post";
+	import { post } from "$lib/commons/utils/fetch";
+	import type { PostId } from "$lib/models/post";
 
 	export let observer: IntersectionObserver;
-	export let post: Post;
+	export let tweet: PostId;
 	export let observe: boolean;
 
 	const last = (node: HTMLElement) => {
@@ -42,23 +44,38 @@
 
 		return date.toLocaleDateString(undefined, { day: "numeric", month: "short" });
 	};
+
+	$: like = $page.data.likedPosts.has(tweet._id);
+
+	const handleLikeClick = async () => {
+		await post("/api/post/like", { id: tweet._id });
+		tweet = { ...tweet, likes: tweet.likes + (like ? -1 : 1) };
+
+		if (!like) {
+			$page.data.likedPosts.add(tweet._id);
+		} else {
+			$page.data.likedPosts.delete(tweet._id);
+		}
+	};
 </script>
 
 <div use:last class="post">
 	<div class="meta">
-		<span class="author">@{post.author}</span>
-		<span class="date">{getDate(post.date)}</span>
+		<span class="author">@{tweet.author}</span>
+		<span class="date">{getDate(tweet.date)}</span>
 	</div>
-	{post.content}
+	{tweet.content}
 	<div class="stats">
-		<span class="button">
+		<button class="button" on:click={handleLikeClick}>
 			<span class="icon">
-				<Icon icon="favoriteBorder" />
+				<Icon icon={like ? "favorite" : "favoriteBorder"} />
 			</span>
-			<span class="value">
-				{post.likes}
-			</span>
-		</span>
+			{#key tweet.likes}
+				<div class="value">
+					{tweet.likes}
+				</div>
+			{/key}
+		</button>
 	</div>
 </div>
 
