@@ -68,7 +68,7 @@
 	<div class="stats">
 		<button class="button" on:click={handleLikeClick}>
 			<span class="icon">
-				<Icon icon={like ? "favorite" : "favoriteBorder"} />
+				<Icon icon={like ? "favorite" : "favorite-border"} />
 			</span>
 			{#key tweet.likes}
 				<div class="value">

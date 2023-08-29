@@ -70,7 +70,7 @@
 		on:introend={() => input.focus()}
 	>
 		<div class="actions">
-			<Button icon="arrowRight" mirror on:click={close} />
+			<Button icon="arrow-right" mirror on:click={close} />
 			<Button
 				on:click={handleClick}
 				variant="contained"
