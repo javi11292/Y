@@ -46,25 +46,19 @@
 		}
 
 		loading = false;
-		closeModal();
+		close();
 	};
 
-	const closeModal = () => {
-		document.documentElement.removeAttribute("style");
-		history.back();
-	};
-
-	const openModal = () => {
-		const diff = window.innerWidth - document.body.clientWidth;
-		document.documentElement.style.overflowY = "hidden";
-		document.documentElement.style.marginRight = `${diff}px`;
-
-		goto("#post", { noScroll: true });
-	};
+	const close = () => history.back();
 </script>
 
 <div use:portal hidden class="button">
-	<Button size="lg" icon="add" variant="contained" on:click={openModal} />
+	<Button
+		size="lg"
+		icon="add"
+		variant="contained"
+		on:click={() => goto("#post", { noScroll: true })}
+	/>
 </div>
 
 {#if open}
@@ -76,7 +70,7 @@
 		on:introend={() => input.focus()}
 	>
 		<div class="actions">
-			<Button icon="arrow-right" mirror on:click={closeModal} />
+			<Button icon="arrow-right" mirror on:click={close} />
 			<Button
 				on:click={handleClick}
 				variant="contained"
