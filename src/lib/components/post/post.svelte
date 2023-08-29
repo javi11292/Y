@@ -160,8 +160,11 @@
 	}
 
 	.post {
+		box-sizing: border-box;
 		position: fixed;
-		inset: 0;
+		top: 0;
+		bottom: 0;
+		width: 100%;
 		background: black;
 		padding: 0.5rem;
 	}
@@ -173,9 +176,13 @@
 	}
 
 	.button {
+		box-sizing: border-box;
 		position: fixed;
-		bottom: 1rem;
-		right: 1rem;
+		bottom: 0;
+		width: 100%;
+		display: flex;
+		justify-content: end;
+		padding: 1rem;
 	}
 
 	.editable {

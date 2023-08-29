@@ -3,17 +3,6 @@
 	import "$lib/commons/utils/layout";
 </script>
 
-<main class="layout">
-	<slot />
-</main>
+<slot />
 
 <Snackbar />
-
-<style lang="scss">
-	.layout {
-		position: relative;
-		left: 50%;
-		translate: -50%;
-		max-width: 640px;
-	}
-</style>
