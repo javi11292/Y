@@ -15,7 +15,7 @@
 
 	onMount(() => {
 		const handlePopState = () => {
-			open = location.hash === "?post";
+			open = location.hash === "#post";
 		};
 
 		window.addEventListener("popstate", handlePopState);
@@ -24,7 +24,7 @@
 	});
 
 	afterNavigate(() => {
-		open = location.search === "?post";
+		open = location.hash === "#post";
 	});
 
 	$: {
@@ -57,7 +57,7 @@
 		size="lg"
 		icon="add"
 		variant="contained"
-		on:click={() => goto("?post", { noScroll: true })}
+		on:click={() => goto("#post", { noScroll: true })}
 	/>
 </div>
 
