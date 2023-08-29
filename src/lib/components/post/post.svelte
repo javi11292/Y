@@ -39,7 +39,7 @@
 		loading = true;
 
 		try {
-			await post("/api/post", { content });
+			await post("/api/post/add", { content });
 			await invalidate("posts");
 		} catch (error) {
 			showError(error);
