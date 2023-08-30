@@ -83,7 +83,6 @@
 				variant="contained"
 				disableUpperCase
 				size="sm"
-				rounded
 				disabled={!content || content.length > MAX_LENGTH}
 				{loading}
 			>
