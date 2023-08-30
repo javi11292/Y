@@ -20,7 +20,13 @@
 
 		window.addEventListener("popstate", handlePopState);
 
-		return () => window.removeEventListener("popstate", handlePopState);
+		const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+		document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+
+		return () => {
+			window.removeEventListener("popstate", handlePopState);
+			document.body.removeAttribute("style");
+		};
 	});
 
 	afterNavigate(() => {
@@ -167,6 +173,7 @@
 		position: fixed;
 		top: 0;
 		bottom: 0;
+		left: calc(50% - (var(--scrollbarWidth) / 2));
 		width: 100%;
 		background: black;
 		padding: 0.5rem;
@@ -182,6 +189,7 @@
 		box-sizing: border-box;
 		position: fixed;
 		bottom: 0;
+		left: calc(50% - (var(--scrollbarWidth) / 2));
 		width: 100%;
 		display: flex;
 		justify-content: end;
