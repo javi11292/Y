@@ -18,7 +18,7 @@
 	}
 
 	const getNextPosts = async () => {
-		const lastPost = posts[posts.length - 1];
+		const lastPost = posts.at(-1);
 
 		if (lastPost && lastId !== lastPost._id) {
 			loading = true;
