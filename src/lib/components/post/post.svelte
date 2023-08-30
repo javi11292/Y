@@ -17,6 +17,10 @@
 		open = location.hash === "#post";
 		if (!open) {
 			document.documentElement.removeAttribute("style");
+		} else {
+			const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+			document.documentElement.style.overflow = "hidden";
+			document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
 		}
 	};
 
@@ -58,7 +62,6 @@
 	const closeModal = () => history.back();
 
 	const openModal = () => {
-		document.documentElement.style.overflow = "hidden";
 		goto("#post", { noScroll: true });
 	};
 </script>
