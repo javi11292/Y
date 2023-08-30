@@ -15,9 +15,6 @@
 
 	const handleClose = () => {
 		open = location.hash === "#post";
-		if (!open) {
-			document.documentElement.removeAttribute("style");
-		}
 	};
 
 	onMount(() => {
