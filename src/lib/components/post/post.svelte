@@ -23,12 +23,8 @@
 	onMount(() => {
 		window.addEventListener("popstate", handleClose);
 
-		const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-		document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
-
 		return () => {
 			window.removeEventListener("popstate", handleClose);
-			document.body.removeAttribute("style");
 		};
 	});
 
@@ -170,7 +166,7 @@
 		position: fixed;
 		top: 0;
 		bottom: 0;
-		left: calc(50% - (var(--scrollbarWidth) / 2));
+		left: 50%;
 		width: 100%;
 		background: black;
 		padding: 0.5rem;
@@ -183,10 +179,19 @@
 	}
 
 	.button {
-		all: unset;
+		box-sizing: border-box;
 		position: fixed;
-		bottom: 1rem;
-		right: 1rem;
+		bottom: 0;
+		left: 50%;
+		width: 100%;
+		display: flex;
+		justify-content: end;
+		padding: 1rem;
+		pointer-events: none;
+
+		> :global(*) {
+			pointer-events: auto;
+		}
 	}
 
 	.editable {
