@@ -16,6 +16,7 @@
 	const handleClose = () => {
 		open = location.hash === "#post";
 		if (!open) {
+			content = "";
 			document.documentElement.removeAttribute("style");
 		} else {
 			const scrollbarWidth = window.innerWidth - document.body.clientWidth;
@@ -33,12 +34,6 @@
 	});
 
 	afterNavigate(handleClose);
-
-	$: {
-		if (!open) {
-			content = "";
-		}
-	}
 
 	$: amount = Math.max(1 - content.length / MAX_LENGTH, 0);
 
