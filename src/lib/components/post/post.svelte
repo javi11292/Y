@@ -13,25 +13,26 @@
 	let content = "";
 	let input: HTMLDivElement;
 
-	onMount(() => {
-		const handlePopState = () => {
-			open = location.hash === "#post";
-		};
+	const handleClose = () => {
+		open = location.hash === "#post";
+		if (!open) {
+			document.documentElement.removeAttribute("style");
+		}
+	};
 
-		window.addEventListener("popstate", handlePopState);
+	onMount(() => {
+		window.addEventListener("popstate", handleClose);
 
 		const scrollbarWidth = window.innerWidth - document.body.clientWidth;
 		document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
 
 		return () => {
-			window.removeEventListener("popstate", handlePopState);
+			window.removeEventListener("popstate", handleClose);
 			document.body.removeAttribute("style");
 		};
 	});
 
-	afterNavigate(() => {
-		open = location.hash === "#post";
-	});
+	afterNavigate(handleClose);
 
 	$: {
 		if (!open) {
@@ -55,10 +56,7 @@
 		closeModal();
 	};
 
-	const closeModal = () => {
-		document.documentElement.removeAttribute("style");
-		history.back();
-	};
+	const closeModal = () => history.back();
 
 	const openModal = () => {
 		document.documentElement.style.overflow = "hidden";
