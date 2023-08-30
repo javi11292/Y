@@ -46,19 +46,22 @@
 		}
 
 		loading = false;
-		close();
+		closeModal();
 	};
 
-	const close = () => history.back();
+	const closeModal = () => {
+		document.documentElement.removeAttribute("style");
+		history.back();
+	};
+
+	const openModal = () => {
+		document.documentElement.style.overflow = "hidden";
+		goto("#post", { noScroll: true });
+	};
 </script>
 
 <div use:portal hidden class="button">
-	<Button
-		size="lg"
-		icon="add"
-		variant="contained"
-		on:click={() => goto("#post", { noScroll: true })}
-	/>
+	<Button size="lg" icon="add" variant="contained" on:click={openModal} />
 </div>
 
 {#if open}
@@ -70,7 +73,7 @@
 		on:introend={() => input.focus()}
 	>
 		<div class="actions">
-			<Button icon="arrow-right" mirror on:click={close} />
+			<Button icon="arrow-right" mirror on:click={closeModal} />
 			<Button
 				on:click={handleClick}
 				variant="contained"
@@ -183,6 +186,11 @@
 		display: flex;
 		justify-content: end;
 		padding: 1rem;
+		pointer-events: none;
+
+		> :global(*) {
+			pointer-events: auto;
+		}
 	}
 
 	.editable {
