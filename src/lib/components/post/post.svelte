@@ -21,14 +21,13 @@
 	};
 
 	onMount(() => {
-		window.addEventListener("popstate", handleClose);
-
 		const scrollbarWidth = window.innerWidth - document.body.clientWidth;
 		document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+		window.addEventListener("popstate", handleClose);
 
 		return () => {
-			window.removeEventListener("popstate", handleClose);
 			document.body.removeAttribute("style");
+			window.removeEventListener("popstate", handleClose);
 		};
 	});
 
