@@ -23,8 +23,12 @@
 	onMount(() => {
 		window.addEventListener("popstate", handleClose);
 
+		const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+		document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+
 		return () => {
 			window.removeEventListener("popstate", handleClose);
+			document.body.removeAttribute("style");
 		};
 	});
 
@@ -166,7 +170,7 @@
 		position: fixed;
 		top: 0;
 		bottom: 0;
-		left: 50%;
+		left: calc(50% - (var(--scrollbarWidth) / 2));
 		width: 100%;
 		background: black;
 		padding: 0.5rem;
