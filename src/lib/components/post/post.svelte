@@ -183,19 +183,10 @@
 	}
 
 	.button {
-		box-sizing: border-box;
+		all: unset;
 		position: fixed;
-		bottom: 0;
-		left: calc(50% - (var(--scrollbarWidth) / 2));
-		width: 100%;
-		display: flex;
-		justify-content: end;
-		padding: 1rem;
-		pointer-events: none;
-
-		> :global(*) {
-			pointer-events: auto;
-		}
+		bottom: 1rem;
+		right: 1rem;
 	}
 
 	.editable {
