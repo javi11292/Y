@@ -169,7 +169,7 @@
 		position: fixed;
 		top: 0;
 		bottom: 0;
-		left: calc(50% - (var(--scrollbarWidth) / 2));
+		left: calc(50% - var(--scrollbarWidth));
 		width: 100%;
 		background: black;
 		padding: 0.5rem;
@@ -185,7 +185,7 @@
 		box-sizing: border-box;
 		position: fixed;
 		bottom: 0;
-		left: 50%;
+		left: calc(50% - var(--scrollbarWidth));
 		width: 100%;
 		display: flex;
 		justify-content: end;
