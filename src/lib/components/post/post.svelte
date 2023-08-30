@@ -25,12 +25,9 @@
 	};
 
 	onMount(() => {
-		const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-		document.body.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
 		window.addEventListener("popstate", handleClose);
 
 		return () => {
-			document.body.removeAttribute("style");
 			window.removeEventListener("popstate", handleClose);
 		};
 	});
@@ -61,9 +58,7 @@
 
 	const closeModal = () => history.back();
 
-	const openModal = () => {
-		goto("#post", { noScroll: true });
-	};
+	const openModal = () => goto("#post", { noScroll: true });
 </script>
 
 <div use:portal hidden class="button">
@@ -172,7 +167,7 @@
 		position: fixed;
 		top: 0;
 		bottom: 0;
-		left: calc(50% - var(--scrollbarWidth));
+		left: calc(50% - var(--scrollbarWidth, 0px) / 2);
 		width: 100%;
 		background: black;
 		padding: 0.5rem;
@@ -188,7 +183,7 @@
 		box-sizing: border-box;
 		position: fixed;
 		bottom: 0;
-		left: calc(50% - var(--scrollbarWidth));
+		left: calc(50% - var(--scrollbarWidth, 0px) / 2);
 		width: 100%;
 		display: flex;
 		justify-content: end;
