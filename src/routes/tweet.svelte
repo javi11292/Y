@@ -24,7 +24,7 @@
 
 	const getDate = (iso: Date) => {
 		const date = new Date(iso);
-		let diff = Math.floor((Date.now() - date.getTime()) / 1000);
+		let diff = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
 
 		if (diff < 60) {
 			return `${diff}s`;
