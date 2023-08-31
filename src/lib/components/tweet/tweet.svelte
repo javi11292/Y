@@ -3,22 +3,28 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import Icon from "$lib/commons/components/icon";
-	import { post } from "$lib/commons/utils/fetch";
+	import { get, post } from "$lib/commons/utils/fetch";
 	import type { PostId } from "$lib/models/post";
 
-	export let observer: IntersectionObserver;
 	export let tweet: PostId;
-	export let observe: boolean;
+	export let onIntersection: null | ((response: Promise<PostId[]>) => void);
 
-	const last = (node: HTMLElement) => {
-		if (!observe) {
-			return {};
+	const last = (node: HTMLElement, enabled: boolean) => {
+		if (!enabled) {
+			return;
 		}
+
+		const observer = new IntersectionObserver(([{ isIntersecting }]) => {
+			if (isIntersecting) {
+				onIntersection?.(get(`/api/post/${tweet._id}`) as Promise<PostId[]>);
+				observer.disconnect();
+			}
+		}) as IntersectionObserver;
 
 		observer.observe(node);
 
 		return {
-			destroy: () => observer.unobserve(node),
+			destroy: () => observer.disconnect(),
 		};
 	};
 
@@ -59,7 +65,7 @@
 	};
 </script>
 
-<div use:last class="post">
+<div use:last={!!onIntersection} class="post">
 	<div class="meta">
 		<span class="author">@{tweet.author}</span>
 		<span class="date">{getDate(tweet.date)}</span>

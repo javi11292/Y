@@ -1,49 +1,31 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
 	import LoadingIcon from "$lib/commons/components/loading-icon";
-	import { get } from "$lib/commons/utils/fetch";
 	import Post from "$lib/components/post";
+	import Tweet from "$lib/components/tweet";
 	import type { PostId } from "$lib/models/post";
 	import { fade } from "svelte/transition";
-	import Tweet from "./tweet.svelte";
 
 	export let data;
 
-	let posts: PostId[] = [];
-	let lastId = "";
+	let tweets: PostId[] = [];
 	let loading = false;
 
 	$: {
-		data.streamed.posts.then((value) => (posts = value));
+		data.streamed.posts.then((value) => (tweets = value));
 	}
 
-	const getNextPosts = async () => {
-		const lastPost = posts.at(-1);
-
-		if (lastPost && lastId !== lastPost._id) {
-			loading = true;
-			posts.push(...((await get(`/api/post/${lastPost._id}`)) as PostId[]));
-			posts = posts;
-			lastId = lastPost._id;
-			loading = false;
-		}
+	const handleIntersection = async (response: Promise<PostId[]>) => {
+		loading = true;
+		tweets.push(...(await response));
+		tweets = tweets;
+		loading = false;
 	};
-
-	const observer = (browser &&
-		new IntersectionObserver(
-			([{ isIntersecting }]) => {
-				if (isIntersecting) {
-					getNextPosts();
-				}
-			},
-			{ threshold: 0.5 }
-		)) as IntersectionObserver;
 </script>
 
 <Post />
 
-{#each posts as post, index}
-	<Tweet tweet={post} {observer} observe={index + 1 === posts.length} />
+{#each tweets as tweet, index}
+	<Tweet {tweet} onIntersection={index === tweets.length - 1 ? handleIntersection : null} />
 {/each}
 
 {#if loading}
