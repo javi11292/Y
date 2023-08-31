@@ -14,6 +14,8 @@ export const addUser = async (username: string, password: string) => {
 		username,
 		password: await hashPassword(password),
 		likedPosts: [],
+		followers: 0,
+		following: [],
 	};
 
 	await collection.insertOne(user);

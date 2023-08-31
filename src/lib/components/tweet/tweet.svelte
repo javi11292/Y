@@ -67,7 +67,7 @@
 
 <div use:last class="post">
 	<div class="meta">
-		<span class="author">@{tweet.author}</span>
+		<a class="author" href={`/@${tweet.author}`}>@{tweet.author}</a>
 		<span class="date">{getDate(tweet.date)}</span>
 	</div>
 	{tweet.content}
@@ -88,6 +88,11 @@
 <style lang="scss">
 	@use "$lib/commons/theme";
 	@use "$lib/commons/classes";
+
+	a {
+		color: theme.$colorPrimary;
+		text-decoration: none;
+	}
 
 	.post {
 		border-bottom: 1px solid theme.$colorNeutralDark;
