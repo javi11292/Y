@@ -9,8 +9,8 @@
 	export let tweet: PostId;
 	export let onIntersection: null | ((response: Promise<PostId[]>) => void);
 
-	const last = (node: HTMLElement, enabled: boolean) => {
-		if (!enabled) {
+	const last = (node: HTMLElement) => {
+		if (!onIntersection) {
 			return;
 		}
 
@@ -65,7 +65,7 @@
 	};
 </script>
 
-<div use:last={!!onIntersection} class="post">
+<div use:last class="post">
 	<div class="meta">
 		<span class="author">@{tweet.author}</span>
 		<span class="date">{getDate(tweet.date)}</span>
