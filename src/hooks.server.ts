@@ -18,6 +18,10 @@ export const handle = async ({ event, resolve }) => {
 	let page = "";
 	await promise;
 
+	const { locals, url } = event;
+
+	locals.login = url.pathname === "/login" || url.pathname === "/register";
+
 	return resolve(event, {
 		transformPageChunk: ({ html, done }) => {
 			page += html;

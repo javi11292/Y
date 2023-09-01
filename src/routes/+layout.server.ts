@@ -1,15 +1,15 @@
 import type { User } from "$lib/models/user";
 import { redirect } from "@sveltejs/kit";
 
-export const load = async ({ fetch, url, depends }) => {
+export const load = async ({ fetch, depends, locals }) => {
 	depends("user");
 	const response = await fetch("/api/user");
 
-	if (!response.ok && url.pathname !== "/login" && url.pathname !== "/register") {
+	if (!response.ok && !locals.login) {
 		throw redirect(307, "/login");
 	}
 
-	if (response.ok && (url.pathname === "/login" || url.pathname === "/register")) {
+	if (response.ok && locals.login) {
 		throw redirect(307, "/");
 	}
 
@@ -19,6 +19,5 @@ export const load = async ({ fetch, url, depends }) => {
 		username: user.username,
 		likedPosts: new Set(user.likedPosts),
 		following: new Set(user.following),
-		pathname: url.pathname,
 	};
 };
