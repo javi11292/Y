@@ -1,7 +1,7 @@
 import type { Post } from "$lib/models/post";
 import { ObjectId } from "mongodb";
 import { client, database } from ".";
-import { collection as userCollection } from "./user";
+import { getUser, collection as userCollection } from "./user";
 
 const PAGE_SIZE = 20;
 
@@ -15,8 +15,11 @@ export const getPosts = (id?: string) => {
 		.toArray();
 };
 
-export const likePost = async (id: string, username: string, like: boolean) => {
+export const likePost = async (id: string, username: string) => {
 	const session = client.startSession();
+	const user = await getUser(username);
+
+	const like = !user.likedPosts.includes(id);
 	const operator = like ? "$push" : "$pull";
 	try {
 		session.startTransaction();
@@ -35,6 +38,5 @@ export const likePost = async (id: string, username: string, like: boolean) => {
 	}
 };
 
-export const addPost = async (content: string, author: string) => {
-	await collection.insertOne({ content, author, date: new Date(), likes: 0 });
-};
+export const addPost = (content: string, author: string) =>
+	collection.insertOne({ content, author, date: new Date(), likes: 0 });

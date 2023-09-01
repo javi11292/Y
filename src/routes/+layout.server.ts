@@ -1,7 +1,8 @@
 import type { User } from "$lib/models/user";
 import { redirect } from "@sveltejs/kit";
 
-export const load = async ({ fetch, url }) => {
+export const load = async ({ fetch, url, depends }) => {
+	depends("user");
 	const response = await fetch("/api/user");
 
 	if (!response.ok && url.pathname !== "/login" && url.pathname !== "/register") {
@@ -14,5 +15,10 @@ export const load = async ({ fetch, url }) => {
 
 	const user = (await response.json()) as User;
 
-	return { username: user.username, likedPosts: new Set(user.likedPosts), pathname: url.pathname };
+	return {
+		username: user.username,
+		likedPosts: new Set(user.likedPosts),
+		following: new Set(user.following),
+		pathname: url.pathname,
+	};
 };

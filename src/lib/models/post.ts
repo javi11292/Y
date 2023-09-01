@@ -1,3 +1,5 @@
+import type { WithId } from "mongodb";
+
 export type Post = {
 	content: string;
 	author: string;
@@ -5,6 +7,4 @@ export type Post = {
 	likes: number;
 };
 
-export type PostId = {
-	_id: string;
-} & Post;
+export type PostId = WithId<Post>;

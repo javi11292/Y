@@ -1,14 +1,35 @@
 <script lang="ts">
+	import { invalidate } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
+	import { post } from "$lib/commons/utils/fetch";
 
 	export let data;
 
 	$: user = data.user;
+	let loading = false;
+
+	const handleFollowClick = async () => {
+		loading = true;
+		await post("/api/follow", { id: user.username });
+		await Promise.all([invalidate("user"), invalidate(`user:${user.username}`)]);
+		loading = false;
+	};
 </script>
 
 <div class="container">
 	<div class="buttons">
-		<Button variant="contained" size="sm" color="neutral" disableUpperCase>Seguir</Button>
+		{#if user.username !== data.username}
+			<Button
+				{loading}
+				variant="contained"
+				size="sm"
+				color="neutral"
+				disableUpperCase
+				on:click={handleFollowClick}
+			>
+				{data.following.has(user.username) ? "Dejar de seguir" : "Seguir"}
+			</Button>
+		{/if}
 	</div>
 	@{user.username}
 

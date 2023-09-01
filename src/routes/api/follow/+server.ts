@@ -1,15 +1,10 @@
-import { likePost } from "$lib/server/database/post";
+import { followUser } from "$lib/server/database/user";
 import { withSession } from "$lib/server/utils/session";
-import { error } from "@sveltejs/kit";
 
 export const POST = withSession(async ({ request, locals }) => {
 	const { id } = await request.json();
 
-	if (!id) {
-		throw error(400, "ID requerida");
-	}
-
-	await likePost(id, locals.username);
+	await followUser(locals.username, id);
 
 	return new Response();
 });

@@ -1,5 +1,6 @@
 import { NODE_ENV, SESSION_SECRET } from "$env/static/private";
-import type { Cookies } from "@sveltejs/kit";
+import type { Cookies, RequestHandler } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import jsonwebtoken from "jsonwebtoken";
 
 const { sign, verify } = jsonwebtoken;
@@ -27,3 +28,17 @@ export const getSessionToken = (cookies: Cookies) => {
 export const removeSessionToken = (cookies: Cookies) => {
 	cookies.delete(KEY, { path: "/" });
 };
+
+export const withSession =
+	(callback: RequestHandler): RequestHandler =>
+	(props) => {
+		const username = getSessionToken(props.cookies);
+
+		if (!username) {
+			throw error(400, "Usuario requerido");
+		}
+
+		props.locals.username = username;
+
+		return callback(props);
+	};
