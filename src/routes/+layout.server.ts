@@ -1,8 +1,10 @@
+import type { PostId } from "$lib/models/post";
 import type { User } from "$lib/models/user";
 import { redirect } from "@sveltejs/kit";
 
 export const load = async ({ fetch, depends, locals }) => {
 	depends("user");
+	depends("posts");
 	const response = await fetch("/api/user");
 
 	if (!response.ok && !locals.login) {
@@ -19,5 +21,6 @@ export const load = async ({ fetch, depends, locals }) => {
 		username: user.username,
 		likedPosts: new Set(user.likedPosts),
 		following: new Set(user.following),
+		posts: fetch("/api/post").then((response) => response.json() as Promise<PostId[]>),
 	};
 };
