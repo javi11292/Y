@@ -54,6 +54,7 @@
 	.buttons {
 		display: flex;
 		justify-content: space-between;
+		align-items: start;
 		padding: 1rem;
 
 		> :global(:nth-child(1)) {
