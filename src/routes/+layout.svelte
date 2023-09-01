@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import Snackbar from "$lib/commons/components/snackbar";
 	import "$lib/commons/utils/layout";
 	import { scroll } from "$lib/stores";
@@ -6,23 +7,36 @@
 
 	export let data;
 
-	let style: string | undefined;
+	let transition = false;
+	let measurer: Element;
+
+	const setScrollbarWidth = (add: boolean) => {
+		if (add) {
+			const scrollbarWidth = window.innerWidth - measurer.clientWidth;
+			document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+		} else {
+			document.documentElement.style.removeProperty("--scrollbarWidth");
+		}
+	};
 
 	$: {
-		if (!$scroll) {
-			const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-			style = `--scrollbarWidth: ${scrollbarWidth}px`;
-		} else {
-			style = undefined;
+		if (browser) {
+			setScrollbarWidth(transition || !$scroll);
 		}
 	}
 </script>
 
 {#key data.pathname}
-	<div class="layout" in:fly={{ x: "100%" }} out:fly={{ x: "-100%" }} {style}>
-		<div class="scroll" class:noScroll={!$scroll}>
+	<div
+		class="layout"
+		on:introstart={() => (transition = true)}
+		on:introend={() => (transition = false)}
+		in:fly={{ x: "100%" }}
+		out:fly={{ x: "-100%" }}
+	>
+		<div class="scroll" class:noScroll={transition || !$scroll}>
 			<slot />
-			<div />
+			<div class="measurer" bind:this={measurer} />
 		</div>
 	</div>
 {/key}
@@ -48,16 +62,16 @@
 		}
 	}
 
-	.noScroll {
-		overflow: hidden;
-	}
-
 	.scroll {
 		scrollbar-gutter: stable;
 		overflow-y: scroll;
 		height: 100%;
 
-		> :global(*) {
+		&.noScroll {
+			overflow: hidden;
+		}
+
+		> :global(:not(.measurer)) {
 			@extend %view;
 		}
 	}
