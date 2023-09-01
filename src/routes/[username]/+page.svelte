@@ -54,9 +54,10 @@
 	.buttons {
 		display: flex;
 		justify-content: space-between;
+		padding: 1rem;
 
-		> div {
-			padding: 1rem 1rem 0;
+		> :global(:nth-child(1)) {
+			margin: -0.5rem;
 		}
 	}
 

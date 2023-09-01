@@ -172,13 +172,17 @@
 		left: calc(50% - var(--scrollbarWidth, 0px) / 2);
 		width: 100%;
 		background: black;
-		padding: 0.5rem;
+		padding: 1rem;
 	}
 
 	.actions {
 		display: flex;
 		justify-content: space-between;
 		align-items: start;
+
+		> :global(:nth-child(1)) {
+			margin: -0.5rem;
+		}
 	}
 
 	.button {
