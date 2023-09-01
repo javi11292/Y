@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import Snackbar from "$lib/commons/components/snackbar";
 	import "$lib/commons/utils/layout";
 	import { scroll } from "$lib/stores";
@@ -12,6 +13,20 @@
 		const scrollbarWidth = window.innerWidth - node.clientWidth;
 		document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
 	};
+
+	const hideScroll = (add: boolean) => {
+		if (add) {
+			document.documentElement.style.setProperty("--overflow", "hidden");
+		} else {
+			document.documentElement.style.removeProperty("--overflow");
+		}
+	};
+
+	$: {
+		if (browser) {
+			hideScroll(transition || !$scroll);
+		}
+	}
 </script>
 
 {#key data.pathname}
@@ -22,7 +37,7 @@
 		in:fly={{ x: "100%" }}
 		out:fly={{ x: "-100%" }}
 	>
-		<div class="scroll" class:noScroll={transition || !$scroll}>
+		<div class="scroll">
 			<slot />
 			<div class="measurer" use:setScrollbarWidth />
 		</div>
@@ -54,10 +69,7 @@
 		scrollbar-gutter: stable;
 		overflow-y: scroll;
 		height: 100%;
-
-		&.noScroll {
-			overflow: hidden;
-		}
+		overflow-y: var(--overflow);
 
 		> :global(:not(.measurer)) {
 			@extend %view;
