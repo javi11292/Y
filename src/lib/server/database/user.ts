@@ -17,7 +17,6 @@ export const getUser = async (username: string) => {
 };
 
 export const followUser = async (username: string, followUsername: string) => {
-	console.log(username, followUsername);
 	const session = client.startSession();
 
 	const user = await getUser(username);
