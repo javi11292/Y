@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
 	import Snackbar from "$lib/commons/components/snackbar";
 	import "$lib/commons/utils/layout";
 	import { scroll } from "$lib/stores";
@@ -8,26 +7,16 @@
 	export let data;
 
 	let transition = false;
-	let measurer: Element;
 
-	const setScrollbarWidth = (add: boolean) => {
-		if (add) {
-			const scrollbarWidth = window.innerWidth - measurer.clientWidth;
-			document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
-		} else {
-			document.documentElement.style.removeProperty("--scrollbarWidth");
-		}
+	const setScrollbarWidth = (node: Element) => {
+		const scrollbarWidth = window.innerWidth - node.clientWidth;
+		document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
 	};
-
-	$: {
-		if (browser) {
-			setScrollbarWidth(transition || !$scroll);
-		}
-	}
 </script>
 
 {#key data.pathname}
 	<div
+		use:setScrollbarWidth
 		class="layout"
 		on:introstart={() => (transition = true)}
 		on:introend={() => (transition = false)}
@@ -36,7 +25,7 @@
 	>
 		<div class="scroll" class:noScroll={transition || !$scroll}>
 			<slot />
-			<div class="measurer" bind:this={measurer} />
+			<div class="measurer" use:setScrollbarWidth />
 		</div>
 	</div>
 {/key}
