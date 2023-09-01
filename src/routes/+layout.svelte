@@ -10,16 +10,17 @@
 	let transition = false;
 
 	const setScrollbarWidth = (node: Element) => {
-		const scrollbarWidth = window.innerWidth - node.clientWidth;
-		document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+		const observer = new ResizeObserver(() => {
+			const scrollbarWidth = window.innerWidth - node.clientWidth;
+			document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+		});
+
+		observer.observe(node);
+		return { destroy: () => observer.disconnect() };
 	};
 
-	const hideScroll = (add: boolean) => {
-		if (add) {
-			document.documentElement.style.setProperty("--overflow", "hidden");
-		} else {
-			document.documentElement.style.removeProperty("--overflow");
-		}
+	const hideScroll = (hidden: boolean) => {
+		document.documentElement.style.setProperty("--overflow", hidden ? "hidden" : "scroll");
 	};
 
 	$: {
@@ -67,7 +68,6 @@
 
 	.scroll {
 		scrollbar-gutter: stable;
-		overflow-y: scroll;
 		height: 100%;
 		overflow-y: var(--overflow);
 

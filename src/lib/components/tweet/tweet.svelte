@@ -22,7 +22,6 @@
 		}) as IntersectionObserver;
 
 		observer.observe(node);
-
 		return {
 			destroy: () => observer.disconnect(),
 		};

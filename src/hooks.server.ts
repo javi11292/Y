@@ -1,3 +1,4 @@
+import { connect } from "$lib/server/database";
 import { minify } from "html-minifier";
 
 const minifyOptions = {
@@ -11,8 +12,11 @@ const minifyOptions = {
 	removeStyleLinkTypeAttributes: true,
 };
 
+const promise = connect();
+
 export const handle = async ({ event, resolve }) => {
 	let page = "";
+	await promise;
 
 	return resolve(event, {
 		transformPageChunk: ({ html, done }) => {
