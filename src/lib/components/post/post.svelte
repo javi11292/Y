@@ -3,6 +3,7 @@
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
 	import { portal } from "$lib/commons/utils/portal";
+	import Back from "$lib/components/back";
 	import { MAX_LENGTH } from "$lib/constants";
 	import { scroll } from "$lib/stores";
 	import { showError } from "$lib/utils/message";
@@ -47,10 +48,8 @@
 		}
 
 		loading = false;
-		closeModal();
+		history.back();
 	};
-
-	const closeModal = () => history.back();
 
 	const openModal = () => goto("#post", { noScroll: true });
 
@@ -77,7 +76,7 @@
 		on:introend={() => input.focus()}
 	>
 		<div class="actions">
-			<Button icon="arrow-right" mirror on:click={closeModal} />
+			<Back />
 			<Button
 				on:click={handleClick}
 				variant="contained"

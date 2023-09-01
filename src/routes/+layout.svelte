@@ -11,7 +11,7 @@
 
 	const setScrollbarWidth = (node: Element) => {
 		const observer = new ResizeObserver(() => {
-			const scrollbarWidth = window.innerWidth - node.clientWidth;
+			const scrollbarWidth = document.body.clientWidth - node.clientWidth;
 			document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
 		});
 

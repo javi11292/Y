@@ -2,6 +2,7 @@
 	import { invalidate } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
+	import Back from "$lib/components/back";
 
 	export let data;
 
@@ -16,8 +17,9 @@
 	};
 </script>
 
-<div class="container">
-	<div class="buttons">
+<div class="buttons">
+	<Back />
+	<div>
 		{#if user.username !== data.username}
 			<Button
 				{loading}
@@ -31,6 +33,9 @@
 			</Button>
 		{/if}
 	</div>
+</div>
+
+<div class="container">
 	@{user.username}
 
 	<div class="followers">
@@ -43,12 +48,16 @@
 	@use "$lib/commons/theme";
 
 	.container {
-		padding: 1rem;
+		padding: 0 1rem 1rem;
 	}
 
 	.buttons {
 		display: flex;
-		justify-content: end;
+		justify-content: space-between;
+
+		> div {
+			padding: 1rem 1rem 0;
+		}
 	}
 
 	.followers {
