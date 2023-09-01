@@ -4,6 +4,7 @@
 	import { post } from "$lib/commons/utils/fetch";
 	import { portal } from "$lib/commons/utils/portal";
 	import { MAX_LENGTH } from "$lib/constants";
+	import { scroll } from "$lib/stores";
 	import { showError } from "$lib/utils/message";
 	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
@@ -17,11 +18,9 @@
 		open = location.hash === "#post";
 		if (!open) {
 			content = "";
-			document.documentElement.removeAttribute("style");
+			$scroll = true;
 		} else {
-			const scrollbarWidth = window.innerWidth - document.body.clientWidth;
-			document.documentElement.style.overflow = "hidden";
-			document.documentElement.style.setProperty("--scrollbarWidth", `${scrollbarWidth}px`);
+			$scroll = false;
 		}
 	};
 
