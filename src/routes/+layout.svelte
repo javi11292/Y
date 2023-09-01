@@ -16,7 +16,6 @@
 
 {#key data.pathname}
 	<div
-		use:setScrollbarWidth
 		class="layout"
 		on:introstart={() => (transition = true)}
 		on:introend={() => (transition = false)}
