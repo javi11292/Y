@@ -54,15 +54,22 @@
 	const closeModal = () => history.back();
 
 	const openModal = () => goto("#post", { noScroll: true });
+
+	let portalTarget: null | Element = null;
+
+	onMount(() => {
+		const layout = document.querySelectorAll(".layout");
+		portalTarget = layout[layout.length - 1];
+	});
 </script>
 
-<div use:portal hidden class="button">
+<div use:portal={portalTarget} hidden class="button">
 	<Button size="lg" icon="add" variant="contained" on:click={openModal} />
 </div>
 
 {#if open}
 	<div
-		use:portal
+		use:portal={portalTarget}
 		hidden
 		class="post"
 		transition:fly={{ y: "100%" }}
@@ -159,7 +166,7 @@
 
 	.post {
 		box-sizing: border-box;
-		position: fixed;
+		position: absolute;
 		top: 0;
 		bottom: 0;
 		left: calc(50% - var(--scrollbarWidth, 0px) / 2);
@@ -176,7 +183,7 @@
 
 	.button {
 		box-sizing: border-box;
-		position: fixed;
+		position: absolute;
 		bottom: 0;
 		left: calc(50% - var(--scrollbarWidth, 0px) / 2);
 		width: 100%;

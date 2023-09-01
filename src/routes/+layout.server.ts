@@ -14,5 +14,5 @@ export const load = async ({ fetch, url }) => {
 
 	const user = (await response.json()) as User;
 
-	return { username: user.username, likedPosts: new Set(user.likedPosts) };
+	return { username: user.username, likedPosts: new Set(user.likedPosts), pathname: url.pathname };
 };
