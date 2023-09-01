@@ -10,9 +10,7 @@
 	let tweets: PostId[] = [];
 	let loading = false;
 
-	$: {
-		data.streamed.posts.then((value) => (tweets = value));
-	}
+	$: tweets = data.posts;
 
 	const handleIntersection = async (response: Promise<PostId[]>) => {
 		loading = true;

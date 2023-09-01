@@ -63,7 +63,9 @@
 </script>
 
 <div use:portal={portalTarget} hidden class="button">
-	<Button size="lg" icon="add" variant="contained" on:click={openModal} />
+	<div>
+		<Button size="lg" icon="add" variant="contained" on:click={openModal} />
+	</div>
 </div>
 
 {#if open}
@@ -183,16 +185,19 @@
 	.button {
 		box-sizing: border-box;
 		position: absolute;
-		bottom: 0;
 		left: calc(50% - var(--scrollbarWidth, 0px) / 2);
 		width: 100%;
-		display: flex;
-		justify-content: end;
+		bottom: 0;
 		padding: 1rem;
 		pointer-events: none;
 
-		> :global(*) {
-			pointer-events: auto;
+		> div {
+			display: flex;
+			justify-content: end;
+
+			> :global(*) {
+				pointer-events: auto;
+			}
 		}
 	}
 
