@@ -11,7 +11,7 @@
 	const handleFollowClick = async () => {
 		loading = true;
 		await post("/api/follow", { id: user.username });
-		await Promise.all([invalidate("user"), invalidate(`user:${user.username}`)]);
+		await Promise.all([invalidate("user"), invalidate("user:id")]);
 		loading = false;
 	};
 </script>

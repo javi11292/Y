@@ -8,7 +8,7 @@ export const load = ({ params, fetch, depends }) => {
 		throw error(404, "Not Found");
 	}
 
-	depends(`user:${match[1]}`);
+	depends("user:id");
 
 	return {
 		user: fetch(`/api/user/${match[1]}`).then((response) => response.json()) as Promise<UserId>,
