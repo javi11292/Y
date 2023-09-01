@@ -36,7 +36,7 @@
 	}
 
 	.scroll {
-		overflow-x: scroll;
+		overflow-y: scroll;
 		height: 100%;
 
 		> :global(*) {
