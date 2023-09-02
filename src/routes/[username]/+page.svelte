@@ -71,7 +71,10 @@
 			<Loading />
 		{:then}
 			{#each tweets as tweet, index}
-				<Tweet {tweet} onIntersection={index === tweets.length - 1 ? handleIntersection : null} />
+				<Tweet
+					bind:tweet
+					onIntersection={index === tweets.length - 1 ? handleIntersection : null}
+				/>
 			{/each}
 		{/await}
 	</div>
