@@ -89,7 +89,7 @@
 	.container {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		min-height: 100%;
 
 		> :last-child {
 			flex: 1;
@@ -105,6 +105,11 @@
 		justify-content: space-between;
 		align-items: start;
 		padding: 1rem;
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		background: rgba(0, 0, 0, 0.65);
+		backdrop-filter: blur(12px);
 
 		> :global(:nth-child(1)) {
 			margin: -0.5rem;
