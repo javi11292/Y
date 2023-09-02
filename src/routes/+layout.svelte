@@ -19,13 +19,12 @@
 		return { destroy: () => observer.disconnect() };
 	};
 
-	const hideScroll = (hidden: boolean) => {
-		document.documentElement.style.setProperty("--overflow", hidden ? "hidden" : "scroll");
-	};
-
 	$: {
 		if (browser) {
-			hideScroll(transition || !$scroll);
+			document.documentElement.style.setProperty(
+				"--overflow",
+				transition || !$scroll ? "hidden" : "auto"
+			);
 		}
 	}
 </script>
