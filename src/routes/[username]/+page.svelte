@@ -4,17 +4,19 @@
 	import { post } from "$lib/commons/utils/fetch";
 	import Back from "$lib/components/back";
 	import type { User } from "$lib/models/user";
+	import { bustCache } from "./cache";
 
 	export let data;
 
-	let user: undefined | User;
+	let user: User;
 
 	$: data.streamed.user.then((value) => (user = value));
 	let loading = false;
 
 	const handleFollowClick = async () => {
 		loading = true;
-		await post("/api/follow", { id: user?.username });
+		bustCache(user.username);
+		await post("/api/follow", { id: user.username });
 		await Promise.all([invalidate("user"), invalidate("user:id")]);
 		loading = false;
 	};
