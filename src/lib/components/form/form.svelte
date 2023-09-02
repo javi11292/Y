@@ -56,9 +56,15 @@
 			Continuar
 		</Button>
 	</div>
+
+	<div class="link">
+		<slot />
+	</div>
 </div>
 
 <style lang="scss">
+	@use "$lib/commons/theme";
+
 	.form {
 		display: grid;
 		gap: 0.5rem;
@@ -72,5 +78,18 @@
 	.button {
 		display: contents;
 		text-align: center;
+	}
+
+	.link {
+		margin-top: 2rem;
+		color: theme.$colorNeutral;
+
+		:global(a) {
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 </style>

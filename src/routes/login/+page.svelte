@@ -12,4 +12,6 @@
 	};
 </script>
 
-<Form title="Login" {fields} onSubmit={handleSubmit} />
+<Form title="Login" {fields} onSubmit={handleSubmit}>
+	¿No tienes cuenta? <a href="/register">Regístrate</a>
+</Form>
