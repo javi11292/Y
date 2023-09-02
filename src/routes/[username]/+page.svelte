@@ -1,17 +1,21 @@
+<svelte:options />
+
 <script lang="ts">
 	import { invalidate } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
 	import Back from "$lib/components/back";
+	import Loading from "$lib/components/loading";
 	import type { User } from "$lib/models/user";
+	import { fade } from "svelte/transition";
 	import { bustCache } from "./cache";
 
 	export let data;
 
+	let loading = false;
 	let user: User;
 
 	$: data.streamed.user.then((value) => (user = value));
-	let loading = false;
 
 	const handleFollowClick = async () => {
 		loading = true;
@@ -23,32 +27,36 @@
 </script>
 
 {#if user}
-	<div class="buttons">
-		<Back />
-		<div>
-			{#if user.username !== data.username}
-				<Button
-					{loading}
-					variant="contained"
-					size="sm"
-					color="neutral"
-					disableUpperCase
-					on:click={handleFollowClick}
-				>
-					{data.following.has(user.username) ? "Dejar de seguir" : "Seguir"}
-				</Button>
-			{/if}
+	<div in:fade>
+		<div class="buttons">
+			<Back />
+			<div>
+				{#if user.username !== data.username}
+					<Button
+						{loading}
+						variant="contained"
+						size="sm"
+						color="neutral"
+						disableUpperCase
+						on:click={handleFollowClick}
+					>
+						{data.following.has(user.username) ? "Dejar de seguir" : "Seguir"}
+					</Button>
+				{/if}
+			</div>
+		</div>
+
+		<div class="container">
+			@{user.username}
+
+			<div class="followers">
+				{user.following.length} <span>Siguiendo</span>
+				{user.followers} <span>Seguidores</span>
+			</div>
 		</div>
 	</div>
-
-	<div class="container">
-		@{user.username}
-
-		<div class="followers">
-			{user.following.length} <span>Siguiendo</span>
-			{user.followers} <span>Seguidores</span>
-		</div>
-	</div>
+{:else}
+	<Loading />
 {/if}
 
 <style lang="scss">

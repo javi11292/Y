@@ -1,9 +1,8 @@
 <script lang="ts">
-	import LoadingIcon from "$lib/commons/components/loading-icon";
+	import Loading from "$lib/components/loading";
 	import Post from "$lib/components/post";
 	import Tweet from "$lib/components/tweet";
 	import type { PostId } from "$lib/models/post";
-	import { fade } from "svelte/transition";
 
 	export let data;
 
@@ -27,15 +26,13 @@
 {/each}
 
 {#if loading}
-	<div in:fade class="loading">
-		<LoadingIcon />
+	<div class="loading">
+		<Loading />
 	</div>
 {/if}
 
 <style lang="scss">
 	.loading {
-		display: flex;
-		justify-content: center;
 		padding: 2rem;
 	}
 </style>
