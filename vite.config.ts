@@ -14,13 +14,6 @@ export default defineConfig({
 					skipWaiting: true,
 					runtimeCaching: [
 						{
-							urlPattern: ({ url }) => /^\/_app\/immutable/.test(url.pathname),
-							handler: "CacheFirst",
-							options: {
-								cacheName: "immutable",
-							},
-						},
-						{
 							urlPattern: ({ url }) => !/^\/_app\/immutable/.test(url.pathname),
 							handler: "NetworkFirst",
 							options: {
