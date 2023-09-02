@@ -1,6 +1,7 @@
-import type { User } from "$lib/models/user.js";
+import type { PostId } from "$lib/models/post";
+import type { User } from "$lib/models/user";
 import { error } from "@sveltejs/kit";
-import { getCache } from "./cache";
+import { getPostsCache, getUserCache } from "./cache";
 
 export const load = ({ params, fetch, depends }) => {
 	depends("user:id");
@@ -14,9 +15,16 @@ export const load = ({ params, fetch, depends }) => {
 
 	return {
 		streamed: {
-			user: getCache(
+			user: getUserCache(
 				username,
-				() => fetch(`/api/user/${match[1]}`).then((response) => response.json()) as Promise<User>
+				() => fetch(`/api/user/${username}`).then((response) => response.json()) as Promise<User>
+			),
+			posts: getPostsCache(
+				username,
+				() =>
+					fetch(`/api/post/user/${username}`).then((response) => response.json()) as Promise<
+						PostId[]
+					>
 			),
 		},
 	};

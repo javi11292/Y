@@ -1,4 +1,5 @@
 import type { Post } from "$lib/models/post";
+import type { Filter } from "mongodb";
 import { ObjectId } from "mongodb";
 import { client, database } from ".";
 import { getUser, collection as userCollection } from "./user";
@@ -6,13 +7,20 @@ import { getUser, collection as userCollection } from "./user";
 const PAGE_SIZE = 20;
 
 export const collection = database.collection<Post>("posts");
+collection.createIndex({ username: 1 });
 
-export const getPosts = (id?: string) => {
-	return collection
-		.find(id ? { _id: { $lt: new ObjectId(id) } } : {})
-		.sort({ _id: -1 })
-		.limit(PAGE_SIZE)
-		.toArray();
+export const getPosts = (id?: string, username?: string) => {
+	const filter: Filter<Post> = {};
+
+	if (id) {
+		filter._id = { $lt: new ObjectId(id) };
+	}
+
+	if (username) {
+		filter.author = username;
+	}
+
+	return collection.find(filter).sort({ _id: -1 }).limit(PAGE_SIZE).toArray();
 };
 
 export const likePost = async (id: string, username: string) => {

@@ -3,23 +3,30 @@
 <script lang="ts">
 	import { page } from "$app/stores";
 	import Icon from "$lib/commons/components/icon";
-	import { get, post } from "$lib/commons/utils/fetch";
+	import { post } from "$lib/commons/utils/fetch";
 	import type { PostId } from "$lib/models/post";
+	import Loading from "../loading";
 
 	export let tweet: PostId;
-	export let onIntersection: null | ((response: Promise<PostId[]>) => void);
+	export let onIntersection: null | ((id: string) => Promise<void>);
+
+	let loading = false;
 
 	const last = (node: HTMLElement) => {
 		if (!onIntersection) {
 			return;
 		}
 
-		const observer = new IntersectionObserver(([{ isIntersecting }]) => {
+		let callback = onIntersection;
+
+		const observer = new IntersectionObserver(async ([{ isIntersecting }]) => {
 			if (isIntersecting) {
-				onIntersection?.(get(`/api/post/${tweet._id}`) as Promise<PostId[]>);
+				loading = true;
+				await callback(tweet._id);
 				observer.disconnect();
+				loading = false;
 			}
-		}) as IntersectionObserver;
+		});
 
 		observer.observe(node);
 		return {
@@ -52,8 +59,7 @@
 
 	$: like = $page.data.likedPosts.has(tweet._id);
 
-	const handleLikeClick = async () => {
-		await post("/api/post/like", { id: tweet._id });
+	const toggleLike = () => {
 		tweet = { ...tweet, likes: tweet.likes + (like ? -1 : 1) };
 
 		if (!like) {
@@ -61,6 +67,11 @@
 		} else {
 			$page.data.likedPosts.delete(tweet._id);
 		}
+	};
+
+	const handleLikeClick = () => {
+		toggleLike();
+		post("/api/post/like", { id: tweet._id }).catch(toggleLike);
 	};
 </script>
 
@@ -84,9 +95,19 @@
 	</div>
 </div>
 
+{#if loading}
+	<div class="loading">
+		<Loading />
+	</div>
+{/if}
+
 <style lang="scss">
 	@use "$lib/commons/theme";
 	@use "$lib/commons/classes";
+
+	.loading {
+		padding: 2rem;
+	}
 
 	a {
 		color: theme.$colorPrimary;

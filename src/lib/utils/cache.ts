@@ -5,7 +5,9 @@ type Id = string | number | symbol;
 export const setupCache = <T>() => {
 	if (!browser) {
 		return {
-			bustCache: () => null,
+			bustCache: () => {
+				return;
+			},
 			getCache: (_: Id, callback: () => Promise<T>) => callback(),
 		};
 	}
@@ -13,7 +15,9 @@ export const setupCache = <T>() => {
 	const cache: Record<Id, Promise<T>> = {};
 
 	return {
-		bustCache: (id: Id) => delete cache[id],
+		bustCache: (id: Id) => {
+			delete cache[id];
+		},
 		getCache: (id: Id, callback: () => Promise<T>) => {
 			if (!cache[id]) {
 				cache[id] = callback();
