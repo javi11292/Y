@@ -17,7 +17,7 @@ export default defineConfig({
 							urlPattern: ({ url }) => /^\/_app\/immutable/.test(url.pathname),
 							handler: "CacheFirst",
 							options: {
-								cacheName: "cache",
+								cacheName: "immutable",
 							},
 						},
 						{
