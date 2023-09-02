@@ -3,46 +3,51 @@
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
 	import Back from "$lib/components/back";
+	import type { User } from "$lib/models/user";
 
 	export let data;
 
-	$: user = data.user;
+	let user: undefined | User;
+
+	$: data.streamed.user.then((value) => (user = value));
 	let loading = false;
 
 	const handleFollowClick = async () => {
 		loading = true;
-		await post("/api/follow", { id: user.username });
+		await post("/api/follow", { id: user?.username });
 		await Promise.all([invalidate("user"), invalidate("user:id")]);
 		loading = false;
 	};
 </script>
 
-<div class="buttons">
-	<Back />
-	<div>
-		{#if user.username !== data.username}
-			<Button
-				{loading}
-				variant="contained"
-				size="sm"
-				color="neutral"
-				disableUpperCase
-				on:click={handleFollowClick}
-			>
-				{data.following.has(user.username) ? "Dejar de seguir" : "Seguir"}
-			</Button>
-		{/if}
+{#if user}
+	<div class="buttons">
+		<Back />
+		<div>
+			{#if user.username !== data.username}
+				<Button
+					{loading}
+					variant="contained"
+					size="sm"
+					color="neutral"
+					disableUpperCase
+					on:click={handleFollowClick}
+				>
+					{data.following.has(user.username) ? "Dejar de seguir" : "Seguir"}
+				</Button>
+			{/if}
+		</div>
 	</div>
-</div>
 
-<div class="container">
-	@{user.username}
+	<div class="container">
+		@{user.username}
 
-	<div class="followers">
-		{user.following.length} <span>Siguiendo</span>
-		{user.followers} <span>Seguidores</span>
+		<div class="followers">
+			{user.following.length} <span>Siguiendo</span>
+			{user.followers} <span>Seguidores</span>
+		</div>
 	</div>
-</div>
+{/if}
 
 <style lang="scss">
 	@use "$lib/commons/theme";

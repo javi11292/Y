@@ -10,6 +10,8 @@ export const load = ({ params, fetch, depends }) => {
 	}
 
 	return {
-		user: fetch(`/api/user/${match[1]}`).then((response) => response.json()) as Promise<UserId>,
+		streamed: {
+			user: fetch(`/api/user/${match[1]}`).then((response) => response.json()) as Promise<UserId>,
+		},
 	};
 };
