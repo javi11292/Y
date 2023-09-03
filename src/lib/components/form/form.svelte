@@ -51,11 +51,9 @@
 		/>
 	{/each}
 
-	<div class="button">
-		<Button bind:element={elements[elements.length]} {loading} on:click={handleClick}>
-			Continuar
-		</Button>
-	</div>
+	<Button bind:element={elements[elements.length]} {loading} on:click={handleClick}>
+		Continuar
+	</Button>
 
 	<div class="link">
 		<slot />
@@ -73,11 +71,6 @@
 
 	.title {
 		font-size: 2rem;
-	}
-
-	.button {
-		display: contents;
-		text-align: center;
 	}
 
 	.link {

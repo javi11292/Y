@@ -110,6 +110,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: start;
+		padding: 1rem;
 
 		> :global(:nth-child(1)) {
 			margin: -0.5rem;

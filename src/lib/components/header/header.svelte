@@ -4,7 +4,6 @@
 
 <style lang="scss">
 	.header {
-		padding: 1rem;
 		position: sticky;
 		top: 0;
 		z-index: 1;
