@@ -5,6 +5,7 @@
 	import Button from "$lib/commons/components/button";
 	import { get, post } from "$lib/commons/utils/fetch";
 	import Back from "$lib/components/back";
+	import Header from "$lib/components/header";
 	import Loading from "$lib/components/loading";
 	import Tweet from "$lib/components/tweet";
 	import type { PostId } from "$lib/models/post";
@@ -38,23 +39,25 @@
 
 {#if user}
 	<div in:fade class="container">
-		<div class="buttons">
-			<Back />
-			<div>
-				{#if user.username !== data.username}
-					<Button
-						{loading}
-						variant="contained"
-						size="sm"
-						color="neutral"
-						disableUpperCase
-						on:click={handleFollowClick}
-					>
-						{data.following.has(user.username) ? "Dejar de seguir" : "Seguir"}
-					</Button>
-				{/if}
+		<Header>
+			<div class="buttons">
+				<Back />
+				<div>
+					{#if user.username !== data.username}
+						<Button
+							{loading}
+							variant="contained"
+							size="sm"
+							color="neutral"
+							disableUpperCase
+							on:click={handleFollowClick}
+						>
+							{data.following.has(user.username) ? "Dejar de seguir" : "Seguir"}
+						</Button>
+					{/if}
+				</div>
 			</div>
-		</div>
+		</Header>
 
 		<div class="content">
 			@{user.username}
@@ -107,12 +110,6 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: start;
-		padding: 1rem;
-		position: sticky;
-		top: 0;
-		z-index: 1;
-		background: rgba(0, 0, 0, 0.65);
-		backdrop-filter: blur(12px);
 
 		> :global(:nth-child(1)) {
 			margin: -0.5rem;

@@ -7,7 +7,7 @@ import { getUser, collection as userCollection } from "./user";
 const PAGE_SIZE = 20;
 
 export const collection = database.collection<Post>("posts");
-collection.createIndex({ username: 1 });
+collection.createIndex({ author: 1 });
 
 export const getPosts = (id?: string, username?: string) => {
 	const filter: Filter<Post> = {};
