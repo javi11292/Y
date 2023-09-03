@@ -64,7 +64,6 @@
 
 	.container {
 		position: relative;
-		overflow: hidden;
 	}
 
 	.tabs {
@@ -77,6 +76,7 @@
 	.content {
 		display: grid;
 		grid-template-areas: "content";
+		overflow: hidden;
 
 		& > * {
 			grid-area: content;
