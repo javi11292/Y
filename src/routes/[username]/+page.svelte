@@ -97,7 +97,7 @@
 		flex-direction: column;
 		min-height: 100%;
 
-		> :last-child {
+		> :global(:last-child) {
 			flex: 1;
 		}
 	}
