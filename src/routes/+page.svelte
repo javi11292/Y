@@ -3,12 +3,8 @@
 	import Header from "$lib/components/header";
 	import Post from "$lib/components/post";
 	import { crossfade, fly } from "svelte/transition";
-	import Tab1 from "./tab1.svelte";
-
-	enum tabs {
-		tab1,
-		tab2,
-	}
+	import { tabs } from "./constants";
+	import Tab from "./tab.svelte";
 
 	const handleClick = (tab: number) => {
 		if (active < tab) {
@@ -53,7 +49,7 @@
 				in:fly={{ x: `${100 * direction}%`, opacity: 1 }}
 				out:fly={{ x: `${-100 * direction}%`, opacity: 1 }}
 			>
-				<Tab1 />
+				<Tab {active} />
 			</div>
 		{/key}
 	</div>

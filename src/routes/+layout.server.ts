@@ -22,5 +22,8 @@ export const load = async ({ fetch, depends, locals }) => {
 		likedPosts: new Set(user.likedPosts),
 		following: new Set(user.following),
 		posts: fetch("/api/post/all").then((response) => response.json() as Promise<PostId[]>),
+		followingPosts: fetch("/api/post/following").then(
+			(response) => response.json() as Promise<PostId[]>
+		),
 	};
 };

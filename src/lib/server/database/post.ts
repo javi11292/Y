@@ -23,6 +23,39 @@ export const getPosts = (id?: string, username?: string) => {
 	return collection.find(filter).sort({ _id: -1 }).limit(PAGE_SIZE).toArray();
 };
 
+export const getFollowingPosts = (username: string, id?: string) => {
+	return userCollection
+		.aggregate([
+			{ $match: { username } },
+			{
+				$lookup: {
+					from: "posts",
+					localField: "following",
+					foreignField: "author",
+					as: "following",
+					pipeline: [
+						{
+							$match: {
+								_id: { $lt: new ObjectId(id) },
+							},
+						},
+					],
+				},
+			},
+			{
+				$unwind: "$following",
+			},
+			{
+				$replaceRoot: {
+					newRoot: "$following",
+				},
+			},
+		])
+		.sort({ _id: -1 })
+		.limit(PAGE_SIZE)
+		.toArray();
+};
+
 export const likePost = async (id: string, username: string) => {
 	const session = client.startSession();
 	const user = await getUser(username);

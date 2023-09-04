@@ -3,13 +3,23 @@
 	import { get } from "$lib/commons/utils/fetch";
 	import Tweet from "$lib/components/tweet";
 	import type { PostId } from "$lib/models/post";
+	import { tabs } from "./constants";
+
+	export let active: number;
 
 	let tweets: PostId[] = [];
 
-	$: tweets = $page.data.posts;
+	$: {
+		if (active === tabs.tab1) {
+			tweets = $page.data.posts;
+		} else {
+			tweets = $page.data.followingPosts;
+		}
+	}
 
 	const handleIntersection = async (id: string) => {
-		const response = (await get(`/api/post/all/${id}`)) as PostId[];
+		const api = active === tabs.tab1 ? "all" : "following";
+		const response = (await get(`/api/post/${api}/${id}`)) as PostId[];
 		tweets.push(...response);
 		tweets = tweets;
 	};
