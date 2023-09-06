@@ -1,4 +1,6 @@
 import { connect } from "$lib/server/database";
+import { getUser } from "$lib/server/database/user";
+import { getSessionToken } from "$lib/server/utils/session";
 import { minify } from "html-minifier";
 
 const minifyOptions = {
@@ -12,15 +14,21 @@ const minifyOptions = {
 	removeStyleLinkTypeAttributes: true,
 };
 
-const promise = connect();
+const databaseConnection = connect();
 
 export const handle = async ({ event, resolve }) => {
+	await databaseConnection;
+	const { locals, url, cookies } = event;
+
+	const username = getSessionToken(cookies);
+
+	if (username) {
+		locals.user = await getUser(username).catch();
+	}
+
+	locals.pathname = url.pathname;
+
 	let page = "";
-	await promise;
-
-	const { locals, url } = event;
-
-	locals.login = url.pathname === "/login" || url.pathname === "/register";
 
 	return resolve(event, {
 		transformPageChunk: ({ html, done }) => {

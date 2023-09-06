@@ -1,8 +1,10 @@
+import type { User } from "$lib/models/user";
+
 declare global {
 	namespace App {
 		interface Locals {
-			username: string;
-			login: boolean;
+			user: User;
+			pathname: string;
 		}
 	}
 }

@@ -14,7 +14,7 @@ export const POST = withSession(async ({ request, locals }) => {
 		throw error(400, `Longitud máxima: ${MAX_LENGTH}`);
 	}
 
-	await addPost(content, locals.username);
+	await addPost(content, locals.user.username);
 
 	return new Response();
 });

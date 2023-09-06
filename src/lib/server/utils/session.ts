@@ -31,14 +31,10 @@ export const removeSessionToken = (cookies: Cookies) => {
 
 export const withSession =
 	(callback: RequestHandler): RequestHandler =>
-	(props) => {
-		const username = getSessionToken(props.cookies);
-
-		if (!username) {
+	(event) => {
+		if (!event.locals.user) {
 			throw error(400, "Usuario requerido");
 		}
 
-		props.locals.username = username;
-
-		return callback(props);
+		return callback(event);
 	};
