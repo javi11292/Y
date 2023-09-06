@@ -9,7 +9,7 @@ export const POST = withSession(async ({ request, locals }) => {
 		throw error(400, "ID requerida");
 	}
 
-	await likePost(id, locals.user.username);
+	await likePost(id, locals.user);
 
 	return new Response();
 });

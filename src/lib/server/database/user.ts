@@ -16,10 +16,9 @@ export const getUser = async (username: string) => {
 	return user as unknown as UserId;
 };
 
-export const followUser = async (username: string, followUsername: string) => {
+export const followUser = async (user: User, followUsername: string) => {
 	const session = client.startSession();
 
-	const user = await getUser(username);
 	const follow = !user.following.includes(followUsername);
 	const operator = follow ? "$push" : "$pull";
 
@@ -31,7 +30,7 @@ export const followUser = async (username: string, followUsername: string) => {
 			{ session }
 		);
 		await collection.updateOne(
-			{ username },
+			{ username: user.username },
 			{ [operator]: { following: followUsername } },
 			{ session }
 		);

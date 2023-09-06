@@ -1,8 +1,9 @@
 import type { Post } from "$lib/models/post";
+import type { User } from "$lib/models/user";
 import type { Filter } from "mongodb";
 import { ObjectId } from "mongodb";
 import { client, database } from ".";
-import { getUser, collection as userCollection } from "./user";
+import { collection as userCollection } from "./user";
 
 const PAGE_SIZE = 20;
 
@@ -56,9 +57,8 @@ export const getFollowingPosts = (username: string, id?: string) => {
 		.toArray();
 };
 
-export const likePost = async (id: string, username: string) => {
+export const likePost = async (id: string, user: User) => {
 	const session = client.startSession();
-	const user = await getUser(username);
 
 	const like = !user.likedPosts.includes(id);
 	const operator = like ? "$push" : "$pull";
@@ -69,7 +69,11 @@ export const likePost = async (id: string, username: string) => {
 			{ $inc: { likes: like ? 1 : -1 } },
 			{ session }
 		);
-		await userCollection.updateOne({ username }, { [operator]: { likedPosts: id } }, { session });
+		await userCollection.updateOne(
+			{ username: user.username },
+			{ [operator]: { likedPosts: id } },
+			{ session }
+		);
 		await session.commitTransaction();
 	} catch (error) {
 		console.error(error);
