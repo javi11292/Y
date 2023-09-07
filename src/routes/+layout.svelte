@@ -2,7 +2,7 @@
 	import { browser } from "$app/environment";
 	import Snackbar from "$lib/commons/components/snackbar";
 	import "$lib/commons/utils/layout";
-	import { scroll } from "$lib/stores";
+	import { posts as _posts, scroll } from "$lib/stores";
 	import { fly } from "svelte/transition";
 
 	export let data;
@@ -18,6 +18,18 @@
 		observer.observe(node);
 		return { destroy: () => observer.disconnect() };
 	};
+
+	const updatePosts = ({ posts }: typeof data) => {
+		if (browser) {
+			$_posts = {
+				elements: { ...posts.elements, ...$_posts.elements },
+				all: posts.all,
+				following: posts.following,
+			};
+		}
+	};
+
+	$: updatePosts(data);
 
 	$: {
 		if (browser) {

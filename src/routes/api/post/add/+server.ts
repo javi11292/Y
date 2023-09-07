@@ -1,10 +1,10 @@
 import { MAX_LENGTH } from "$lib/constants";
 import { addPost } from "$lib/server/database/post";
 import { withSession } from "$lib/server/utils/session";
-import { error } from "@sveltejs/kit";
+import { error, json } from "@sveltejs/kit";
 
 export const POST = withSession(async ({ request, locals }) => {
-	const { content } = await request.json();
+	const { content, thread } = await request.json();
 
 	if (!content) {
 		throw error(400, "Contenido requerido");
@@ -14,7 +14,5 @@ export const POST = withSession(async ({ request, locals }) => {
 		throw error(400, `Longitud máxima: ${MAX_LENGTH}`);
 	}
 
-	await addPost(content, locals.user.username);
-
-	return new Response();
+	return json(await addPost({ content, author: locals.user.username, thread }));
 });

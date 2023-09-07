@@ -1,4 +1,4 @@
-import type { Post } from "$lib/models/post";
+import type { Post, PostId } from "$lib/models/post";
 import type { User } from "$lib/models/user";
 import type { Filter } from "mongodb";
 import { ObjectId } from "mongodb";
@@ -8,10 +8,10 @@ import { collection as userCollection } from "./user";
 const PAGE_SIZE = 20;
 
 export const collection = database.collection<Post>("posts");
-collection.createIndex({ author: 1 });
+collection.createIndex({ author: 1, replyId: 1 });
 
 export const getPosts = (id?: string, username?: string) => {
-	const filter: Filter<Post> = {};
+	const filter: Filter<Post> = { thread: { $exists: false } };
 
 	if (id) {
 		filter._id = { $lt: new ObjectId(id) };
@@ -38,6 +38,7 @@ export const getFollowingPosts = (username: string, id?: string) => {
 						{
 							$match: {
 								_id: { $lt: new ObjectId(id) },
+								thread: { $exists: false },
 							},
 						},
 					],
@@ -83,5 +84,49 @@ export const likePost = async (id: string, user: User) => {
 	}
 };
 
-export const addPost = (content: string, author: string) =>
-	collection.insertOne({ content, author, date: new Date(), likes: 0 });
+type AddPost = (args: {
+	content: string;
+	author: string;
+	thread?: string;
+}) => Promise<PostId | void>;
+
+export const addPost: AddPost = async ({ content, author, thread }) => {
+	let _id = "";
+	const session = client.startSession();
+
+	const document: Post = {
+		content,
+		author,
+		date: new Date(),
+		likes: 0,
+		replies: 0,
+	};
+
+	if (thread) {
+		document.thread = thread;
+	}
+
+	try {
+		session.startTransaction();
+		const { insertedId } = await collection.insertOne(document, { session });
+		_id = insertedId.toString();
+
+		await collection.updateOne(
+			{ _id: new ObjectId(thread) },
+			{ $inc: { replies: 1 } },
+			{ session }
+		);
+		await session.commitTransaction();
+	} catch (error) {
+		console.error(error);
+		await session.abortTransaction();
+	} finally {
+		await session.endSession();
+	}
+
+	if (!_id) {
+		return;
+	}
+
+	return { ...document, _id };
+};

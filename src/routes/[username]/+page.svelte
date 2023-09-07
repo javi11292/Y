@@ -1,15 +1,16 @@
-<svelte:options />
-
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import { invalidate } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
 	import { get, post } from "$lib/commons/utils/fetch";
 	import Back from "$lib/components/back";
 	import Header from "$lib/components/header";
 	import Loading from "$lib/components/loading";
+	import Post from "$lib/components/post";
 	import Tweet from "$lib/components/tweet";
 	import type { PostId } from "$lib/models/post";
 	import type { User } from "$lib/models/user";
+	import { posts } from "$lib/stores";
 	import { fade } from "svelte/transition";
 	import { bustUserCache } from "./cache";
 
@@ -19,8 +20,21 @@
 	let user: User;
 	let tweets: PostId[] = [];
 
+	const updatePosts = () => {
+		if (browser) {
+			tweets.forEach((tweet) => {
+				$posts.elements[tweet._id] = $posts.elements[tweet._id] || tweet;
+			});
+
+			$posts = { ...$posts };
+		}
+	};
+
 	$: data.streamed.user.then((value) => (user = value));
-	$: data.streamed.posts.then((value) => (tweets = value));
+	$: data.streamed.posts.then((value) => {
+		tweets = value;
+		updatePosts();
+	});
 
 	const handleFollowClick = async () => {
 		loading = true;
@@ -32,10 +46,14 @@
 
 	const handleIntersection = async (id: string) => {
 		const response = (await get(`/api/post/user/${user.username}/${id}`)) as PostId[];
-		tweets.push(...response);
-		tweets = tweets;
+		response.forEach((tweet) => {
+			$posts.elements[tweet._id] = tweet;
+		});
+		tweets = [...tweets, ...response];
 	};
 </script>
+
+<Post />
 
 {#if user}
 	<div in:fade class="container">
@@ -75,7 +93,7 @@
 		{:then}
 			{#each tweets as tweet, index}
 				<Tweet
-					bind:tweet
+					id={tweet._id}
 					onIntersection={index === tweets.length - 1 ? handleIntersection : null}
 				/>
 			{/each}

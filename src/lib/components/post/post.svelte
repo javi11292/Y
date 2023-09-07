@@ -1,22 +1,27 @@
 <script lang="ts">
-	import { afterNavigate, goto, invalidate } from "$app/navigation";
+	import { afterNavigate, goto } from "$app/navigation";
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
 	import { portal } from "$lib/commons/utils/portal";
 	import Back from "$lib/components/back";
 	import { MAX_LENGTH } from "$lib/constants";
-	import { scroll } from "$lib/stores";
+	import type { PostId } from "$lib/models/post";
+	import { posts, scroll } from "$lib/stores";
 	import { showError } from "$lib/utils/message";
 	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
+	import Tweet from "../tweet";
 
 	let open = false;
 	let loading = false;
 	let content = "";
 	let input: HTMLDivElement;
+	let tweet: PostId | undefined;
 
 	const handleClose = () => {
 		open = location.hash === "#post";
+		tweet = history.state.tweet;
+
 		if (!open) {
 			content = "";
 			$scroll = true;
@@ -41,8 +46,14 @@
 		loading = true;
 
 		try {
-			await post("/api/post/add", { content });
-			await invalidate("posts");
+			const response = (await post("/api/post/add", { content, thread: tweet?._id })) as PostId;
+			const nextTweet = tweet ? { ...tweet, replies: tweet.replies + 1 } : response;
+
+			$posts.elements[nextTweet._id] = nextTweet;
+			if (!tweet) {
+				$posts.all.unshift(nextTweet._id);
+			}
+			$posts = { ...$posts };
 		} catch (error) {
 			showError(error);
 		}
@@ -89,12 +100,17 @@
 			</Button>
 		</div>
 
+		{#if tweet}
+			<Tweet id={tweet._id} thread />
+		{/if}
+
 		<div
 			contenteditable
 			class="editable"
+			class:thread={tweet}
 			bind:this={input}
 			bind:textContent={content}
-			placeholder="¿Que está pasando?"
+			placeholder={tweet ? "Envía tu respuesta" : "¿Que está pasando?"}
 		/>
 
 		<hr />
@@ -210,6 +226,10 @@
 		max-height: 50vh;
 		overflow-y: auto;
 		cursor: text;
+
+		&.thread {
+			margin-top: 2rem;
+		}
 
 		&:empty:before {
 			content: attr(placeholder);
