@@ -149,7 +149,7 @@
 		padding: 1rem 1rem 0;
 		cursor: pointer;
 
-		@include classes.hover(0.05);
+		@include classes.hover(0.03);
 	}
 
 	.meta {
