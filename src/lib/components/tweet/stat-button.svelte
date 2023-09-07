@@ -35,6 +35,7 @@
 		display: flex;
 		align-items: center;
 		gap: 0.25rem;
+		padding-right: 0.5rem;
 		cursor: pointer;
 
 		@media (hover: hover) {

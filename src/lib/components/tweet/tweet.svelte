@@ -81,17 +81,26 @@
 		}
 	};
 
-	const handleLikeClick = () => {
+	const handleLikeClick = (event: Event) => {
+		event.stopPropagation();
 		toggleLike();
 		post("/api/post/like", { id }).catch(toggleLike);
 	};
 
-	const handleReplyClick = () => {
+	const handleReplyClick = (event: Event) => {
+		event.stopPropagation();
 		goto("#post", { noScroll: true, state: { tweet } });
 	};
 </script>
 
-<div use:last={onIntersection} class:post={!thread}>
+<div
+	use:last={onIntersection}
+	class:post={!thread}
+	on:keydown
+	on:click={() => goto(`/post/${tweet._id}`)}
+	role="button"
+	tabindex="0"
+>
 	<div class="meta">
 		<a class="author" href={`/@${tweet.author}`}>@{tweet.author}</a>
 		<span class="date">{getDate(tweet.date)}</span>
@@ -118,6 +127,7 @@
 {/if}
 
 <style lang="scss">
+	@use "$lib/commons/classes";
 	@use "$lib/commons/theme";
 
 	.loading {
@@ -127,11 +137,19 @@
 	a {
 		color: theme.$colorPrimary;
 		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 
 	.post {
+		@extend %root;
 		border-bottom: 1px solid theme.$colorNeutralDark;
 		padding: 1rem 1rem 0;
+		cursor: pointer;
+
+		@include classes.hover(0.05);
 	}
 
 	.meta {
@@ -152,5 +170,6 @@
 		color: theme.$colorNeutral;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
+		justify-items: start;
 	}
 </style>
