@@ -1,0 +1,28 @@
+---
+import "$lib/commons/assets/global.scss";
+import { ViewTransitions } from "astro:transitions";
+---
+
+<script>
+	if (import.meta.env.PROD && navigator.serviceWorker) {
+		navigator.serviceWorker.register("/service-worker.js");
+	}
+</script>
+
+<html lang="en">
+	<head>
+		<title>TEMPLATE</title>
+		<meta name="description" content="TEMPLATE" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/192x192.png" />
+		<link rel="manifest" href="/manifest.json" />
+		<ViewTransitions />
+	</head>
+
+	<body>
+		<slot />
+	</body>
+</html>
