@@ -1,8 +1,15 @@
 ---
+import Form from "$lib/components/form/form.astro";
 import Layout from "$lib/layouts/layout.astro";
-import Login from "./login.svelte";
+
+const fields = [
+	{ name: "username", label: "Usuario" },
+	{ name: "password", label: "Contraseña", type: "password" },
+];
 ---
 
 <Layout>
-	<Login />
+	<Form title="Login" {fields}>
+		¿No tienes cuenta? <a href="/register">Regístrate</a>
+	</Form>
 </Layout>

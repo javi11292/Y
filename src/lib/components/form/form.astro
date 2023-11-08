@@ -1,0 +1,47 @@
+---
+import Fields from "./fields.svelte";
+
+interface Props {
+	title: string;
+	fields: { name: string }[];
+}
+
+const { title, fields } = Astro.props;
+---
+
+<div class="form">
+	<div class="title">{title}</div>
+
+	<Fields client:idle {fields} />
+
+	<div class="link">
+		<slot />
+	</div>
+</div>
+
+<style lang="scss">
+	@use "src/lib/commons/theme";
+
+	.form {
+		display: grid;
+		gap: 0.5rem;
+		padding: 1rem;
+	}
+
+	.title {
+		font-size: 2rem;
+	}
+
+	.link {
+		margin-top: 2rem;
+		color: theme.$colorNeutral;
+
+		:global(a) {
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+</style>
