@@ -3,16 +3,17 @@ import Fields from "./fields.svelte";
 
 interface Props {
 	title: string;
+	api: "login" | "register";
 	fields: { name: string }[];
 }
 
-const { title, fields } = Astro.props;
+const { title, fields, api } = Astro.props;
 ---
 
 <div class="form">
 	<div class="title">{title}</div>
 
-	<Fields client:idle {fields} />
+	<Fields client:idle {fields} {api} />
 
 	<div class="link">
 		<slot />

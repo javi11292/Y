@@ -2,10 +2,11 @@
 	import Button from "$lib/commons/components/button";
 	import Input from "$lib/commons/components/input";
 	import { addError } from "$lib/commons/components/snackbar";
-	import { NetworkError, post } from "$lib/commons/utils/fetch";
+	import { post } from "$lib/commons/utils/fetch";
 	import type { ComponentProps } from "svelte";
 
 	export let fields: ({ name: string } & ComponentProps<Input>)[];
+	export let api: "login" | "register";
 
 	let values: Record<string, string> = {};
 	let elements: HTMLInputElement[] = [];
@@ -15,9 +16,13 @@
 		loading = true;
 
 		try {
-			await post("/api/login", { username: values.username, password: values.password });
+			if (api === "register" && values.password !== values.confirmPassword) {
+				throw new Error("Las contraseñas no coinciden");
+			}
+
+			await post(`/api/${api}`, { username: values.username, password: values.password });
 		} catch (error) {
-			if (error instanceof NetworkError) {
+			if (error instanceof Error) {
 				addError(error.message);
 			}
 		}

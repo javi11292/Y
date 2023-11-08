@@ -1,0 +1,16 @@
+---
+import Form from "$lib/components/form/form.astro";
+import Layout from "$lib/layouts/layout.astro";
+
+const fields = [
+	{ name: "username", label: "Usuario" },
+	{ name: "password", label: "Contraseña", type: "password" },
+	{ name: "confirmPassword", label: "Repite la contraseña", type: "password" },
+];
+---
+
+<Layout>
+	<Form title="Registro" {fields} api="register">
+		¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
+	</Form>
+</Layout>

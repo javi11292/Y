@@ -11,7 +11,12 @@ import Snackbar from "$lib/commons/components/snackbar";
 </script>
 
 <style lang="scss">
+	html,
 	body {
+		min-height: 100vh;
+	}
+
+	.body {
 		position: relative;
 		left: 50%;
 		translate: -50%;
@@ -33,7 +38,9 @@ import Snackbar from "$lib/commons/components/snackbar";
 	</head>
 
 	<body>
-		<slot />
+		<div class="body">
+			<slot />
+		</div>
 		<Snackbar client:idle />
 	</body>
 </html>
