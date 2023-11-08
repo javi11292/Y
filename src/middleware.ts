@@ -21,10 +21,10 @@ const redirectUser = defineMiddleware((context, next) => {
 	return next();
 });
 
-export const addUser = defineMiddleware((context, next) => {
+export const addUser = defineMiddleware(async (context, next) => {
 	const { locals, cookies } = context;
 
-	const username = getSessionToken(cookies);
+	const username = await getSessionToken(cookies);
 
 	if (username) {
 		locals.user = true;
