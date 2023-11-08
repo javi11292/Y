@@ -7,7 +7,7 @@ const workbox = {
 	name: "workbox",
 	writeBundle: async () => {
 		await generateSW({
-			swDest: "dist/client/service-worker.js",
+			swDest: "dist/service-worker.js",
 			sourcemap: false,
 			skipWaiting: true,
 			runtimeCaching: [
