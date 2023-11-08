@@ -1,6 +1,7 @@
 ---
 import "$lib/commons/assets/global.scss";
 import { ViewTransitions } from "astro:transitions";
+import Snackbar from "$lib/commons/components/snackbar";
 ---
 
 <script>
@@ -8,6 +9,15 @@ import { ViewTransitions } from "astro:transitions";
 		navigator.serviceWorker.register("/service-worker.js");
 	}
 </script>
+
+<style lang="scss">
+	body {
+		position: relative;
+		left: 50%;
+		translate: -50%;
+		max-width: 640px;
+	}
+</style>
 
 <html lang="en">
 	<head>
@@ -24,5 +34,6 @@ import { ViewTransitions } from "astro:transitions";
 
 	<body>
 		<slot />
+		<Snackbar client:idle />
 	</body>
 </html>
