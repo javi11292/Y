@@ -2,11 +2,17 @@
 import "$lib/commons/assets/global.scss";
 import { ViewTransitions } from "astro:transitions";
 import Snackbar from "$lib/commons/components/snackbar";
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
-		<title>Y</title>
+		<title>{title}</title>
 		<meta name="description" content="Y" />
 		<meta name="theme-color" content="#000000" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
