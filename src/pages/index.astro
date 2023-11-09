@@ -1,5 +1,43 @@
 ---
+import Header from "$lib/components/header/header.astro";
 import Layout from "$lib/layouts/layout.astro";
+import Content from "./_home/content.svelte";
+import Tabs from "./_home/tabs.svelte";
 ---
 
-<Layout>HOME</Layout>
+<Layout>
+	<div class="container">
+		<Header>
+			<div class="tabs"><Tabs client:idle /></div>
+		</Header>
+
+		<div class="content">
+			<Content client:idle />
+		</div>
+	</div>
+</Layout>
+
+<style lang="scss">
+	@use "$lib/commons/theme";
+
+	.container {
+		position: relative;
+	}
+
+	.tabs {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		border-bottom: 1px solid theme.$colorNeutralDark;
+		position: relative;
+	}
+
+	.content {
+		display: grid;
+		grid-template-areas: "content";
+		overflow: hidden;
+
+		:global(> astro-island > *) {
+			grid-area: content;
+		}
+	}
+</style>
