@@ -39,7 +39,8 @@
 		bottom: 0;
 		translate: -50%;
 		left: 50%;
-		width: 30%;
-		border-bottom: 5px solid theme.$colorPrimary;
+		width: 25%;
+		border-bottom: 4px solid theme.$colorPrimary;
+		border-radius: 2px;
 	}
 </style>
