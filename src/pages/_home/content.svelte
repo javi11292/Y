@@ -7,7 +7,5 @@
 	<div
 		in:fly={{ x: `${100 * $direction}%`, opacity: 1 }}
 		out:fly={{ x: `${-100 * $direction}%`, opacity: 1 }}
-	>
-		{$active}
-	</div>
+	/>
 {/key}

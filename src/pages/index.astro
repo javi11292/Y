@@ -1,5 +1,6 @@
 ---
-import Header from "$lib/components/header/header.astro";
+import Compose from "$lib/components/compose";
+import Header from "$lib/components/header";
 import Layout from "$lib/layouts/layout.astro";
 import Content from "./_home/content.svelte";
 import Tabs from "./_home/tabs.svelte";
@@ -15,6 +16,8 @@ import Tabs from "./_home/tabs.svelte";
 			<Content client:idle />
 		</div>
 	</div>
+
+	<Compose client:idle />
 </Layout>
 
 <style lang="scss">
