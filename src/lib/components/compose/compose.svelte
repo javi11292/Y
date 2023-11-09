@@ -4,6 +4,7 @@
 	import { MAX_LENGTH } from "$lib/constants";
 	import { posts } from "$lib/stores";
 	import type { Post } from "@prisma/client";
+	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
 
 	let open = false;
@@ -12,6 +13,14 @@
 	let input: HTMLDivElement;
 
 	$: amount = Math.max(1 - content.length / MAX_LENGTH, 0);
+
+	const handlePopState = () => {
+		open = location.hash === "#post";
+
+		if (!open) {
+			content = "";
+		}
+	};
 
 	const handleClick = async () => {
 		loading = true;
@@ -27,13 +36,26 @@
 		}
 
 		loading = false;
-		open = false;
+		closeModal();
 	};
 
 	const openModal = () => {
-		content = "";
-		open = true;
+		location.hash = "post";
 	};
+
+	const closeModal = () => {
+		location.hash = "";
+		history.replaceState(null, "", location.pathname);
+	};
+
+	onMount(() => {
+		handlePopState();
+		addEventListener("popstate", handlePopState);
+
+		return () => {
+			removeEventListener("popstate", handlePopState);
+		};
+	});
 </script>
 
 <div class="container">
@@ -48,7 +70,7 @@
 	<div class="container">
 		<div class="post" transition:fly={{ y: "100%" }} on:introend={() => input.focus()}>
 			<div class="actions">
-				<Button icon="arrow-right" mirror on:click={() => (open = false)} />
+				<Button icon="arrow-right" mirror on:click={closeModal} />
 				<Button
 					on:click={handleClick}
 					variant="contained"
