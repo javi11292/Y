@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id    Int     @id
+  id    String  @id
   email String  @unique
   name  String?
   posts Post[]
@@ -19,5 +19,5 @@ model Post {
   id       Int    @id @default(autoincrement())
   content  String @db.VarChar(280)
   author   User   @relation(fields: [authorId], references: [id])
-  authorId Int
+  authorId String
 }

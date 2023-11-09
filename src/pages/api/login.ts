@@ -1,3 +1,4 @@
+import { errorResponse } from "$lib/utils/api";
 import type { APIRoute } from "astro";
 
 const AUTH_ERROR = {
@@ -12,17 +13,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
 	const { email, password } = await request.json();
 
 	if (!email) {
-		return new Response(JSON.stringify({ message: "Email requerido" }), { status: 400 });
+		return errorResponse("Email requerido", 400);
 	}
 
 	if (!password) {
-		return new Response(JSON.stringify({ message: "Contraseña requerida" }), { status: 400 });
+		return errorResponse("Contraseña requerida", 400);
 	}
 
 	const { error } = await locals.auth.signInWithPassword({ email, password });
 
 	if (error && error.status && isAuthError(error.status)) {
-		return new Response(JSON.stringify({ message: AUTH_ERROR[error.status] }), { status: 400 });
+		return errorResponse(AUTH_ERROR[error.status], 400);
 	}
 
 	return new Response();
