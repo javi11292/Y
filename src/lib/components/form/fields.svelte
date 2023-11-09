@@ -3,9 +3,10 @@
 	import Input from "$lib/commons/components/input";
 	import { addError } from "$lib/commons/components/snackbar";
 	import { post } from "$lib/commons/utils/fetch";
+	import { navigate } from "astro:transitions/client";
 	import type { ComponentProps } from "svelte";
 
-	export let fields: ({ name: string } & ComponentProps<Input>)[];
+	export let fields: Record<string, { name: string } & ComponentProps<Input>>;
 	export let api: "login" | "register";
 
 	let values: Record<string, string> = {};
@@ -16,11 +17,12 @@
 		loading = true;
 
 		try {
-			if (api === "register" && values.password !== values.confirmPassword) {
+			if (fields.confirmPassword && values.password !== values.confirmPassword) {
 				throw new Error("Las contraseñas no coinciden");
 			}
 
-			await post(`/api/${api}`, { username: values.username, password: values.password });
+			await post(`/api/${api}`, values);
+			navigate("/");
 		} catch (error) {
 			if (error instanceof Error) {
 				addError(error.message);
@@ -43,7 +45,7 @@
 	};
 </script>
 
-{#each fields as { name, ...field }, index}
+{#each Object.values(fields) as { name, ...field }, index}
 	<Input
 		bind:element={elements[index]}
 		bind:value={values[name]}

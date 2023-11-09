@@ -30,7 +30,6 @@ const workbox = {
 	},
 };
 
-// https://astro.build/config
 export default defineConfig({
 	output: "server",
 	scopedStyleStrategy: "class",

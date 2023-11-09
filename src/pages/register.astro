@@ -2,11 +2,22 @@
 import Form from "$lib/components/form/form.astro";
 import Layout from "$lib/layouts/layout.astro";
 
-const fields = [
-	{ name: "username", label: "Usuario" },
-	{ name: "password", label: "Contraseña", type: "password" },
-	{ name: "confirmPassword", label: "Repite la contraseña", type: "password" },
-];
+const fields = {
+	email: {
+		name: "email",
+		label: "Email",
+	},
+	password: {
+		name: "password",
+		label: "Contraseña",
+		type: "password",
+	},
+	confirmPassword: {
+		name: "confirmPassword",
+		label: "Repite la contraseña",
+		type: "password",
+	},
+};
 ---
 
 <Layout>

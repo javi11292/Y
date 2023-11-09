@@ -1,10 +1,10 @@
 ---
 import Fields from "./fields.svelte";
 
-interface Props {
+type FieldsProps = Parameters<typeof Fields>[0];
+
+interface Props extends FieldsProps {
 	title: string;
-	api: "login" | "register";
-	fields: { name: string }[];
 }
 
 const { title, fields, api } = Astro.props;

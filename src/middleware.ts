@@ -1,4 +1,4 @@
-import { getSessionToken } from "$lib/utils/session";
+import { createServerClient } from "@supabase/ssr";
 import { defineMiddleware, sequence } from "astro:middleware";
 
 const redirectUser = defineMiddleware((context, next) => {
@@ -24,10 +24,24 @@ const redirectUser = defineMiddleware((context, next) => {
 export const addUser = defineMiddleware(async (context, next) => {
 	const { locals, cookies } = context;
 
-	const username = await getSessionToken(cookies);
+	locals.auth = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
+		cookies: {
+			get(key) {
+				return cookies.get(key)?.value;
+			},
+			set(key, value, options) {
+				cookies.set(key, value, options);
+			},
+			remove(key, options) {
+				cookies.delete(key, options);
+			},
+		},
+	}).auth;
 
-	if (username) {
-		locals.user = true;
+	const { data } = await locals.auth.getSession();
+
+	if (data.session) {
+		locals.user = data.session.user;
 	}
 
 	return next();
