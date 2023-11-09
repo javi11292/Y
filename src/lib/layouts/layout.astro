@@ -4,26 +4,6 @@ import { ViewTransitions } from "astro:transitions";
 import Snackbar from "$lib/commons/components/snackbar";
 ---
 
-<script>
-	if (import.meta.env.PROD && navigator.serviceWorker) {
-		navigator.serviceWorker.register("/service-worker.js");
-	}
-</script>
-
-<style lang="scss">
-	html,
-	body {
-		min-height: 100dvh;
-	}
-
-	.body {
-		position: relative;
-		left: 50%;
-		translate: -50%;
-		max-width: 640px;
-	}
-</style>
-
 <html lang="en">
 	<head>
 		<title>Y</title>
@@ -41,6 +21,27 @@ import Snackbar from "$lib/commons/components/snackbar";
 		<div class="body">
 			<slot />
 		</div>
+
 		<Snackbar client:idle />
+
+		<script>
+			if (import.meta.env.PROD && navigator.serviceWorker) {
+				navigator.serviceWorker.register("/service-worker.js");
+			}
+		</script>
+
+		<style lang="scss">
+			html,
+			body {
+				min-height: 100dvh;
+			}
+
+			.body {
+				position: relative;
+				left: 50%;
+				translate: -50%;
+				max-width: 640px;
+			}
+		</style>
 	</body>
 </html>
