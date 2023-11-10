@@ -2,6 +2,37 @@ import cloudflare from "@astrojs/cloudflare";
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import { generateSW } from "workbox-build";
+import { Strategy } from "workbox-strategies";
+
+{
+	if (/^\/_astro/.test(url.pathname)) {
+		return false;
+	}
+
+	if (sessionStorage.getItem(url.pathname)) {
+		return false;
+	}
+
+	sessionStorage.setItem(url.pathname, true);
+}
+
+class SessionHandler extends Strategy {
+	_handle = async (request, handler) => {
+		const response = await handler.cacheMatch(request);
+
+		if (!response) {
+			return handler.fetchAndCachePut(request);
+		}
+
+		if (sessionStorage.getItem(url.pathname)) {
+			return response;
+		}
+
+		sessionStorage.setItem(url.pathname);
+
+		return handler.fetchAndCachePut(request);
+	};
+}
 
 const workbox = {
 	name: "workbox",
@@ -20,7 +51,7 @@ const workbox = {
 				},
 				{
 					urlPattern: ({ url }) => !/^\/_astro/.test(url.pathname),
-					handler: "NetworkFirst",
+					handler: new SessionHandler(),
 					options: {
 						cacheName: "Files",
 					},
