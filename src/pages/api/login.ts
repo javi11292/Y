@@ -1,12 +1,12 @@
 import { errorResponse } from "$lib/utils/api";
 import type { APIRoute } from "astro";
 
-const AUTH_ERROR = {
+const AUTH_ERROR: Record<number, string> = {
 	400: "Credenciales inválidas",
 };
 
-const isAuthError = (status: number): status is keyof typeof AUTH_ERROR => {
-	return status in AUTH_ERROR;
+const getAuthError = (status?: number) => {
+	return (status && AUTH_ERROR[status]) || "Error";
 };
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -22,8 +22,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
 	const { error } = await locals.auth.signInWithPassword({ email, password });
 
-	if (error && error.status && isAuthError(error.status)) {
-		return errorResponse(AUTH_ERROR[error.status], 400);
+	if (error) {
+		return errorResponse(getAuthError(error.status), 400);
 	}
 
 	return new Response();

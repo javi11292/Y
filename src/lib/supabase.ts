@@ -42,17 +42,17 @@ export interface Database {
         Row: {
           email: string
           id: string
-          name: string | null
+          name: string
         }
         Insert: {
           email: string
           id: string
-          name?: string | null
+          name: string
         }
         Update: {
           email?: string
           id?: string
-          name?: string | null
+          name?: string
         }
         Relationships: [
           {

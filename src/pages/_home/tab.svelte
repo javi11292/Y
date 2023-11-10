@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { get } from "$lib/commons/utils/fetch";
 	import PostComponent from "$lib/components/post";
-	import type { Post } from "$lib/database";
+	import type { Post } from "$lib/database/post";
 	import { posts } from "$lib/stores";
 	import { tabs } from "./constants";
 

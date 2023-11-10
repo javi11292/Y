@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Post } from "$lib/database";
+	import type { Post } from "$lib/database/post";
 	import { setPosts } from "$lib/stores";
 	import { fly } from "svelte/transition";
 	import { active, direction } from "./constants";

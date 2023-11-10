@@ -1,4 +1,4 @@
-import type { Post } from "$lib/database";
+import type { Post } from "$lib/database/post";
 import { writable } from "svelte/store";
 
 export const posts = writable<{

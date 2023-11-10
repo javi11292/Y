@@ -43,7 +43,7 @@
 	};
 
 	const getDate = (iso: string) => {
-		const date = new Date(iso);
+		const date = new Date(`${iso}Z`);
 		let diff = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
 
 		if (diff < 60) {
@@ -68,7 +68,7 @@
 
 <div use:last={onIntersection} class:post={!thread} on:keydown role="button" tabindex="0">
 	<div class="meta">
-		<a class="author" href={`/@${post.author}`}>@{post.author}</a>
+		<a class="author" href={`/@${post.author.name}`}>@{post.author.name}</a>
 		<span class="date">{getDate(post.date)}</span>
 	</div>
 
