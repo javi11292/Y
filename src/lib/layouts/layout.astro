@@ -2,6 +2,7 @@
 import "$lib/commons/assets/global.scss";
 import { ViewTransitions } from "astro:transitions";
 import Snackbar from "$lib/commons/components/snackbar";
+import icons from "$lib/commons/assets/icons.svg?url";
 
 interface Props {
 	title: string;
@@ -27,6 +28,7 @@ if (Astro.request.headers.get("Cache-Control")) {
 		<link rel="icon" href="/favicon.ico" />
 		<link rel="apple-touch-icon" href="/192x192.png" />
 		<link rel="manifest" href="/manifest.json" />
+		<link rel="preload" as="image" href={icons} />
 		<ViewTransitions />
 	</head>
 
