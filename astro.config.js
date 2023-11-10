@@ -12,9 +12,7 @@ const workbox = {
 			skipWaiting: true,
 			runtimeCaching: [
 				{
-					urlPattern: ({ request }) =>
-						console.log(request.headers.get("Sec-Fetch-Mode")) ||
-						request.headers.get("Sec-Fetch-Mode") === "navigate",
+					urlPattern: ({ request }) => request.headers.get("Accept").startsWith("text/html"),
 					handler: "NetworkFirst",
 					options: {
 						cacheName: "Astro",
