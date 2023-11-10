@@ -2,9 +2,8 @@ import cloudflare from "@astrojs/cloudflare";
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import { generateSW } from "workbox-build";
-import { Strategy } from "workbox-strategies/Strategy";
 
-class SessionHandler extends Strategy {
+class SessionHandler {
 	_handle = async (request, handler) => {
 		const response = await handler.cacheMatch(request);
 
@@ -39,7 +38,7 @@ const workbox = {
 				},
 				{
 					urlPattern: ({ url }) => !/^\/_astro/.test(url.pathname),
-					handler: new SessionHandler(),
+					handler: (...args) => console.log(args),
 					options: {
 						cacheName: "Files",
 					},
