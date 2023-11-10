@@ -13,16 +13,19 @@ export interface Database {
         Row: {
           author: string
           content: string
+          date: string
           id: number
         }
         Insert: {
           author: string
           content: string
+          date: string
           id?: number
         }
         Update: {
           author?: string
           content?: string
+          date?: string
           id?: number
         }
         Relationships: [
@@ -51,7 +54,15 @@ export interface Database {
           id?: string
           name?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

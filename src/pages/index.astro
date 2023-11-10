@@ -1,9 +1,13 @@
 ---
+import { get } from "$lib/commons/utils/fetch";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
+import type { Post } from "$lib/database";
 import Layout from "$lib/layouts/layout.astro";
 import Content from "./_home/content.svelte";
 import Tabs from "./_home/tabs.svelte";
+
+const posts = await get<Post[]>(`${Astro.url}/api/post/all`);
 ---
 
 <Layout title="Home">
@@ -13,7 +17,7 @@ import Tabs from "./_home/tabs.svelte";
 		</Header>
 
 		<div class="content">
-			<Content client:idle />
+			<Content client:idle {posts} />
 		</div>
 	</div>
 
