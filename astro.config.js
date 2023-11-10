@@ -2,7 +2,7 @@ import cloudflare from "@astrojs/cloudflare";
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import { generateSW } from "workbox-build";
-import { Strategy } from "workbox-strategies";
+import { Strategy } from "workbox-strategies/Strategy";
 
 class SessionHandler extends Strategy {
 	_handle = async (request, handler) => {
