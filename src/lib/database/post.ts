@@ -2,6 +2,8 @@ import { supabase } from ".";
 
 type Args = { content: string; author: string };
 
+const PAGE_SIZE = 20;
+
 export const addPost = async ({ content, author }: Args) => {
 	const { data, error } = await supabase
 		.from("post")
@@ -17,7 +19,7 @@ export const addPost = async ({ content, author }: Args) => {
 };
 
 export const getPosts = async (id?: string) => {
-	let query = supabase.from("post").select("*, author:user (name)");
+	let query = supabase.from("post").select("*, author:user (name)").limit(PAGE_SIZE);
 
 	if (id) {
 		query = query.lt("id", id);
