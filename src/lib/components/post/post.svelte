@@ -68,7 +68,7 @@
 
 <div use:last={onIntersection} class:post={!thread} on:keydown role="button" tabindex="0">
 	<div class="meta">
-		<a class="author" href={`/@${post.author.name}`}>@{post.author.name}</a>
+		<a class="author" href={`/@${post.author}`}>@{post.author}</a>
 		<span class="date">{getDate(post.date)}</span>
 	</div>
 

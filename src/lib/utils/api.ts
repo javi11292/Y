@@ -1,4 +1,6 @@
-import type { APIRoute } from "astro";
+import type { AstroGlobal } from "astro";
+
+type APIRoute = (context: AstroGlobal) => Response | Promise<Response>;
 
 export const errorResponse = (message: string, status: number) =>
 	new Response(JSON.stringify({ message }), { status });

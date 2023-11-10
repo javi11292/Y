@@ -1,23 +1,26 @@
 ---
-import { get } from "$lib/commons/utils/fetch";
+import { GET as GETAll } from "$api/post/all/[...page]";
+import { GET as GETFollowing } from "$api/post/following/[...page]";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
-import type { Post } from "$lib/database/post";
 import Layout from "$lib/layouts/layout.astro";
 import Content from "./_home/content.svelte";
 import Tabs from "./_home/tabs.svelte";
 
-const posts = await get<Post[]>(`${Astro.url}/api/post/all`);
+const posts = await GETAll(Astro).then((response) => response.json());
+const following = await GETFollowing(Astro).then((response) => response.json());
 ---
 
 <Layout title="Home">
-	<div class="container">
-		<Header>
-			<div class="tabs"><Tabs client:idle /></div>
-		</Header>
+	<div class="scroll">
+		<div class="container">
+			<Header>
+				<div class="tabs"><Tabs client:idle /></div>
+			</Header>
 
-		<div class="content">
-			<Content client:idle {posts} />
+			<div class="content">
+				<Content client:idle {posts} {following} />
+			</div>
 		</div>
 	</div>
 

@@ -24,7 +24,7 @@ const redirectUser = defineMiddleware((context, next) => {
 export const addUser = defineMiddleware(async (context, next) => {
 	const { locals, cookies } = context;
 
-	locals.auth = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
+	locals.supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
 		cookies: {
 			get(key) {
 				return cookies.get(key)?.value;
@@ -36,9 +36,9 @@ export const addUser = defineMiddleware(async (context, next) => {
 				cookies.delete(key, options);
 			},
 		},
-	}).auth;
+	});
 
-	const { data } = await locals.auth.getSession();
+	const { data } = await locals.supabase.auth.getSession();
 
 	if (data.session) {
 		locals.user = data.session.user;

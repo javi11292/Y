@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { get } from "$lib/commons/utils/fetch";
 	import PostComponent from "$lib/components/post";
-	import type { Post } from "$lib/database/post";
+	import type { Post } from "$lib/database";
 	import { posts } from "$lib/stores";
 	import { tabs } from "./constants";
 
@@ -19,7 +19,7 @@
 
 	const handleIntersection = async (id: number) => {
 		const api = active === tabs.tab1 ? "all" : "following";
-		const response = (await get(`/api/post/${api}/${id}`)) as Post[];
+		const response = await get<Post[]>(`/api/post/${api}/${id}`);
 
 		response.forEach((post) => {
 			$posts.elements[post.id] = post;

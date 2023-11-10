@@ -1,7 +1,7 @@
 import { admin } from "$lib/database";
 import { addUser } from "$lib/database/user";
 import { errorResponse } from "$lib/utils/api";
-import type { APIRoute } from "astro";
+import type { AstroGlobal } from "astro";
 
 const AUTH_ERROR: Record<number, string> = {
 	400: "Email ya registrado",
@@ -20,7 +20,7 @@ const getDBError = (error: any) => {
 	return DB_ERROR[error.code] || "Error";
 };
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST = async ({ request, locals }: AstroGlobal) => {
 	const { email, password, name } = await request.json();
 
 	if (!email) {
@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 		return errorResponse("Nombre de usuario requerido", 400);
 	}
 
-	const { error, data } = await locals.auth.signUp({ email, password });
+	const { error, data } = await locals.supabase.auth.signUp({ email, password });
 
 	if (error) {
 		return errorResponse(getAuthError(error.status), 400);
@@ -46,9 +46,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
 	}
 
 	try {
-		await addUser({ id: data.user.id, email, name });
+		await addUser(locals.supabase, { id: data.user.id, email, name });
 	} catch (error) {
-		await locals.auth.signOut();
+		await locals.supabase.auth.signOut();
 		await admin.deleteUser(data.user.id);
 		return errorResponse(getDBError(error), 400);
 	}

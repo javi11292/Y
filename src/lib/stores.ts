@@ -1,4 +1,4 @@
-import type { Post } from "$lib/database/post";
+import type { Post } from "$lib/database";
 import { writable } from "svelte/store";
 
 export const posts = writable<{
@@ -7,14 +7,21 @@ export const posts = writable<{
 	following: number[];
 }>({ elements: {}, all: [], following: [] });
 
-export const setPosts = (nextPosts: Post[]) => {
+export const setPosts = (nextPosts: Post[], nextFollowing: Post[]) => {
 	const all: number[] = [];
+	const following: number[] = [];
 
-	const normalized = nextPosts.reduce<Record<string, Post>>((acc, post) => {
+	let normalized = nextPosts.reduce<Record<string, Post>>((acc, post) => {
 		acc[post.id] = post;
 		all.push(post.id);
 		return acc;
 	}, {});
 
-	posts.set({ elements: normalized, all, following: [] });
+	normalized = nextFollowing.reduce<Record<string, Post>>((acc, post) => {
+		acc[post.id] = post;
+		following.push(post.id);
+		return acc;
+	}, normalized);
+
+	posts.set({ elements: normalized, all, following });
 };
