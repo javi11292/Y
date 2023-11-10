@@ -12,7 +12,7 @@ const workbox = {
 			skipWaiting: true,
 			runtimeCaching: [
 				{
-					urlPattern: ({ request }) => request.headers.get("Accept").startsWith("text/html"),
+					urlPattern: ({ request }) => !request.headers.has("Referer"),
 					handler: "NetworkFirst",
 					options: {
 						cacheName: "Astro",
