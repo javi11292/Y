@@ -8,6 +8,13 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+Astro.response.headers.set("Vary", "Cookie");
+Astro.response.headers.set("Cache-Control", "private, max-age=3600");
+
+if (Astro.request.headers.get("Cache-Control")) {
+	Astro.cookies.set("version", Date.now().toString());
+}
 ---
 
 <html lang="en">
