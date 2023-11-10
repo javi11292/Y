@@ -4,18 +4,6 @@ import { defineConfig } from "astro/config";
 import { generateSW } from "workbox-build";
 import { Strategy } from "workbox-strategies";
 
-{
-	if (/^\/_astro/.test(url.pathname)) {
-		return false;
-	}
-
-	if (sessionStorage.getItem(url.pathname)) {
-		return false;
-	}
-
-	sessionStorage.setItem(url.pathname, true);
-}
-
 class SessionHandler extends Strategy {
 	_handle = async (request, handler) => {
 		const response = await handler.cacheMatch(request);
