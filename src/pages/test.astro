@@ -1,6 +1,9 @@
 ---
-Astro.response.headers.set("Cache-Control", "private, max-age=50");
+import Layout from "$lib/layouts/layout.astro";
+
+//Astro.response.headers.set("Cache-Control", "private, max-age=0");
 ---
 
-HOLA
-
+<Layout title="test">
+	<a href="/">HOME</a>
+</Layout>
