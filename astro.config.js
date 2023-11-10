@@ -3,24 +3,6 @@ import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import { generateSW } from "workbox-build";
 
-class SessionHandler {
-	_handle = async (request, handler) => {
-		const response = await handler.cacheMatch(request);
-
-		if (!response) {
-			return handler.fetchAndCachePut(request);
-		}
-
-		if (sessionStorage.getItem(url.pathname)) {
-			return response;
-		}
-
-		sessionStorage.setItem(url.pathname);
-
-		return handler.fetchAndCachePut(request);
-	};
-}
-
 const workbox = {
 	name: "workbox",
 	writeBundle: async () => {
@@ -38,7 +20,7 @@ const workbox = {
 				},
 				{
 					urlPattern: ({ url }) => !/^\/_astro/.test(url.pathname),
-					handler: (...args) => console.log(args),
+					handler: "NetworkFirst",
 					options: {
 						cacheName: "Files",
 					},
