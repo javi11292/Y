@@ -2,8 +2,8 @@
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
 	import { MAX_LENGTH } from "$lib/constants";
+	import type { Post } from "$lib/database";
 	import { posts } from "$lib/stores";
-	import type { Post } from "@prisma/client";
 	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
 

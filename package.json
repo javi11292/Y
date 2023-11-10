@@ -3,12 +3,12 @@
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
-		"preview": "astro preview"
+		"preview": "astro preview",
+		"generate": "supabase gen types typescript --project-id daislqwxhhgdcrkfthho --schema public > src/lib/supabase.ts"
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "^7.6.4",
 		"@astrojs/svelte": "^4.0.3",
-		"@prisma/client": "^5.5.2",
 		"@supabase/ssr": "^0.0.9",
 		"@supabase/supabase-js": "^2.38.4",
 		"astro": "^3.4.3",
@@ -16,5 +16,8 @@
 		"svelte": "^4.2.2",
 		"typescript": "^5.2.2",
 		"workbox-build": "^7.0.0"
+	},
+	"devDependencies": {
+		"supabase": "^1.110.1"
 	}
 }

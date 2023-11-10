@@ -1,8 +1,11 @@
-import type { Post } from "@prisma/client";
-import { prisma } from ".";
+import { supabase, type Post } from ".";
 
-type AddPost = (args: { content: string; author: string }) => Promise<Post>;
+type AddPost = (args: { content: string; author: string }) => Promise<Post | null>;
 
-export const addPost: AddPost = ({ content, author }) => {
-	return prisma.post.create({ data: { content, authorId: author } });
+export const addPost: AddPost = async ({ content, author }) => {
+	const { data, error } = await supabase.from("post").insert({ content, author }).select().single();
+
+	console.log(data, error);
+
+	return data;
 };

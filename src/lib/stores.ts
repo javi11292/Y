@@ -1,4 +1,4 @@
-import type { Post } from "@prisma/client";
+import type { Post } from "$lib/database";
 import { writable } from "svelte/store";
 
 export const posts = writable<{
