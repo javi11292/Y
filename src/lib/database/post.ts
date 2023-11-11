@@ -1,12 +1,8 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Post } from ".";
+import { supabase, type Post } from ".";
 
 const PAGE_SIZE = 20;
 
-export const addPost = async (
-	supabase: SupabaseClient,
-	{ content, author }: { content: string; author: string }
-) => {
+export const addPost = async ({ content, author }: { content: string; author: string }) => {
 	const { data, error } = await supabase
 		.from("post")
 		.insert({ content, author, date: new Date().toISOString() })
@@ -20,7 +16,7 @@ export const addPost = async (
 	return data;
 };
 
-export const getPosts = async (supabase: SupabaseClient, id?: string) => {
+export const getPosts = async (id?: string) => {
 	let query = supabase.from("post").select("*, ...user (author:name)").limit(PAGE_SIZE);
 
 	if (id) {
@@ -36,10 +32,7 @@ export const getPosts = async (supabase: SupabaseClient, id?: string) => {
 	return data;
 };
 
-export const getFollowingPosts = async (
-	supabase: SupabaseClient,
-	{ user, id }: { user: string; id?: string }
-) => {
+export const getFollowingPosts = async ({ user, id }: { user: string; id?: string }) => {
 	let query = supabase
 		.from("post")
 		.select("*, ...user!inner (author:name, follow!follow_id_fkey!inner ())")

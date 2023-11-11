@@ -1,4 +1,4 @@
-import { admin } from "$lib/database";
+import { supabase } from "$lib/database";
 import { addUser } from "$lib/database/user";
 import { errorResponse } from "$lib/utils/api";
 import type { AstroGlobal } from "astro";
@@ -46,10 +46,10 @@ export const POST = async ({ request, locals }: AstroGlobal) => {
 	}
 
 	try {
-		await addUser(locals.supabase, { id: data.user.id, email, name });
+		await addUser({ id: data.user.id, email, name });
 	} catch (error) {
 		await locals.supabase.auth.signOut();
-		await admin.deleteUser(data.user.id);
+		await supabase.auth.admin.deleteUser(data.user.id);
 		return errorResponse(getDBError(error), 400);
 	}
 
