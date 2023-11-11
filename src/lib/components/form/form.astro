@@ -10,13 +10,15 @@ interface Props extends FieldsProps {
 const { title, fields, api } = Astro.props;
 ---
 
-<div class="form">
-	<div class="title">{title}</div>
+<div>
+	<div class="form">
+		<div class="title">{title}</div>
 
-	<Fields client:idle {fields} {api} />
+		<Fields client:idle {fields} {api} />
 
-	<div class="link">
-		<slot />
+		<div class="link">
+			<slot />
+		</div>
 	</div>
 </div>
 

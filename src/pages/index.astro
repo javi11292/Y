@@ -12,8 +12,8 @@ const following = await GETFollowing(Astro).then((response) => response.json());
 ---
 
 <Layout title="Home">
-	<div class="scroll">
-		<div class="container">
+	<div>
+		<div>
 			<Header>
 				<div class="tabs"><Tabs client:idle /></div>
 			</Header>
@@ -29,10 +29,6 @@ const following = await GETFollowing(Astro).then((response) => response.json());
 
 <style lang="scss">
 	@use "$lib/commons/theme";
-
-	.container {
-		position: relative;
-	}
 
 	.tabs {
 		display: grid;

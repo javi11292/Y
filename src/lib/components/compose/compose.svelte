@@ -61,67 +61,66 @@
 </script>
 
 <div class="container">
-	<div>
-		<div class="compose button">
-			<div>
-				<Button size="lg" icon="add" variant="contained" on:click={openModal} />
+	<div class="button">
+		<div>
+			<Button size="lg" icon="add" variant="contained" on:click={openModal} />
+		</div>
+	</div>
+
+	{#if open}
+		<div class="post" transition:fly={{ y: "100%" }} on:introend={() => input.focus()}>
+			<div class="actions">
+				<Button icon="arrow-right" mirror on:click={closeModal} />
+				<Button
+					on:click={handleClick}
+					variant="contained"
+					disableUpperCase
+					size="sm"
+					disabled={!content || content.length > MAX_LENGTH}
+					{loading}
+				>
+					Enviar
+				</Button>
+			</div>
+
+			<div
+				contenteditable
+				class="editable"
+				bind:this={input}
+				bind:textContent={content}
+				placeholder="¿Que está pasando?"
+			/>
+
+			<hr />
+
+			<div class="counter">
+				{#if MAX_LENGTH - content.length <= 10}
+					<span transition:fade>{MAX_LENGTH - content.length}</span>
+				{/if}
+				<svg
+					class="icon"
+					viewBox="22 22 44 44"
+					style={`--pi: ${Math.PI.toString()}; --amount: ${amount}`}
+				>
+					<circle cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6" />
+					<circle
+						class="circle"
+						class:error={amount === 0}
+						cx="44"
+						cy="44"
+						r="20.2"
+						fill="none"
+						stroke-width="3.6"
+					/>
+				</svg>
 			</div>
 		</div>
-
-		{#if open}
-			<div class="compose post" transition:fly={{ y: "100%" }} on:introend={() => input.focus()}>
-				<div class="actions">
-					<Button icon="arrow-right" mirror on:click={closeModal} />
-					<Button
-						on:click={handleClick}
-						variant="contained"
-						disableUpperCase
-						size="sm"
-						disabled={!content || content.length > MAX_LENGTH}
-						{loading}
-					>
-						Enviar
-					</Button>
-				</div>
-
-				<div
-					contenteditable
-					class="editable"
-					bind:this={input}
-					bind:textContent={content}
-					placeholder="¿Que está pasando?"
-				/>
-
-				<hr />
-
-				<div class="counter">
-					{#if MAX_LENGTH - content.length <= 10}
-						<span transition:fade>{MAX_LENGTH - content.length}</span>
-					{/if}
-					<svg
-						class="icon"
-						viewBox="22 22 44 44"
-						style={`--pi: ${Math.PI.toString()}; --amount: ${amount}`}
-					>
-						<circle cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6" />
-						<circle
-							class="circle"
-							class:error={amount === 0}
-							cx="44"
-							cy="44"
-							r="20.2"
-							fill="none"
-							stroke-width="3.6"
-						/>
-					</svg>
-				</div>
-			</div>
-		{/if}
-	</div>
+	{/if}
 </div>
 
 <style lang="scss">
 	@use "src/lib/commons/theme";
+
 	hr {
 		border-color: theme.$colorNeutral;
 	}
@@ -130,14 +129,6 @@
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
-		scrollbar-gutter: stable;
-		overflow: auto;
-
-		> div {
-			position: absolute;
-			inset: 0;
-			overflow: hidden;
-		}
 	}
 
 	.counter {

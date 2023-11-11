@@ -49,27 +49,22 @@ if (Astro.request.headers.get("Cache-Control")) {
 				overflow: hidden;
 			}
 
-			%view {
-				left: 50%;
-				translate: -50%;
-				max-width: 640px;
-			}
-
 			.content {
 				height: 100dvh;
 				position: relative;
 
-				:global(.compose) {
-					@extend %view;
-				}
-
-				:global(.scroll) {
+				> :global(:not(astro-island)),
+				> :global(astro-island > *) {
 					height: 100%;
 					scrollbar-gutter: stable;
 					overflow: var(--overflow, auto);
 
-					> :global(*) {
-						@extend %view;
+					> :global(:not(astro-island)),
+					> :global(astro-island > *) {
+						position: relative;
+						left: 50%;
+						translate: -50%;
+						max-width: 640px;
 					}
 				}
 			}
