@@ -1,6 +1,6 @@
 import cloudflare from "@astrojs/cloudflare";
 import svelte from "@astrojs/svelte";
-import { defineConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
 import { generateSW } from "workbox-build";
 
 const workbox = {
@@ -24,14 +24,17 @@ const workbox = {
 };
 
 export default defineConfig({
-	output: "server",
 	scopedStyleStrategy: "class",
+	output: "server",
+	adapter: cloudflare(),
+	integrations: [svelte()],
 	server: {
 		port: 3000,
 	},
 	vite: {
 		plugins: [workbox],
 	},
-	adapter: cloudflare(),
-	integrations: [svelte()],
+	image: {
+		service: passthroughImageService(),
+	},
 });
