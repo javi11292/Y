@@ -43,7 +43,8 @@ export const getFollowingPosts = async (
 	let query = supabase
 		.from("post")
 		.select("*, ...user!inner (author:name, follow!follow_id_fkey!inner ())")
-		.eq("user.follow.follower", user);
+		.eq("user.follow.follower", user)
+		.limit(PAGE_SIZE);
 
 	if (id) {
 		query = query.lt("id", id);
