@@ -18,13 +18,10 @@
 	@use "src/lib/commons/theme";
 	@use "src/lib/commons/classes";
 
-	.value {
-		transition: all;
-		transition-duration: 200ms;
-	}
-
 	.icon {
 		@extend %root;
+
+		transition: none;
 		border-radius: 50%;
 		overflow: hidden;
 		padding: 0.5rem;
@@ -33,6 +30,9 @@
 	}
 
 	.button {
+		transition: all;
+		transition-duration: 200ms;
+		position: relative;
 		display: flex;
 		align-items: center;
 		gap: 0.25rem;
@@ -43,8 +43,8 @@
 			&:hover {
 				color: theme.$colorPrimary;
 
-				.icon {
-					@include classes.hover;
+				.icon::before {
+					opacity: 0.1;
 				}
 			}
 		}
@@ -53,9 +53,11 @@
 			color: theme.$colorPrimary;
 
 			.icon {
-				@include classes.active;
-
 				scale: 95%;
+			}
+
+			.icon::before {
+				opacity: 0.2;
 			}
 		}
 	}
