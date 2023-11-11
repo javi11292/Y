@@ -1,0 +1,78 @@
+---
+import Button from "$lib/commons/components/button";
+import Compose from "$lib/components/compose";
+import Header from "$lib/components/header";
+import Layout from "$lib/layouts/layout.astro";
+
+const user = { username: "test", following: [], followers: 0 };
+---
+
+<Layout title="User">
+	<div>
+		<div class="container">
+			<Header>
+				<div class="buttons">
+					<Button icon="arrow-right" mirror href="/" />
+				</div>
+			</Header>
+
+			<div class="content">
+				@{user.username}
+
+				<div class="followers">
+					{user.following.length}
+					<span>Siguiendo</span>
+					{user.followers}
+					<span>Seguidores</span>
+				</div>
+			</div>
+
+			<div><hr /></div>
+		</div>
+	</div>
+
+	<Compose />
+</Layout>
+
+<style lang="scss">
+	@use "$lib/commons/theme";
+
+	hr {
+		border-color: theme.$colorNeutralDark;
+	}
+
+	.container {
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+
+		> :global(:last-child) {
+			flex: 1;
+		}
+	}
+
+	.content {
+		padding: 0 1rem 1rem;
+	}
+
+	.buttons {
+		display: flex;
+		justify-content: space-between;
+		align-items: start;
+		padding: 1rem;
+
+		> :global(:nth-child(1)) {
+			margin: -0.5rem;
+		}
+	}
+
+	.followers {
+		margin-top: 1rem;
+
+		span {
+			margin-left: 0.4rem;
+			margin-right: 1rem;
+			color: theme.$colorNeutral;
+		}
+	}
+</style>

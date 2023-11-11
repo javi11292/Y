@@ -1,1 +1,1 @@
-export { default } from "./compose.svelte";
+export { default } from "./compose.astro";

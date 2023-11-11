@@ -1,11 +1,14 @@
 <script lang="ts">
 	import Button from "$lib/commons/components/button";
+	import { addError } from "$lib/commons/components/snackbar";
 	import { post } from "$lib/commons/utils/fetch";
 	import { MAX_LENGTH } from "$lib/constants";
 	import type { Post } from "$lib/database";
 	import { posts } from "$lib/stores";
 	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
+
+	$$restProps;
 
 	let open = false;
 	let loading = false;
@@ -32,7 +35,9 @@
 			$posts.all.unshift(response.id);
 			$posts = { ...$posts };
 		} catch (error) {
-			console.log(error);
+			if (error instanceof Error) {
+				addError(error.message);
+			}
 		}
 
 		loading = false;
