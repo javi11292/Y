@@ -129,6 +129,7 @@
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
+		overflow: hidden;
 	}
 
 	.counter {
