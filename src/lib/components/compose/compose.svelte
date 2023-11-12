@@ -8,7 +8,7 @@
 	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
 
-	let open = false;
+	let open = typeof window !== "undefined" && location.hash === "#post";
 	let loading = false;
 	let content = "";
 	let input: HTMLDivElement;
@@ -54,7 +54,6 @@
 	};
 
 	onMount(() => {
-		handlePopState();
 		addEventListener("popstate", handlePopState);
 
 		return () => {
