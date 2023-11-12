@@ -1,0 +1,44 @@
+---
+import Layout from "$lib/commons/components/layout";
+import Snackbar from "$lib/commons/components/snackbar";
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<Layout {title}>
+	<div class="content">
+		<slot />
+	</div>
+
+	<Snackbar client:idle transition:persist />
+</Layout>
+
+<style lang="scss">
+	html {
+		scrollbar-gutter: auto;
+	}
+
+	.content {
+		height: 100dvh;
+		position: relative;
+
+		> :global(:not(astro-island)),
+		> :global(astro-island > *) {
+			height: 100%;
+			scrollbar-gutter: stable;
+			overflow: var(--overflow, auto);
+
+			> :global(:not(astro-island)),
+			> :global(astro-island > *) {
+				position: relative;
+				left: 50%;
+				translate: -50%;
+				max-width: 640px;
+			}
+		}
+	}
+</style>
