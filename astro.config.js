@@ -12,7 +12,7 @@ const workbox = {
 			skipWaiting: true,
 			runtimeCaching: [
 				{
-					urlPattern: ({ url }) => !/^\/(_astro|api)\//.test(url.pathname),
+					urlPattern: ({ url }) => !/^\/(_astro|api|assets)\//.test(url.pathname),
 					handler: "NetworkFirst",
 					options: {
 						cacheName: "Astro",
