@@ -19,7 +19,7 @@ if (!user) {
 users.set({ [user.id]: user });
 ---
 
-<Layout title="User">
+<Layout title={user.name}>
 	<div>
 		<div class="container">
 			<Header>

@@ -1,12 +1,11 @@
 <script lang="ts">
 	import type { User } from "$lib/database";
 	import { users } from "$lib/stores";
+	import { addUser } from "./load";
 
 	export let user: User;
 
-	if (!$users[user.id]) {
-		$users[user.id] = user;
-	}
+	addUser($users, user);
 
 	$: udpatedUser = $users[user.id];
 </script>

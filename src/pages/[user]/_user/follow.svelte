@@ -3,6 +3,7 @@
 	import { post } from "$lib/commons/utils/fetch";
 	import type { User } from "$lib/database";
 	import { invalidateUsers, users } from "$lib/stores";
+	import { addUser } from "./load";
 
 	let loading = false;
 
@@ -15,6 +16,8 @@
 		await invalidateUsers(user.name);
 		loading = false;
 	};
+
+	addUser($users, user);
 
 	$: udpatedUser = $users[user.id];
 </script>
