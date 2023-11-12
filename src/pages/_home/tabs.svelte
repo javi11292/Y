@@ -1,16 +1,16 @@
 <script lang="ts">
 	import Button from "$lib/commons/components/button";
 	import { crossfade } from "svelte/transition";
-	import { active, direction, tabs } from "./store";
+	import { tab, tabs } from "./store";
 
 	const handleClick = (tab: number) => {
-		if ($active < tab) {
-			$direction = 1;
+		if ($tab.active < tab) {
+			$tab.direction = 1;
 		} else {
-			$direction = -1;
+			$tab.direction = -1;
 		}
 
-		$active = tab;
+		$tab.active = tab;
 	};
 
 	const key = { key: "indicator" };
@@ -20,13 +20,13 @@
 
 <Button disableBorder disableActive disableUpperCase on:click={() => handleClick(tabs.tab1)}>
 	Para ti
-	{#if $active === tabs.tab1}
+	{#if $tab.active === tabs.tab1}
 		<div class="indicator" in:receive={key} out:send={key} />
 	{/if}
 </Button>
 <Button disableBorder disableActive disableUpperCase on:click={() => handleClick(tabs.tab2)}>
 	Siguiendo
-	{#if $active === tabs.tab2}
+	{#if $tab.active === tabs.tab2}
 		<div class="indicator" in:receive={key} out:send={key} />
 	{/if}
 </Button>

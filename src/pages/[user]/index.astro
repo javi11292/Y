@@ -27,12 +27,7 @@ if (!user) {
 			<Header>
 				<div class="buttons">
 					<Button icon="arrow-right" mirror href="/" />
-					<Follow
-						client:idle
-						currentUser={(Astro as LoggedAstroGlobal).locals.user.id}
-						{user}
-						{posts}
-					/>
+					<Follow client:idle currentUser={(Astro as LoggedAstroGlobal).locals.user.id} {user} />
 				</div>
 			</Header>
 

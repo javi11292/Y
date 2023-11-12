@@ -1,17 +1,13 @@
 <script lang="ts">
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
-	import type { Post, User } from "$lib/database";
+	import type { User } from "$lib/database";
 	import { invalidateUsers, users } from "$lib/stores";
-	import { addUser } from "./load";
 
 	let loading = false;
 
 	export let user: User;
 	export let currentUser: string;
-	export let posts: Post[];
-
-	addUser($users, user, posts);
 
 	const handleFollowClick = async () => {
 		loading = true;
@@ -20,7 +16,7 @@
 		loading = false;
 	};
 
-	$: udpatedUser = $users[user.id];
+	$: udpatedUser = $users[user.id] || user;
 </script>
 
 {#if user.id !== currentUser}

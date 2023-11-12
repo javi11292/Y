@@ -5,5 +5,4 @@ export enum tabs {
 	tab2,
 }
 
-export const active = writable<tabs>(tabs.tab1);
-export const direction = writable<1 | -1>(1);
+export const tab = writable({ active: tabs.tab1, direction: 1 });

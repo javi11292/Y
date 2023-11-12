@@ -1,28 +1,20 @@
 ---
-import { GET as GETAll } from "$api/post/all/[...page]";
-import { GET as GETFollowing } from "$api/post/following/[...page]";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/root-layout.astro";
-import type { LoggedAstroGlobal } from "$lib/types";
 import Content from "./_home/content.svelte";
 import Tabs from "./_home/tabs.svelte";
-
-const [posts, following] = await Promise.all([
-	GETAll(Astro).then((response) => response.json()),
-	GETFollowing(Astro as LoggedAstroGlobal).then((response) => response.json()),
-]);
 ---
 
 <Layout title="Home">
 	<div>
-		<div>
+		<div class="container">
 			<Header>
 				<div class="tabs"><Tabs client:idle /></div>
 			</Header>
 
 			<div class="content">
-				<Content client:idle {posts} {following} />
+				<Content client:idle />
 			</div>
 		</div>
 	</div>
@@ -38,6 +30,12 @@ const [posts, following] = await Promise.all([
 		grid-template-columns: repeat(2, 1fr);
 		border-bottom: 1px solid theme.$colorNeutralDark;
 		position: relative;
+	}
+
+	.container {
+		min-height: 100%;
+		display: grid;
+		grid-template-rows: auto 1fr;
 	}
 
 	.content {

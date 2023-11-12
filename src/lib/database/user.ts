@@ -27,6 +27,10 @@ export const getUser = async ({ name, id }: { name: string; id: string }) => {
 
 	const [user, isFollowing] = await Promise.all([userQuery, isFollowingQuery]);
 
+	if (!user.data) {
+		return null;
+	}
+
 	return { ...user.data, isFollowing: !!isFollowing.data };
 };
 
