@@ -8,7 +8,7 @@
 	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
 
-	let open = typeof window !== "undefined" && location.hash === "#post";
+	let open = false;
 	let loading = false;
 	let content = "";
 	let input: HTMLDivElement;
@@ -16,10 +16,9 @@
 	$: amount = Math.max(1 - content.length / MAX_LENGTH, 0);
 
 	const handlePopState = () => {
-		open = location.hash === "#post";
-
-		if (!open) {
-			content = "";
+		if (open) {
+			history.pushState(null, "", document.URL);
+			closeModal();
 		}
 	};
 
@@ -44,13 +43,14 @@
 
 	const openModal = () => {
 		document.documentElement.style.setProperty("--overflow", "hidden");
-		location.hash = "post";
+		history.replaceState(null, "", document.URL);
+		history.pushState(null, "", document.URL);
+		open = true;
 	};
 
 	const closeModal = () => {
 		document.documentElement.style.setProperty("--overflow", "auto");
-		location.hash = "";
-		history.replaceState(null, "", location.pathname);
+		open = false;
 	};
 
 	onMount(() => {
@@ -70,7 +70,12 @@
 	</div>
 
 	{#if open}
-		<div class="post" transition:fly={{ y: "100%" }} on:introend={() => input.focus()}>
+		<div
+			class="post"
+			transition:fly={{ y: "100%" }}
+			on:introend={() => input.focus()}
+			on:outroend={() => history.back()}
+		>
 			<div class="actions">
 				<Button icon="arrow-right" mirror on:click={closeModal} />
 				<Button
