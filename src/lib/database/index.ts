@@ -20,5 +20,5 @@ export type User = {
 	name: string;
 	following: [{ count: number }];
 	followers: [{ count: number }];
-	isFollowing?: boolean;
+	isFollowing: boolean;
 };

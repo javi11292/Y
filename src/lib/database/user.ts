@@ -11,7 +11,7 @@ export const addUser = async (value: { id: string; email: string; name: string }
 };
 
 export const getUser = async ({ name, id }: { name: string; id: string }) => {
-	const { data } = await supabase
+	const userQuery = supabase
 		.from("user")
 		.select(
 			"id, name, followers:follow_id_fkey!inner (count), following:follow_follower_fkey!inner (count)"
@@ -19,17 +19,15 @@ export const getUser = async ({ name, id }: { name: string; id: string }) => {
 		.eq("name", name)
 		.single();
 
-	if (data?.id !== id) {
-		const { data: isFollowing } = await supabase
-			.from("user")
-			.select("*, followers:follow_id_fkey!inner (*)")
-			.match({ name, "followers.follower": id })
-			.single();
+	const isFollowingQuery = supabase
+		.from("user")
+		.select("*, followers:follow_id_fkey!inner (*)")
+		.match({ name, "followers.follower": id })
+		.single();
 
-		return { ...data, isFollowing: !!isFollowing };
-	}
+	const [user, isFollowing] = await Promise.all([userQuery, isFollowingQuery]);
 
-	return data;
+	return { ...user.data, isFollowing: !!isFollowing.data };
 };
 
 export const followUser = async ({ id, follower }: { id: string; follower: string }) => {
