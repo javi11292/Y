@@ -36,7 +36,7 @@ export const POST = async ({ request, locals }: AstroGlobal) => {
 	}
 
 	if (!/^\w+$/.test(name)) {
-		return errorResponse("El nombre solo puede contener caracteres alfanuméricos", 400);
+		return errorResponse("El nombre sólo puede contener caracteres alfanuméricos", 400);
 	}
 
 	const { error, data } = await locals.supabase.auth.signUp({ email, password });
