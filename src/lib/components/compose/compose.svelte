@@ -8,8 +8,6 @@
 	import { onMount } from "svelte";
 	import { fade, fly } from "svelte/transition";
 
-	$$restProps;
-
 	let open = false;
 	let loading = false;
 	let content = "";

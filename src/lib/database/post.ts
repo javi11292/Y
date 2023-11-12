@@ -2,10 +2,10 @@ import { supabase, type Post } from ".";
 
 const PAGE_SIZE = 20;
 
-export const addPost = async ({ content, author }: { content: string; author: string }) => {
+export const addPost = async (value: { content: string; author: string }) => {
 	const { data, error } = await supabase
 		.from("post")
-		.insert({ content, author, date: new Date().toISOString() })
+		.insert({ ...value, date: new Date().toISOString() })
 		.select("*, ...user (author:name)")
 		.single<Post>();
 

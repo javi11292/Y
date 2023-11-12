@@ -1,10 +1,22 @@
 ---
+import { GET } from "$api/user/[user]";
 import Button from "$lib/commons/components/button";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
+import type { User } from "$lib/database";
 import Layout from "$lib/layouts/layout.astro";
+import { users } from "$lib/stores";
+import type { LoggedAstroGlobal } from "$lib/types";
+import Follow from "./_user/follow.svelte";
+import Followers from "./_user/followers.svelte";
 
-const user = { username: "test", following: [], followers: 0 };
+const user = (await GET(Astro as LoggedAstroGlobal).then((response) => response.json())) as User;
+
+if (!user) {
+	return Astro.redirect("/");
+}
+
+users.set({ [user.id]: user });
 ---
 
 <Layout title="User">
@@ -13,17 +25,15 @@ const user = { username: "test", following: [], followers: 0 };
 			<Header>
 				<div class="buttons">
 					<Button icon="arrow-right" mirror href="/" />
+					<Follow client:idle currentUser={(Astro as LoggedAstroGlobal).locals.user.id} {user} />
 				</div>
 			</Header>
 
 			<div class="content">
-				@{user.username}
+				@{user.name}
 
 				<div class="followers">
-					{user.following.length}
-					<span>Siguiendo</span>
-					{user.followers}
-					<span>Seguidores</span>
+					<Followers client:idle {user} />
 				</div>
 			</div>
 
@@ -69,8 +79,7 @@ const user = { username: "test", following: [], followers: 0 };
 	.followers {
 		margin-top: 1rem;
 
-		span {
-			margin-left: 0.4rem;
+		:global(span) {
 			margin-right: 1rem;
 			color: theme.$colorNeutral;
 		}

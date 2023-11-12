@@ -4,11 +4,14 @@ import { GET as GETFollowing } from "$api/post/following/[...page]";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/layout.astro";
+import type { LoggedAstroGlobal } from "$lib/types";
 import Content from "./_home/content.svelte";
 import Tabs from "./_home/tabs.svelte";
 
-const posts = await GETAll(Astro).then((response) => response.json());
-const following = await GETFollowing(Astro).then((response) => response.json());
+const [posts, following] = await Promise.all([
+	GETAll(Astro).then((response) => response.json()),
+	GETFollowing(Astro as LoggedAstroGlobal).then((response) => response.json()),
+]);
 ---
 
 <Layout title="Home">

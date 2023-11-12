@@ -1,4 +1,6 @@
+import { addSession } from "$lib/utils/api";
 import { createServerClient } from "@supabase/ssr";
+import type { AstroGlobal } from "astro";
 import { defineMiddleware, sequence } from "astro:middleware";
 
 const redirectUser = defineMiddleware((context, next) => {
@@ -22,7 +24,7 @@ const redirectUser = defineMiddleware((context, next) => {
 });
 
 export const addUser = defineMiddleware(async (context, next) => {
-	const { locals, cookies } = context;
+	const { url, locals, cookies } = context;
 
 	locals.supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
 		cookies: {
@@ -38,11 +40,11 @@ export const addUser = defineMiddleware(async (context, next) => {
 		},
 	});
 
-	const { data } = await locals.supabase.auth.getSession();
-
-	if (data.session) {
-		locals.user = data.session.user;
+	if (url.pathname.startsWith("/api")) {
+		return next();
 	}
+
+	await addSession(context as unknown as AstroGlobal);
 
 	return next();
 });

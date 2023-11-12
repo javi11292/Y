@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from "$lib/commons/components/button";
 	import { crossfade } from "svelte/transition";
-	import { active, direction, tabs } from "./constants";
+	import { active, direction, tabs } from "./store";
 
 	const handleClick = (tab: number) => {
 		if ($active < tab) {

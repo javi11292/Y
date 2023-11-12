@@ -35,7 +35,7 @@ if (Astro.request.headers.get("Cache-Control")) {
 			<slot />
 		</div>
 
-		<Snackbar client:idle />
+		<Snackbar client:idle transition:persist />
 
 		<script>
 			if (import.meta.env.PROD && navigator.serviceWorker) {
