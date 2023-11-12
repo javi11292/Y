@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PostComponent from "$lib/components/post";
 	import type { Post, User } from "$lib/database";
 	import { users } from "$lib/stores";
 	import { addUser } from "./load";
@@ -7,11 +8,8 @@
 	export let posts: Post[];
 
 	addUser($users, user, posts);
-
-	$: udpatedUser = $users[user.id];
 </script>
 
-{udpatedUser.following[0].count}
-<span>Siguiendo</span>
-{udpatedUser.followers[0].count}
-<span>Seguidores</span>
+{#each $users[user.id].posts as post}
+	<PostComponent id={post} />
+{/each}

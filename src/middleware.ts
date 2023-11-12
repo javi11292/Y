@@ -1,3 +1,4 @@
+import { load, posts, users } from "$lib/stores";
 import { addSession } from "$lib/utils/api";
 import { createServerClient } from "@supabase/ssr";
 import type { AstroGlobal } from "astro";
@@ -43,6 +44,10 @@ export const addUser = defineMiddleware(async (context, next) => {
 	if (url.pathname.startsWith("/api")) {
 		return next();
 	}
+
+	posts.set({ elements: {}, all: [], following: [] });
+	users.set({});
+	load.post = true;
 
 	await addSession(context as unknown as AstroGlobal);
 

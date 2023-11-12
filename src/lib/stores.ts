@@ -2,40 +2,73 @@ import { get } from "$lib/commons/utils/fetch";
 import type { Post, User } from "$lib/database";
 import { writable } from "svelte/store";
 
-export const posts = writable<{
+export type Users = Record<string, User & { posts: number[] }>;
+export type Posts = {
 	elements: Record<string, Post>;
 	all: number[];
 	following: number[];
-}>({ elements: {}, all: [], following: [] });
+};
 
-export const users = writable<Record<string, User>>({});
+export const posts = writable<Posts>({ elements: {}, all: [], following: [] });
 
-export const setPosts = (nextPosts: Post[], nextFollowing: Post[]) => {
-	const all: number[] = [];
-	const following: number[] = [];
+export const users = writable<Users>({});
 
-	let normalized = nextPosts.reduce<Record<string, Post>>((acc, post) => {
-		acc[post.id] = post;
-		all.push(post.id);
-		return acc;
-	}, {});
+export const load = {
+	post: true,
+};
 
-	normalized = nextFollowing.reduce<Record<string, Post>>((acc, post) => {
-		acc[post.id] = post;
-		following.push(post.id);
-		return acc;
-	}, normalized);
+export const updatePosts = ({
+	nextPosts,
+	nextFollowing,
+}: {
+	nextPosts?: Post[];
+	nextFollowing?: Post[];
+}) => {
+	posts.update((value) => {
+		if (nextPosts) {
+			const all: number[] = [];
 
-	posts.set({ elements: normalized, all, following });
+			nextPosts.forEach((post) => {
+				value.elements[post.id] = post;
+				all.push(post.id);
+			});
+
+			value.all = all;
+		}
+
+		if (nextFollowing) {
+			const following: number[] = [];
+
+			nextFollowing.forEach((post) => {
+				value.elements[post.id] = post;
+				following.push(post.id);
+			});
+
+			value.following = following;
+		}
+
+		return value;
+	});
+};
+
+export const loadPosts = (nextPosts: Post[], nextFollowing: Post[]) => {
+	if (!load.post) {
+		return;
+	}
+
+	load.post = false;
+	updatePosts({ nextPosts, nextFollowing });
 };
 
 export const invalidateUsers = async (name: string) => {
-	const [user, posts, following] = await Promise.all([
+	const [user, following] = await Promise.all([
 		get<User>(`/api/user/@${name}`),
-		get<Post[]>("/api/post/all"),
 		get<Post[]>("/api/post/following"),
 	]);
 
-	setPosts(posts, following);
-	users.update((state) => ({ ...state, [user.id]: user }));
+	updatePosts({ nextFollowing: following });
+	users.update((state) => {
+		Object.assign(state[user.id], user);
+		return state;
+	});
 };

@@ -1,22 +1,24 @@
 ---
-import { GET } from "$api/user/[user]";
+import { GET as GETPosts } from "$api/post/[user]/[...page]";
+import { GET as GETUser } from "$api/user/[user]";
 import Button from "$lib/commons/components/button";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
-import type { User } from "$lib/database";
+import type { Post, User } from "$lib/database";
 import Layout from "$lib/layouts/layout.astro";
-import { users } from "$lib/stores";
 import type { LoggedAstroGlobal } from "$lib/types";
 import Follow from "./_user/follow.svelte";
 import Followers from "./_user/followers.svelte";
+import Posts from "./_user/posts.svelte";
 
-const user = (await GET(Astro as LoggedAstroGlobal).then((response) => response.json())) as User;
+const user = (await GETUser(Astro as LoggedAstroGlobal).then((response) =>
+	response.json(),
+)) as User;
+const posts = (await GETPosts(Astro).then((response) => response.json())) as Post[];
 
 if (!user) {
 	return Astro.redirect("/");
 }
-
-users.set({ [user.id]: user });
 ---
 
 <Layout title={user.name}>
@@ -25,7 +27,12 @@ users.set({ [user.id]: user });
 			<Header>
 				<div class="buttons">
 					<Button icon="arrow-right" mirror href="/" />
-					<Follow client:idle currentUser={(Astro as LoggedAstroGlobal).locals.user.id} {user} />
+					<Follow
+						client:idle
+						currentUser={(Astro as LoggedAstroGlobal).locals.user.id}
+						{user}
+						{posts}
+					/>
 				</div>
 			</Header>
 
@@ -33,11 +40,13 @@ users.set({ [user.id]: user });
 				@{user.name}
 
 				<div class="followers">
-					<Followers client:idle {user} />
+					<Followers client:idle {user} {posts} />
 				</div>
 			</div>
 
 			<div><hr /></div>
+
+			<Posts client:idle {user} {posts} />
 		</div>
 	</div>
 

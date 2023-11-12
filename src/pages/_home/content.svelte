@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Post } from "$lib/database";
-	import { setPosts } from "$lib/stores";
+	import { loadPosts } from "$lib/stores";
 	import { fly } from "svelte/transition";
 	import { active, direction } from "./store";
 	import Tab from "./tab.svelte";
@@ -8,7 +8,7 @@
 	export let posts: Post[];
 	export let following: Post[];
 
-	setPosts(posts, following);
+	loadPosts(posts, following);
 </script>
 
 {#key $active}

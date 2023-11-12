@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from "$lib/commons/components/button";
 	import { post } from "$lib/commons/utils/fetch";
-	import type { User } from "$lib/database";
+	import type { Post, User } from "$lib/database";
 	import { invalidateUsers, users } from "$lib/stores";
 	import { addUser } from "./load";
 
@@ -9,6 +9,9 @@
 
 	export let user: User;
 	export let currentUser: string;
+	export let posts: Post[];
+
+	addUser($users, user, posts);
 
 	const handleFollowClick = async () => {
 		loading = true;
@@ -16,8 +19,6 @@
 		await invalidateUsers(user.name);
 		loading = false;
 	};
-
-	addUser($users, user);
 
 	$: udpatedUser = $users[user.id];
 </script>

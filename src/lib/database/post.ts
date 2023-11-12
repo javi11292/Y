@@ -16,11 +16,15 @@ export const addPost = async (value: { content: string; author: string }) => {
 	return data;
 };
 
-export const getPosts = async (id?: string) => {
-	let query = supabase.from("post").select("*, ...user (author:name)").limit(PAGE_SIZE);
+export const getPosts = async ({ id, name }: { id?: string; name?: string }) => {
+	let query = supabase.from("post").select("*, ...user!inner (author:name)").limit(PAGE_SIZE);
 
 	if (id) {
 		query = query.lt("id", id);
+	}
+
+	if (name) {
+		query.eq("user.name", name);
 	}
 
 	const { data, error } = await query.order("id", { ascending: false }).returns<Post>();
