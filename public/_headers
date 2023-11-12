@@ -1,11 +1,10 @@
+*
+  Cache-Control: private, max-age=3600
+  Vary: Cookie
+
 /api/*
   ! Cache-Control
   ! Vary
-
-/*
-  ! Cache-Control
-  Cache-Control: private, max-age=31536000
-  Vary: Cookie
 
 /_astro/*
   ! Vary
