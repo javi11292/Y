@@ -4,13 +4,13 @@ import { GET as GetFollowing } from "$api/post/following/[...page]";
 import type { LoggedAstroGlobal } from "$lib/types";
 import AstroLoad from "$lib/commons/components/astro-load";
 
-const [posts, following] = await Promise.all([
+const [all, following] = await Promise.all([
 	GETAll(Astro).then((response) => response.json()),
 	GetFollowing(Astro as LoggedAstroGlobal).then((response) => response.json()),
 ]);
 ---
 
-<AstroLoad id="home" data={{ posts, following }} />
+<AstroLoad id="home" data={{ all, following }} />
 
 <script>
 	import { getData } from "$lib/commons/utils/load";

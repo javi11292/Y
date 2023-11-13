@@ -1,6 +1,7 @@
 ---
 import Form from "$lib/components/form";
 import Layout from "$lib/layouts/root-layout.astro";
+import Redirect from "./_redirect.astro";
 
 const fields = {
 	email: {
@@ -14,10 +15,12 @@ const fields = {
 	},
 };
 
-Astro.response.headers.set("Cache-Control", "public, max-age=31536000");
+export const prerender = true;
 ---
 
-<Layout title="Login" skipCache>
+<Redirect />
+
+<Layout title="Login">
 	<Form title="Login" {fields} api="login">
 		¿No tienes cuenta? <a href="/register">Regístrate</a>
 	</Form>

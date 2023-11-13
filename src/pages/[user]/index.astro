@@ -11,6 +11,10 @@ import Follow from "./_user/follow.svelte";
 import Followers from "./_user/followers.svelte";
 import Posts from "./_user/posts.svelte";
 
+if (!Astro.locals.user) {
+	return Astro.redirect("/login");
+}
+
 const [user, posts] = (await Promise.all([
 	GETUser(Astro as LoggedAstroGlobal).then((response) => response.json()),
 	GETPosts(Astro).then((response) => response.json()),

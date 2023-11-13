@@ -13,51 +13,32 @@ export const posts = writable<Posts>({ elements: {}, all: [], following: [] });
 
 export const users = writable<Users>({});
 
-export const load = {
-	post: true,
-};
-
-export const updatePosts = ({
-	nextPosts,
-	nextFollowing,
-}: {
-	nextPosts?: Post[];
-	nextFollowing?: Post[];
-}) => {
+export const updatePosts = ({ all, following }: { all?: Post[]; following?: Post[] }) => {
 	posts.update((value) => {
-		if (nextPosts) {
-			const all: number[] = [];
+		if (all) {
+			const ids: number[] = [];
 
-			nextPosts.forEach((post) => {
+			all.forEach((post) => {
 				value.elements[post.id] = post;
-				all.push(post.id);
+				ids.push(post.id);
 			});
 
-			value.all = all;
+			value.all = ids;
 		}
 
-		if (nextFollowing) {
-			const following: number[] = [];
+		if (following) {
+			const ids: number[] = [];
 
-			nextFollowing.forEach((post) => {
+			following.forEach((post) => {
 				value.elements[post.id] = post;
-				following.push(post.id);
+				ids.push(post.id);
 			});
 
-			value.following = following;
+			value.following = ids;
 		}
 
 		return value;
 	});
-};
-
-export const loadPosts = (nextPosts: Post[], nextFollowing: Post[]) => {
-	if (!load.post) {
-		return;
-	}
-
-	load.post = false;
-	updatePosts({ nextPosts, nextFollowing });
 };
 
 export const invalidateUsers = async (name: string) => {
@@ -66,7 +47,8 @@ export const invalidateUsers = async (name: string) => {
 		get<Post[]>("/api/post/following"),
 	]);
 
-	updatePosts({ nextFollowing: following });
+	updatePosts({ following });
+
 	users.update((state) => {
 		Object.assign(state[user.id], user);
 		return state;

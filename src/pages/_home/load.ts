@@ -1,12 +1,12 @@
 import { getLoading } from "$lib/commons/utils/load";
 import type { Post } from "$lib/database";
-import { loadPosts } from "$lib/stores";
+import { updatePosts } from "$lib/stores";
 
 const { loading, resolve } = getLoading();
 
-const load = (data: null | { posts: Post[]; following: Post[] }) => {
+const load = (data: null | { all: Post[]; following: Post[] }) => {
 	if (data) {
-		loadPosts(data.posts, data.following);
+		updatePosts(data);
 	}
 
 	resolve();

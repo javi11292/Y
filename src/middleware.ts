@@ -1,57 +1,30 @@
-import { load, posts, users } from "$lib/stores";
-import { addSession } from "$lib/utils/api";
 import { createServerClient } from "@supabase/ssr";
-import type { AstroGlobal } from "astro";
-import { defineMiddleware, sequence } from "astro:middleware";
+import { defineMiddleware } from "astro:middleware";
 
-const redirectUser = defineMiddleware((context, next) => {
-	const { locals, url, redirect } = context;
+export const onRequest = defineMiddleware(async (context, next) => {
+	const { locals, cookies } = context;
 
-	if (url.pathname.startsWith("/api")) {
-		return next();
-	}
+	locals.supabase = createServerClient(
+		import.meta.env.PUBLIC_SUPABASE_URL,
+		import.meta.env.PUBLIC_SUPABASE_KEY,
+		{
+			cookies: {
+				get(key) {
+					return cookies.get(key)?.value;
+				},
+				set(key, value, options) {
+					cookies.set(key, value, options);
+				},
+				remove(key, options) {
+					cookies.delete(key, options);
+				},
+			},
+		}
+	);
 
-	const login = url.pathname === "/login" || url.pathname === "/register";
+	const { data } = await locals.supabase.auth.getSession();
 
-	if (!locals.user && !login) {
-		return redirect("/login", 307);
-	}
-
-	if (locals.user && login) {
-		return redirect("/", 307);
-	}
+	locals.user = data.session?.user;
 
 	return next();
 });
-
-export const addUser = defineMiddleware(async (context, next) => {
-	const { url, locals, cookies } = context;
-
-	locals.supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
-		cookies: {
-			get(key) {
-				return cookies.get(key)?.value;
-			},
-			set(key, value, options) {
-				cookies.set(key, value, options);
-			},
-			remove(key, options) {
-				cookies.delete(key, options);
-			},
-		},
-	});
-
-	if (url.pathname.startsWith("/api")) {
-		return next();
-	}
-
-	posts.set({ elements: {}, all: [], following: [] });
-	users.set({});
-	load.post = true;
-
-	await addSession(context as unknown as AstroGlobal);
-
-	return next();
-});
-
-export const onRequest = sequence(addUser, redirectUser);

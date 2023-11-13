@@ -5,6 +5,10 @@ import Layout from "$lib/layouts/root-layout.astro";
 import Content from "./_home/content.svelte";
 import Load from "./_home/load.astro";
 import Tabs from "./_home/tabs.svelte";
+
+if (!Astro.locals.user) {
+	return Astro.redirect("/login");
+}
 ---
 
 <Layout title="Home">
