@@ -22,9 +22,11 @@ const fields = {
 		type: "password",
 	},
 };
+
+Astro.response.headers.set("Cache-Control", "public, max-age=31536000");
 ---
 
-<Layout title="Registro">
+<Layout title="Registro" skipCache>
 	<Form title="Registro" {fields} api="register">
 		¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
 	</Form>

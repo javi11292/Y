@@ -4,12 +4,15 @@ import Snackbar from "$lib/commons/components/snackbar";
 
 interface Props {
 	title: string;
+	skipCache?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, skipCache } = Astro.props;
 
-Astro.response.headers.set("Vary", "Cookie");
-Astro.response.headers.set("Cache-Control", "private, max-age=3600");
+if (!skipCache) {
+	Astro.response.headers.set("Vary", "Cookie");
+	Astro.response.headers.set("Cache-Control", "private, max-age=3600");
+}
 ---
 
 <Layout {title}>
