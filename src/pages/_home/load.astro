@@ -2,6 +2,7 @@
 import { GET as GETAll } from "$api/post/all/[...page]";
 import { GET as GetFollowing } from "$api/post/following/[...page]";
 import type { LoggedAstroGlobal } from "$lib/types";
+import AstroLoad from "$lib/commons/components/astro-load";
 
 const [posts, following] = await Promise.all([
 	GETAll(Astro).then((response) => response.json()),
@@ -9,7 +10,7 @@ const [posts, following] = await Promise.all([
 ]);
 ---
 
-<astro-load id="home" data-load={JSON.stringify({ posts, following })}></astro-load>
+<AstroLoad id="home" data={{ posts, following }} />
 
 <script>
 	import { getData } from "$lib/commons/utils/load";
