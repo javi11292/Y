@@ -24,6 +24,7 @@ const workbox = {
 };
 
 export default defineConfig({
+	trailingSlash: "never",
 	scopedStyleStrategy: "class",
 	output: "server",
 	adapter: cloudflare(),
