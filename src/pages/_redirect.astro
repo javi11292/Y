@@ -1,15 +1,10 @@
 <script>
-	import { createBrowserClient } from "@supabase/ssr";
+	import { get } from "$lib/commons/utils/fetch";
 	import { navigate } from "astro:transitions/client";
 
-	const supabase = createBrowserClient(
-		import.meta.env.PUBLIC_SUPABASE_URL,
-		import.meta.env.PUBLIC_SUPABASE_URL,
-	);
+	const session = await get("/api/session");
 
-	const { data } = await supabase.auth.getSession();
-
-	if (data.session?.user) {
+	if (session) {
 		navigate("/");
 	}
 </script>
