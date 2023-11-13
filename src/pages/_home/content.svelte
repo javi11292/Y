@@ -7,9 +7,9 @@
 	import Tab from "./tab.svelte";
 </script>
 
-{#await loading}
+{#if $loading}
 	<Loading />
-{:then}
+{:else}
 	<Fade>
 		{#key $tab.active}
 			<div
@@ -20,4 +20,4 @@
 			</div>
 		{/key}
 	</Fade>
-{/await}
+{/if}

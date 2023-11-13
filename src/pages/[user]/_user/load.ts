@@ -1,19 +1,29 @@
+import { getData } from "$lib/commons/utils/data";
 import type { Post, User } from "$lib/database";
-import type { Users } from "$lib/stores";
-import { posts } from "$lib/stores";
+import { posts as storePosts, users as storeUsers } from "$lib/stores";
 
-export const addUser = (users: Users, user: User, nextPosts: Post[] = []) => {
-	if (!users[user.id]) {
-		users[user.id] = {
-			...user,
-			posts: nextPosts.map((post) => {
-				posts.update((value) => {
-					value.elements[post.id] = post;
-					return value;
-				});
+const { data, load } = getData<{ user: User | null; posts: Post[] | null }>(({ user, posts }) => {
+	storeUsers.update((users) => {
+		if (!user || !posts) {
+			return users;
+		}
 
-				return post.id;
-			}),
-		};
-	}
-};
+		if (!users[user.id]) {
+			users[user.id] = {
+				...user,
+				posts: posts.map((post) => {
+					storePosts.update((value) => {
+						value.elements[post.id] = post;
+						return value;
+					});
+
+					return post.id;
+				}),
+			};
+		}
+
+		return users;
+	});
+});
+
+export { data, load };

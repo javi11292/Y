@@ -3,6 +3,7 @@ import type { Post, User } from "$lib/database";
 import { writable } from "svelte/store";
 
 export type Users = Record<string, User & { posts: number[] }>;
+
 export type Posts = {
 	elements: Record<string, Post>;
 	all: number[];

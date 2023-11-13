@@ -1,33 +1,50 @@
 <script lang="ts">
 	import Button from "$lib/commons/components/button";
+	import Fade from "$lib/commons/components/fade";
 	import { post } from "$lib/commons/utils/fetch";
-	import type { User } from "$lib/database";
 	import { invalidateUsers, users } from "$lib/stores";
+	import { data } from "./load";
 
-	let loading = false;
+	let invalidateLoading = false;
 
-	export let user: User;
 	export let currentUser: string;
 
 	const handleFollowClick = async () => {
-		loading = true;
-		await post("/api/follow", { id: user.id });
-		await invalidateUsers(user.name);
-		loading = false;
-	};
+		if (!$data?.user) {
+			return;
+		}
 
-	$: udpatedUser = $users[user.id] || user;
+		invalidateLoading = true;
+		await post("/api/follow", { id: $data.user.id });
+		await invalidateUsers($data.user.name);
+		invalidateLoading = false;
+	};
 </script>
 
-{#if user.id !== currentUser}
-	<Button
-		{loading}
-		variant="contained"
-		size="sm"
-		color="neutral"
-		disableUpperCase
-		on:click={handleFollowClick}
-	>
-		{udpatedUser.isFollowing ? "Dejar de seguir" : "Seguir"}
-	</Button>
+{#if $data?.user}
+	{@const updatedUser = $users[$data.user.id] || $data.user}
+
+	{#if $data.user.id !== currentUser}
+		<Fade>
+			<div class="button">
+				<Button
+					loading={invalidateLoading}
+					variant="contained"
+					size="sm"
+					color="neutral"
+					disableUpperCase
+					on:click={handleFollowClick}
+				>
+					{updatedUser.isFollowing ? "Dejar de seguir" : "Seguir"}
+				</Button>
+			</div>
+		</Fade>
+	{/if}
 {/if}
+
+<style lang="scss">
+	.button {
+		position: absolute;
+		right: 0;
+	}
+</style>

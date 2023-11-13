@@ -1,56 +1,48 @@
 ---
-import { GET as GETPosts } from "$api/post/[user]/[...page]";
-import { GET as GETUser } from "$api/user/[user]";
 import Button from "$lib/commons/components/button";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
-import type { Post, User } from "$lib/database";
 import Layout from "$lib/layouts/root-layout.astro";
-import type { LoggedAstroGlobal } from "$lib/types";
 import Follow from "./_user/follow.svelte";
 import Followers from "./_user/followers.svelte";
+import Load from "./_user/load.astro";
 import Posts from "./_user/posts.svelte";
 
 if (!Astro.locals.user) {
 	return Astro.redirect("/login");
 }
 
-const [user, posts] = (await Promise.all([
-	GETUser(Astro as LoggedAstroGlobal).then((response) => response.json()),
-	GETPosts(Astro).then((response) => response.json()),
-])) as [User, Post[]];
-
-if (!user) {
-	return Astro.redirect("/");
-}
+const name = (Astro.params.user as string).slice(1);
 ---
 
-<Layout title={user.name}>
+<Layout title={name}>
 	<div>
 		<div class="container">
 			<Header>
 				<div class="buttons">
 					<Button icon="arrow-right" mirror href="/" />
-					<Follow client:idle currentUser={(Astro as LoggedAstroGlobal).locals.user.id} {user} />
+					<Follow client:idle currentUser={Astro.locals.user.id} />
 				</div>
 			</Header>
 
 			<div class="content">
-				@{user.name}
+				@{name}
 
 				<div class="followers">
-					<Followers client:idle {user} {posts} />
+					<Followers client:idle />
 				</div>
 			</div>
 
 			<div><hr /></div>
 
-			<Posts client:idle {user} {posts} />
+			<Posts client:idle {name} />
 		</div>
 	</div>
 
 	<Compose client:idle />
 </Layout>
+
+<Load />
 
 <style lang="scss">
 	@use "$lib/commons/theme";
@@ -76,7 +68,6 @@ if (!user) {
 	.buttons {
 		display: flex;
 		justify-content: space-between;
-		align-items: start;
 		padding: 1rem;
 
 		> :global(:nth-child(1)) {

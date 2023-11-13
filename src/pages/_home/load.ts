@@ -1,15 +1,9 @@
-import { getLoading } from "$lib/commons/utils/load";
+import { getData } from "$lib/commons/utils/data";
 import type { Post } from "$lib/database";
 import { updatePosts } from "$lib/stores";
 
-const { loading, resolve } = getLoading();
-
-const load = (data: null | { all: Post[]; following: Post[] }) => {
-	if (data) {
-		updatePosts(data);
-	}
-
-	resolve();
-};
+const { load, loading } = getData<{ all: Post[]; following: Post[] }>((data) => {
+	updatePosts(data);
+});
 
 export { load, loading };

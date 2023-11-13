@@ -1,17 +1,18 @@
 <script lang="ts">
-	import type { Post, User } from "$lib/database";
+	import Fade from "$lib/commons/components/fade";
 	import { users } from "$lib/stores";
-	import { addUser } from "./load";
-
-	export let user: User;
-	export let posts: Post[];
-
-	addUser($users, user, posts);
-
-	$: udpatedUser = $users[user.id];
+	import { data } from "./load";
 </script>
 
-{udpatedUser.following[0].count}
-<span>Siguiendo</span>
-{udpatedUser.followers[0].count}
-<span>Seguidores</span>
+{#if $data?.user}
+	{@const updatedUser = $users[$data.user.id]}
+
+	<Fade>
+		{updatedUser.following[0].count}
+		<span>Siguiendo</span>
+		{updatedUser.followers[0].count}
+		<span>Seguidores</span>
+	</Fade>
+{:else}
+	<span />
+{/if}
