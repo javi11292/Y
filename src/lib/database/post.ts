@@ -17,7 +17,10 @@ export const addPost = async (value: { content: string; author: string }) => {
 };
 
 export const getPosts = async ({ id, name }: { id?: string; name?: string }) => {
-	let query = supabase.from("post").select("*, ...user!inner (author:name)").limit(PAGE_SIZE);
+	let query = supabase
+		.from("post")
+		.select("*, ...user!post_author_fkey!inner (author:name)")
+		.limit(PAGE_SIZE);
 
 	if (id) {
 		query = query.lt("id", id);
@@ -39,7 +42,7 @@ export const getPosts = async ({ id, name }: { id?: string; name?: string }) => 
 export const getFollowingPosts = async ({ user, id }: { user: string; id?: string }) => {
 	let query = supabase
 		.from("post")
-		.select("*, ...user!inner (author:name, follow!follow_id_fkey!inner ())")
+		.select("*, ...user!post_author_fkey!inner (author:name, follow!follow_id_fkey!inner ())")
 		.eq("user.follow.follower", user)
 		.limit(PAGE_SIZE);
 
