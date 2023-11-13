@@ -44,7 +44,7 @@ export const updatePosts = ({ all, following }: { all?: Post[]; following?: Post
 
 export const invalidateUsers = async (name: string) => {
 	const [user, following] = await Promise.all([
-		get<User>(`/api/user/@${name}`),
+		get<User>(`/api/user/${name}`),
 		get<Post[]>("/api/post/following"),
 	]);
 

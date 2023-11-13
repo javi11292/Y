@@ -8,9 +8,18 @@ const fields = {
 		name: "email",
 		label: "Email",
 	},
+	name: {
+		name: "name",
+		label: "Nombre de usuario",
+	},
 	password: {
 		name: "password",
 		label: "Contraseña",
+		type: "password",
+	},
+	confirmPassword: {
+		name: "confirmPassword",
+		label: "Repite la contraseña",
 		type: "password",
 	},
 };
@@ -20,8 +29,8 @@ export const prerender = true;
 
 <Redirect />
 
-<Layout title="Login">
-	<Form title="Login" {fields} api="login">
-		¿No tienes cuenta? <a href="/register/">Regístrate</a>
+<Layout title="Registro">
+	<Form title="Registro" {fields} api="register">
+		¿Ya tienes cuenta? <a href="/i/login/">Inicia sesión</a>
 	</Form>
 </Layout>
