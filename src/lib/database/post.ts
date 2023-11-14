@@ -1,4 +1,4 @@
-import { supabase, type Data, type Post } from ".";
+import { supabase, type Data } from ".";
 
 const PAGE_SIZE = 20;
 
@@ -25,10 +25,11 @@ export const addPost = async (value: { content: string; author: string }) => {
 	const { data } = await supabase
 		.from("post")
 		.insert({ ...value, date: new Date().toISOString() })
-		.select("*, ...user!post_author_fkey (author:name)")
-		.single<Post>();
+		.select("*, user!post_author_fkey (author:name), like (user)");
 
-	return data;
+	const formatted = formatPost({ data, user: value.author });
+
+	return formatted?.[0];
 };
 
 export const likePost = async ({ post, user }: { post: number; user: string }) => {
