@@ -4,6 +4,7 @@
 	import { post } from "$lib/commons/utils/fetch";
 	import { posts } from "$lib/stores";
 	import Loading from "../loading";
+	import Replacer from "../replacer";
 	import StatButton from "./stat-button.svelte";
 
 	export let thread = false;
@@ -88,7 +89,7 @@
 		<span class="date">{getDate(currentPost.date)}</span>
 	</div>
 
-	{currentPost.content}
+	<Replacer content={currentPost.content} />
 
 	{#if !thread}
 		<div class="stats">
@@ -122,7 +123,7 @@
 	}
 
 	a {
-		color: theme.$colorPrimary;
+		color: inherit;
 		text-decoration: none;
 
 		&:hover {
