@@ -9,7 +9,7 @@ export const supabase = createClient<Database>(
 			autoRefreshToken: false,
 			persistSession: false,
 		},
-	}
+	},
 );
 
 type Table<T extends keyof Database["public"]["Tables"]> = Database["public"]["Tables"][T]["Row"];

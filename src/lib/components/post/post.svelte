@@ -90,8 +90,8 @@
 {/if}
 
 <style lang="scss">
-	@use "src/lib/commons/classes";
-	@use "src/lib/commons/theme";
+	@use "$lib/commons/hover";
+	@use "$lib/commons/theme";
 
 	.loading {
 		padding: 2rem;
@@ -112,7 +112,7 @@
 		padding: 1rem 1rem 0;
 		cursor: pointer;
 
-		@include classes.hover(0.03);
+		@include hover.hover(0.03);
 	}
 
 	.meta {

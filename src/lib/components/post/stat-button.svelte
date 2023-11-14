@@ -15,8 +15,8 @@
 </button>
 
 <style lang="scss">
-	@use "src/lib/commons/theme";
-	@use "src/lib/commons/classes";
+	@use "$lib/commons/theme";
+	@use "$lib/commons/hover";
 
 	.icon {
 		@extend %root;

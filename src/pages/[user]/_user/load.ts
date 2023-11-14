@@ -25,7 +25,7 @@ const { data, load, loading } = getData<{ user: User | null; posts: Post[] | nul
 
 			return users;
 		});
-	}
+	},
 );
 
 export { data, load, loading };

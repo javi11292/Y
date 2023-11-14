@@ -14,7 +14,7 @@ export const getUser = async ({ name, id }: { name: string; id: string }) => {
 	const userQuery = supabase
 		.from("user")
 		.select(
-			"id, name, followers:follow_id_fkey!inner (count), following:follow_follower_fkey!inner (count)"
+			"id, name, followers:follow_id_fkey!inner (count), following:follow_follower_fkey!inner (count)",
 		)
 		.eq("name", name)
 		.single();
