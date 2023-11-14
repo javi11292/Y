@@ -63,8 +63,6 @@ export const getPosts = async ({
 
 	const { data } = await query.order("id", { ascending: false });
 
-	console.log(data);
-
 	return formatPost({ data, user });
 };
 

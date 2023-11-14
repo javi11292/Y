@@ -1,6 +1,8 @@
 import { getPosts } from "$lib/database/post";
-import type { AstroGlobal } from "astro";
+import { withSession } from "$lib/utils/api";
 
-export const GET = async ({ params }: AstroGlobal) => {
-	return new Response(JSON.stringify(await getPosts({ id: params.page, name: params.user })));
-};
+export const GET = withSession(async ({ params, locals }) => {
+	return new Response(
+		JSON.stringify(await getPosts({ id: params.page, user: locals.user.id, name: params.user })),
+	);
+});
