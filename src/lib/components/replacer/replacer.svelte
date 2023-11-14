@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let content: string;
+	export let withLink: boolean = false;
 
 	let components: { type: "string" | "user"; value: string }[] = [];
 
@@ -25,7 +26,11 @@
 	{#if type === "string"}
 		{value}
 	{:else}
-		<span class="mention">@<a href={`/${value}`}>{value}</a></span>
+		<span class="mention"
+			>@<svelte:element this={withLink ? "a" : "span"} href={withLink ? `/${value}` : undefined}
+				>{value}</svelte:element
+			></span
+		>
 	{/if}
 {/each}
 

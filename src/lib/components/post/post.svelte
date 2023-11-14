@@ -89,7 +89,7 @@
 		<span class="date">{getDate(currentPost.date)}</span>
 	</div>
 
-	<Replacer content={currentPost.content} />
+	<Replacer content={currentPost.content} withLink />
 
 	{#if !thread}
 		<div class="stats">

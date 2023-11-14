@@ -6,12 +6,15 @@
 	import type { Post } from "$lib/database";
 	import { posts } from "$lib/stores";
 	import { onMount } from "svelte";
+	import type { FormEventHandler } from "svelte/elements";
 	import { fade, fly } from "svelte/transition";
+	import Replacer from "../replacer";
 
 	let open = false;
 	let loading = false;
 	let content = "";
 	let input: HTMLDivElement;
+	let cursor = 0;
 
 	$: amount = Math.max(1 - content.length / MAX_LENGTH, 0);
 
@@ -53,6 +56,71 @@
 		open = false;
 	};
 
+	const findNode = (
+		node: Node,
+		offset: number,
+		result: { offset: number; node: Node | null } = {
+			offset: 0,
+			node: null,
+		},
+	) => {
+		if (node.nodeType === Node.TEXT_NODE) {
+			const { length } = node as Text;
+
+			result.offset += length;
+
+			if (result.offset >= offset) {
+				result.node = node;
+				result.offset = length + offset - result.offset;
+			}
+
+			return result;
+		}
+
+		for (let child of node.childNodes) {
+			findNode(child, offset, result);
+			if (result.node) return result;
+		}
+
+		return result;
+	};
+
+	const findOffset = (node: Node, anchor: Node, result = { offset: 0, found: false }) => {
+		if (node === anchor) {
+			result.found = true;
+			return result.offset;
+		}
+
+		if (node.nodeType === Node.TEXT_NODE) {
+			result.offset += (node as Text).length;
+			return result.offset;
+		}
+
+		for (let child of node.childNodes) {
+			findOffset(child, anchor, result);
+			if (result.found) return result.offset;
+		}
+
+		return result.offset;
+	};
+
+	const handleInput: FormEventHandler<HTMLDivElement> = (event) => {
+		content = event.currentTarget.textContent || "";
+		const selection = document.getSelection() as Selection;
+
+		const offset = findOffset(input, selection.anchorNode as Node);
+		cursor = offset + selection.anchorOffset;
+	};
+
+	const focus = (element: HTMLElement) => {
+		element.focus();
+
+		const { node, offset } = findNode(element, cursor);
+		const selection = document.getSelection() as Selection;
+
+		selection.setPosition(node, offset);
+	};
+
 	onMount(() => {
 		addEventListener("popstate", handlePopState);
 
@@ -70,12 +138,7 @@
 	</div>
 
 	{#if open}
-		<div
-			class="post"
-			transition:fly={{ y: "100%" }}
-			on:introend={() => input.focus()}
-			on:outroend={() => history.back()}
-		>
+		<div class="post" transition:fly={{ y: "100%" }} on:outroend={() => history.back()}>
 			<div class="actions">
 				<Button icon="arrow-right" mirror on:click={closeModal} />
 				<Button
@@ -90,13 +153,18 @@
 				</Button>
 			</div>
 
-			<div
-				contenteditable
-				class="editable"
-				bind:this={input}
-				bind:textContent={content}
-				placeholder="¿Que está pasando?"
-			/>
+			{#key content}
+				<div
+					use:focus
+					contenteditable
+					class="editable"
+					bind:this={input}
+					on:input={handleInput}
+					placeholder="¿Que está pasando?"
+				>
+					<Replacer {content} />
+				</div>
+			{/key}
 
 			<hr />
 
