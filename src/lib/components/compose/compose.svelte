@@ -9,14 +9,15 @@
 	import type { FormEventHandler } from "svelte/elements";
 	import { fade, fly } from "svelte/transition";
 	import Replacer from "../replacer";
+	import { content } from "./store";
 
 	let open = false;
 	let loading = false;
-	let content = "";
 	let input: HTMLDivElement;
 	let cursor = 0;
+	let focusEnabled = false;
 
-	$: amount = Math.max(1 - content.length / MAX_LENGTH, 0);
+	$: amount = Math.max(1 - $content.length / MAX_LENGTH, 0);
 
 	const handlePopState = () => {
 		if (open) {
@@ -29,11 +30,12 @@
 		loading = true;
 
 		try {
-			const response = await post<Post>("/api/post/add", { content });
+			const response = await post<Post>("/api/post/add", { content: $content });
 
 			$posts.elements[response.id] = response;
 			$posts.all.unshift(response.id);
 			$posts = { ...$posts };
+			$content = "";
 		} catch (error) {
 			if (error instanceof Error) {
 				addError(error.message);
@@ -54,6 +56,7 @@
 	const closeModal = () => {
 		document.documentElement.style.setProperty("--overflow", "auto");
 		open = false;
+		focusEnabled = false;
 	};
 
 	const findNode = (
@@ -105,7 +108,7 @@
 	};
 
 	const handleInput: FormEventHandler<HTMLDivElement> = (event) => {
-		content = event.currentTarget.textContent || "";
+		$content = event.currentTarget.textContent || "";
 		const selection = document.getSelection() as Selection;
 
 		const offset = findOffset(input, selection.anchorNode as Node);
@@ -113,6 +116,10 @@
 	};
 
 	const focus = (element: HTMLElement) => {
+		if (!focusEnabled) {
+			return;
+		}
+
 		element.focus();
 
 		const { node, offset } = findNode(element, cursor);
@@ -138,7 +145,15 @@
 	</div>
 
 	{#if open}
-		<div class="post" transition:fly={{ y: "100%" }} on:outroend={() => history.back()}>
+		<div
+			class="post"
+			transition:fly={{ y: "100%" }}
+			on:introend={() => {
+				input.focus();
+				focusEnabled = true;
+			}}
+			on:outroend={() => history.back()}
+		>
 			<div class="actions">
 				<Button icon="arrow-right" mirror on:click={closeModal} />
 				<Button
@@ -146,14 +161,14 @@
 					variant="contained"
 					disableUpperCase
 					size="sm"
-					disabled={!content || content.length > MAX_LENGTH}
+					disabled={!$content || $content.length > MAX_LENGTH}
 					{loading}
 				>
 					Enviar
 				</Button>
 			</div>
 
-			{#key content}
+			{#key $content}
 				<div
 					use:focus
 					contenteditable
@@ -162,15 +177,15 @@
 					on:input={handleInput}
 					placeholder="¿Que está pasando?"
 				>
-					<Replacer {content} />
+					<Replacer content={$content} />
 				</div>
 			{/key}
 
 			<hr />
 
 			<div class="counter">
-				{#if MAX_LENGTH - content.length <= 10}
-					<span transition:fade>{MAX_LENGTH - content.length}</span>
+				{#if MAX_LENGTH - $content.length <= 10}
+					<span transition:fade>{MAX_LENGTH - $content.length}</span>
 				{/if}
 				<svg
 					class="icon"
