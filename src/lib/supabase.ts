@@ -35,30 +35,30 @@ export interface Database {
 			};
 			like: {
 				Row: {
-					author: string;
 					post: number;
+					user: string;
 				};
 				Insert: {
-					author: string;
 					post: number;
+					user: string;
 				};
 				Update: {
-					author?: string;
 					post?: number;
+					user?: string;
 				};
 				Relationships: [
-					{
-						foreignKeyName: "like_author_fkey";
-						columns: ["author"];
-						isOneToOne: false;
-						referencedRelation: "user";
-						referencedColumns: ["id"];
-					},
 					{
 						foreignKeyName: "like_post_fkey";
 						columns: ["post"];
 						isOneToOne: false;
 						referencedRelation: "post";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "like_user_fkey";
+						columns: ["user"];
+						isOneToOne: false;
+						referencedRelation: "user";
 						referencedColumns: ["id"];
 					},
 				];

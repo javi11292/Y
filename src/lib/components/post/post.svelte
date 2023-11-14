@@ -1,6 +1,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
+	import { post } from "$lib/commons/utils/fetch";
 	import { posts } from "$lib/stores";
 	import Loading from "../loading";
 	import StatButton from "./stat-button.svelte";
@@ -11,7 +12,7 @@
 
 	let loading = false;
 
-	$: post = $posts.elements[id];
+	$: currentPost = $posts.elements[id];
 
 	const last = (node: HTMLElement, callback: typeof onIntersection) => {
 		const ref = { callback };
@@ -64,19 +65,38 @@
 
 		return date.toLocaleDateString(undefined, { day: "numeric", month: "short" });
 	};
+
+	const toggleLike = () => {
+		$posts.elements[id] = {
+			...currentPost,
+			likes: currentPost.likes + (currentPost.liked ? -1 : 1),
+			liked: !currentPost.liked,
+		};
+		$posts = { ...$posts };
+	};
+
+	const handleLike = (event: Event) => {
+		event.stopPropagation();
+		toggleLike();
+		post("/api/post/like", { post: id }).catch(toggleLike);
+	};
 </script>
 
 <div use:last={onIntersection} class:post={!thread} on:keydown role="button" tabindex="0">
 	<div class="meta">
-		<span class="author">@<a href={`/${post.author}`}>{post.author}</a></span>
-		<span class="date">{getDate(post.date)}</span>
+		<span class="author">@<a href={`/${currentPost.author}`}>{currentPost.author}</a></span>
+		<span class="date">{getDate(currentPost.date)}</span>
 	</div>
 
-	{post.content}
+	{currentPost.content}
 
 	{#if !thread}
 		<div class="stats">
-			<StatButton icon="favorite-border">0</StatButton>
+			<span class:liked={currentPost.liked}>
+				<StatButton icon={currentPost.liked ? "favorite" : "favorite-border"} on:click={handleLike}>
+					{currentPost.likes}
+				</StatButton>
+			</span>
 
 			<StatButton icon="chat">0</StatButton>
 		</div>
@@ -92,6 +112,10 @@
 <style lang="scss">
 	@use "$lib/commons/hover";
 	@use "$lib/commons/theme";
+
+	.liked {
+		color: rgb(255, 30, 30);
+	}
 
 	.loading {
 		padding: 2rem;

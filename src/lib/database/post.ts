@@ -1,26 +1,56 @@
-import { supabase, type Post } from ".";
+import { supabase, type Data, type Post } from ".";
 
 const PAGE_SIZE = 20;
 
+const selectPosts = () =>
+	supabase
+		.from("post")
+		.select("*, user!post_author_fkey!inner (author:name), like (user)")
+		.limit(PAGE_SIZE);
+
+const formatPost = ({ data, user }: { data: Data<typeof selectPosts>; user: string }) =>
+	data &&
+	data.map((entry) => {
+		const { user: userField, like, ...props } = entry;
+
+		return {
+			...props,
+			author: (userField as { author: string }).author,
+			likes: like.length,
+			liked: like.some(({ user: userId }) => user === userId),
+		};
+	});
+
 export const addPost = async (value: { content: string; author: string }) => {
-	const { data, error } = await supabase
+	const { data } = await supabase
 		.from("post")
 		.insert({ ...value, date: new Date().toISOString() })
 		.select("*, ...user!post_author_fkey (author:name)")
 		.single<Post>();
 
-	if (error) {
-		throw error;
-	}
-
 	return data;
 };
 
-export const getPosts = async ({ id, name }: { id?: string; name?: string }) => {
-	let query = supabase
-		.from("post")
-		.select("*, ...user!post_author_fkey!inner (author:name)")
-		.limit(PAGE_SIZE);
+export const likePost = async ({ post, user }: { post: number; user: string }) => {
+	const { data } = await supabase.from("like").select().match({ post, user }).single();
+
+	if (!data) {
+		await supabase.from("like").insert({ post, user });
+	} else {
+		await supabase.from("like").delete().match({ post, user });
+	}
+};
+
+export const getPosts = async ({
+	id,
+	name,
+	user,
+}: {
+	id?: string;
+	name?: string;
+	user: string;
+}) => {
+	let query = selectPosts();
 
 	if (id) {
 		query = query.lt("id", id);
@@ -30,19 +60,19 @@ export const getPosts = async ({ id, name }: { id?: string; name?: string }) => 
 		query.eq("user.name", name);
 	}
 
-	const { data, error } = await query.order("id", { ascending: false }).returns<Post>();
+	const { data } = await query.order("id", { ascending: false });
 
-	if (error) {
-		throw error;
-	}
+	console.log(data);
 
-	return data;
+	return formatPost({ data, user });
 };
 
 export const getFollowingPosts = async ({ user, id }: { user: string; id?: string }) => {
 	let query = supabase
 		.from("post")
-		.select("*, ...user!post_author_fkey!inner (author:name, follow!follow_id_fkey!inner ())")
+		.select(
+			"*, user!post_author_fkey!inner (author:name, follow!follow_id_fkey!inner ()), like (user)",
+		)
 		.eq("user.follow.follower", user)
 		.limit(PAGE_SIZE);
 
@@ -50,11 +80,7 @@ export const getFollowingPosts = async ({ user, id }: { user: string; id?: strin
 		query = query.lt("id", id);
 	}
 
-	const { data, error } = await query.order("id", { ascending: false }).returns<Post>();
+	const { data } = await query.order("id", { ascending: false });
 
-	if (error) {
-		throw error;
-	}
-
-	return data;
+	return formatPost({ data: data as unknown as Data<typeof selectPosts>, user });
 };

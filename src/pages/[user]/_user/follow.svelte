@@ -35,7 +35,7 @@
 					disableUpperCase
 					on:click={handleFollowClick}
 				>
-					{updatedUser.isFollowing ? "Dejar de seguir" : "Seguir"}
+					{updatedUser.followed ? "Dejar de seguir" : "Seguir"}
 				</Button>
 			</div>
 		</Fade>

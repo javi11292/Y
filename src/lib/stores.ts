@@ -14,7 +14,13 @@ export const posts = writable<Posts>({ elements: {}, all: [], following: [] });
 
 export const users = writable<Users>({});
 
-export const updatePosts = ({ all, following }: { all?: Post[]; following?: Post[] }) => {
+export const updatePosts = ({
+	all,
+	following,
+}: {
+	all?: null | Post[];
+	following?: null | Post[];
+}) => {
 	posts.update((value) => {
 		if (all) {
 			const ids: number[] = [];

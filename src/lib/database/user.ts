@@ -14,40 +14,37 @@ export const getUser = async ({ name, id }: { name: string; id: string }) => {
 	const userQuery = supabase
 		.from("user")
 		.select(
-			"id, name, followers:follow_id_fkey!inner (count), following:follow_follower_fkey!inner (count)",
+			"id, name, followers:follow!follow_id_fkey (follower), following:follow!follow_follower_fkey (id)",
 		)
 		.eq("name", name)
 		.single();
 
-	const isFollowingQuery = supabase
+	const followedQuery = supabase
 		.from("user")
-		.select("*, followers:follow_id_fkey!inner (*)")
+		.select("*, followers!follow_id_fkey!inner (*)")
 		.match({ name, "followers.follower": id })
 		.single();
 
-	const [user, isFollowing] = await Promise.all([userQuery, isFollowingQuery]);
+	const [user, followed] = await Promise.all([userQuery, followedQuery]);
 
 	if (!user.data) {
 		return null;
 	}
 
-	return { ...user.data, isFollowing: !!isFollowing.data };
+	return {
+		...user.data,
+		following: user.data.following.length,
+		followers: user.data.followers.length,
+		followed: !!followed.data,
+	};
 };
 
 export const followUser = async ({ id, follower }: { id: string; follower: string }) => {
-	const { data: user } = await supabase.from("follow").select().match({ id, follower }).single();
+	const { data } = await supabase.from("follow").select().match({ id, follower }).single();
 
-	let error;
-
-	if (!user) {
-		const response = await supabase.from("follow").insert({ id, follower });
-		error = response.error;
+	if (!data) {
+		await supabase.from("follow").insert({ id, follower });
 	} else {
-		const response = await supabase.from("follow").delete().match({ id, follower });
-		error = response.error;
-	}
-
-	if (error) {
-		throw error;
+		await supabase.from("follow").delete().match({ id, follower });
 	}
 };

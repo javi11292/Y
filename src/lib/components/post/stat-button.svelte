@@ -29,6 +29,10 @@
 		font-size: 1.5rem;
 	}
 
+	.value {
+		color: theme.$colorNeutral;
+	}
+
 	.button {
 		transition: all;
 		transition-duration: 200ms;
@@ -42,6 +46,10 @@
 		@media (hover: hover) {
 			&:hover {
 				color: theme.$colorPrimary;
+
+				.value {
+					color: theme.$colorPrimary;
+				}
 
 				.icon::before {
 					opacity: 0.1;

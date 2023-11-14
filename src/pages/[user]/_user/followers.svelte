@@ -8,9 +8,9 @@
 	{@const updatedUser = $users[$data.user.id]}
 
 	<Fade>
-		{updatedUser.following[0].count}
+		{updatedUser.following}
 		<span>Siguiendo</span>
-		{updatedUser.followers[0].count}
+		{updatedUser.followers}
 		<span>Seguidores</span>
 	</Fade>
 {:else}
