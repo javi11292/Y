@@ -6,7 +6,7 @@ export const addPost = async (value: { content: string; author: string }) => {
 	const { data, error } = await supabase
 		.from("post")
 		.insert({ ...value, date: new Date().toISOString() })
-		.select("*, ...user (author:name)")
+		.select("*, ...user!post_author_fkey (author:name)")
 		.single<Post>();
 
 	if (error) {
