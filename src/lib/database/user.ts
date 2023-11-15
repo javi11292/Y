@@ -21,8 +21,8 @@ export const getUser = async ({ name, id }: { name: string; id: string }) => {
 
 	const followedQuery = supabase
 		.from("user")
-		.select("*, followers!follow_id_fkey!inner (*)")
-		.match({ name, "followers.follower": id })
+		.select("follow!follow_id_fkey!inner (*)")
+		.match({ name, "follow.follower": id })
 		.single();
 
 	const [user, followed] = await Promise.all([userQuery, followedQuery]);
