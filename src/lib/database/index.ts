@@ -1,8 +1,10 @@
 import type { Database } from "$lib/supabase";
 import { createClient } from "@supabase/supabase-js";
 
+console.log("LALALA", import.meta.env.SUPABASE_URL);
+
 export const supabase = createClient<Database>(
-	"https://daislqwxhhgdcrkfthho.supabase.co",
+	import.meta.env.SUPABASE_URL,
 	import.meta.env.SUPABASE_ADMIN,
 	{
 		auth: {
