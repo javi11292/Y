@@ -4,21 +4,27 @@ import { defineMiddleware } from "astro:middleware";
 export const onRequest = defineMiddleware(async (context, next) => {
 	const { locals, cookies } = context;
 
-	console.log("LELELE", import.meta.env.SUPABASE_URL);
-
-	locals.supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
-		cookies: {
-			get(key) {
-				return cookies.get(key)?.value;
+	try {
+		locals.supabase = createServerClient(
+			import.meta.env.SUPABASE_URL,
+			import.meta.env.SUPABASE_KEY,
+			{
+				cookies: {
+					get(key) {
+						return cookies.get(key)?.value;
+					},
+					set(key, value, options) {
+						cookies.set(key, value, options);
+					},
+					remove(key, options) {
+						cookies.delete(key, options);
+					},
+				},
 			},
-			set(key, value, options) {
-				cookies.set(key, value, options);
-			},
-			remove(key, options) {
-				cookies.delete(key, options);
-			},
-		},
-	});
+		);
+	} catch {
+		console.log("LALALA");
+	}
 
 	const { data } = await locals.supabase.auth.getSession();
 
