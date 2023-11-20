@@ -1,3 +1,5 @@
-import { createState } from "$lib/commons/utils/state.svelte";
+class Content {
+	value = $state("");
+}
 
-export const content = createState("");
+export const content = new Content();

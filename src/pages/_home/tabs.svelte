@@ -1,41 +1,43 @@
 <script lang="ts">
 	import Button from "$lib/commons/components/button";
-	import { crossfade } from "svelte/transition";
-	import { tab, tabs } from "./store";
+	import { tab, tabs } from "./store.svelte";
 
-	const handleClick = (tab: number) => {
-		if ($tab.active < tab) {
-			$tab.direction = 1;
-		} else {
-			$tab.direction = -1;
+	const handleClick = async (nextTab: number) => {
+		if (tab.active === nextTab) {
+			return;
 		}
 
-		$tab.active = tab;
+		const { finished } = document.startViewTransition(() => {
+			const direction = (tab.active < nextTab ? 1 : -1).toString();
+			document.documentElement.style.setProperty("--direction", direction);
+			tab.active = nextTab;
+		});
+
+		await finished;
+
+		document.documentElement.style.removeProperty("--direction");
 	};
-
-	const key = { key: "indicator" };
-
-	const [send, receive] = crossfade({ duration: 20000 });
 </script>
 
 <Button disableBorder disableActive disableUpperCase onclick={() => handleClick(tabs.tab1)}>
 	Para ti
-	{#if $tab.active === tabs.tab1}
-		<div class="indicator" in:receive={key} out:send={key} />
+	{#if tab.active === tabs.tab1}
+		<div class="selectedTab" />
 	{/if}
 </Button>
 
 <Button disableBorder disableActive disableUpperCase onclick={() => handleClick(tabs.tab2)}>
 	Siguiendo
-	{#if $tab.active === tabs.tab2}
-		<div class="indicator" in:receive={key} out:send={key} />
+	{#if tab.active === tabs.tab2}
+		<div class="selectedTab" />
 	{/if}
 </Button>
 
 <style lang="scss">
 	@use "$lib/commons/theme";
 
-	.indicator {
+	.selectedTab {
+		view-transition-name: selectedTab;
 		position: absolute;
 		bottom: 0;
 		translate: -50%;

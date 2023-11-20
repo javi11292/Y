@@ -1,9 +1,8 @@
 <script lang="ts">
 	import Fade from "$lib/commons/components/fade";
 	import Loading from "$lib/components/loading";
-	import { fly } from "svelte/transition";
 	import { loading } from "./load";
-	import { tab } from "./store";
+	import { tab } from "./store.svelte";
 	import Tab from "./tab.svelte";
 </script>
 
@@ -11,13 +10,16 @@
 	<Loading />
 {:else}
 	<Fade>
-		{#key $tab.active}
-			<div
-				in:fly={{ x: `${100 * $tab.direction}%`, opacity: 1 }}
-				out:fly={{ x: `${-100 * $tab.direction}%`, opacity: 1 }}
-			>
-				<Tab active={$tab.active} />
+		{#key tab.active}
+			<div class="tabContent">
+				<Tab active={tab.active} />
 			</div>
 		{/key}
 	</Fade>
 {/if}
+
+<style lang="scss">
+	.tabContent {
+		view-transition-name: tabContent;
+	}
+</style>

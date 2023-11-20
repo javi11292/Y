@@ -2,6 +2,7 @@
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/root-layout.astro";
+import Content from "./_home/content.svelte";
 import Load from "./_home/load.astro";
 import Tabs from "./_home/tabs.svelte";
 
@@ -16,6 +17,10 @@ if (!Astro.locals.user) {
 			<Header>
 				<div class="tabs"><Tabs client:idle /></div>
 			</Header>
+
+			<div class="content">
+				<Content client:idle />
+			</div>
 		</div>
 	</div>
 
@@ -48,5 +53,31 @@ if (!Astro.locals.user) {
 		:global(> astro-island > *) {
 			grid-area: content;
 		}
+	}
+
+	@keyframes slide {
+		from {
+			translate: calc(var(--from) * var(--direction));
+		}
+
+		to {
+			translate: calc(var(--to) * var(--direction));
+		}
+	}
+
+	:root::view-transition-group(tabContent) {
+		overflow: hidden;
+	}
+
+	:root::view-transition-old(tabContent) {
+		--from: 0;
+		--to: -100%;
+		animation-name: slide;
+	}
+
+	:root::view-transition-new(tabContent) {
+		--from: 100%;
+		--to: 0;
+		animation-name: slide;
 	}
 </style>

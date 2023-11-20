@@ -3,7 +3,7 @@
 	import PostComponent from "$lib/components/post";
 	import type { Post } from "$lib/database";
 	import { posts } from "$lib/stores";
-	import { tabs } from "./store";
+	import { tabs } from "./store.svelte";
 
 	type Props = {
 		active: number;

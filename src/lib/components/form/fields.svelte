@@ -3,9 +3,9 @@
 	import Input from "$lib/commons/components/input";
 	import { addError } from "$lib/commons/components/snackbar";
 	import { post } from "$lib/commons/utils/fetch";
-	import { createStore } from "$lib/commons/utils/state.svelte";
 	import { navigate } from "astro:transitions/client";
 	import type { ComponentProps } from "svelte";
+	import { createState } from "./fields.util.svelte";
 
 	type Props = {
 		fields: Record<string, { name: string } & ComponentProps<Input>>;
@@ -16,7 +16,7 @@
 
 	let loading = $state(false);
 
-	const values = createStore(
+	const values = createState(
 		Object.values(fields).reduce<Record<string, string>>((acc, { name }) => {
 			acc[name] = "";
 
@@ -24,7 +24,7 @@
 		}, {}),
 	);
 
-	const elements = createStore<HTMLElement[]>(
+	const elements = createState<HTMLElement[]>(
 		Array.from({ length: Object.keys(fields).length + 1 }),
 	);
 
