@@ -1,4 +1,4 @@
-import { supabase } from "$lib/database";
+import { supabase } from "$lib/database/supabase";
 import { addUser } from "$lib/database/user";
 import { errorResponse } from "$lib/utils/api";
 import type { AstroGlobal } from "astro";
