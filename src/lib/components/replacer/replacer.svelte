@@ -1,25 +1,28 @@
 <script lang="ts">
-	export let content: string;
-	export let withLink: boolean = false;
+	type Props = { content: string; withLink?: boolean };
 
-	let components: { type: "string" | "user"; value: string }[] = [];
+	let { content, withLink } = $props<Props>();
 
-	$: {
-		components = [];
+	const getComponents = () => {
+		let nextComponents: { type: "string" | "user"; value: string }[] = [];
 		const regex = /@(\w+)/g;
 
 		let index = 0;
 		let result: RegExpExecArray | null;
 
 		while ((result = regex.exec(content))) {
-			components.push({ type: "string", value: content.slice(index, result.index) });
+			nextComponents.push({ type: "string", value: content.slice(index, result.index) });
 			index = regex.lastIndex;
 
-			components.push({ type: "user", value: result[1] });
+			nextComponents.push({ type: "user", value: result[1] });
 		}
 
-		components.push({ type: "string", value: content.slice(index) });
-	}
+		nextComponents.push({ type: "string", value: content.slice(index) });
+
+		return nextComponents;
+	};
+
+	let components = $derived(getComponents());
 </script>
 
 {#each components as { type, value }}

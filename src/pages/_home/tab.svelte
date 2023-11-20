@@ -5,17 +5,13 @@
 	import { posts } from "$lib/stores";
 	import { tabs } from "./store";
 
-	export let active: number;
+	type Props = {
+		active: number;
+	};
 
-	let filteredPosts: number[] = [];
+	let { active } = $props<Props>();
 
-	$: {
-		if (active === tabs.tab1) {
-			filteredPosts = $posts.all;
-		} else {
-			filteredPosts = $posts.following;
-		}
-	}
+	let filteredPosts: number[] = $derived(active === tabs.tab1 ? $posts.all : $posts.following);
 
 	const handleIntersection = async (id: number) => {
 		const api = active === tabs.tab1 ? "all" : "following";
@@ -33,6 +29,6 @@
 {#each filteredPosts as post, index}
 	<PostComponent
 		id={post}
-		onIntersection={index === filteredPosts.length - 1 ? handleIntersection : null}
+		onintersection={index === filteredPosts.length - 1 ? handleIntersection : undefined}
 	/>
 {/each}

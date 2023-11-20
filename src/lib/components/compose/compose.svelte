@@ -5,19 +5,18 @@
 	import { MAX_LENGTH } from "$lib/constants";
 	import type { Post } from "$lib/database";
 	import { posts } from "$lib/stores";
-	import { onMount } from "svelte";
 	import type { FormEventHandler } from "svelte/elements";
 	import { fade, fly } from "svelte/transition";
 	import Replacer from "../replacer";
-	import { content } from "./store";
+	import { content } from "./store.svelte";
 
-	let open = false;
-	let loading = false;
+	let open = $state(false);
+	let loading = $state(false);
+	let amount = $derived(Math.max(1 - content.value.length / MAX_LENGTH, 0));
+
 	let input: HTMLDivElement;
 	let cursor = 0;
 	let focusEnabled = false;
-
-	$: amount = Math.max(1 - $content.length / MAX_LENGTH, 0);
 
 	const handlePopState = () => {
 		if (open) {
@@ -26,16 +25,16 @@
 		}
 	};
 
-	const handleClick = async () => {
+	const send = async () => {
 		loading = true;
 
 		try {
-			const response = await post<Post>("/api/post/add", { content: $content });
+			const response = await post<Post>("/api/post/add", { content: content.value });
 
 			$posts.elements[response.id] = response;
 			$posts.all.unshift(response.id);
 			$posts = { ...$posts };
-			$content = "";
+			content.value = "";
 		} catch (error) {
 			if (error instanceof Error) {
 				addError(error.message);
@@ -107,8 +106,8 @@
 		return result.offset;
 	};
 
-	const handleInput: FormEventHandler<HTMLDivElement> = (event) => {
-		$content = event.currentTarget.textContent || "";
+	const oninput: FormEventHandler<HTMLDivElement> = (event) => {
+		content.value = event.currentTarget.textContent || "";
 		const selection = document.getSelection() as Selection;
 
 		const offset = findOffset(input, selection.anchorNode as Node);
@@ -128,7 +127,7 @@
 		selection.setPosition(node, offset);
 	};
 
-	onMount(() => {
+	$effect(() => {
 		addEventListener("popstate", handlePopState);
 
 		return () => {
@@ -140,7 +139,7 @@
 <div class="container">
 	<div class="button">
 		<div>
-			<Button size="lg" icon="add" variant="contained" on:click={openModal} />
+			<Button size="lg" icon="add" variant="contained" onclick={openModal} />
 		</div>
 	</div>
 
@@ -155,37 +154,37 @@
 			on:outroend={() => history.back()}
 		>
 			<div class="actions">
-				<Button icon="arrow-right" mirror on:click={closeModal} />
+				<Button icon="arrow-right" mirror onclick={closeModal} />
 				<Button
-					on:click={handleClick}
+					onclick={send}
 					variant="contained"
 					disableUpperCase
 					size="sm"
-					disabled={!$content || $content.length > MAX_LENGTH}
+					disabled={!content.value || content.value.length > MAX_LENGTH}
 					{loading}
 				>
 					Enviar
 				</Button>
 			</div>
 
-			{#key $content}
+			{#key content.value}
 				<div
 					use:focus
 					contenteditable
 					class="editable"
 					bind:this={input}
-					on:input={handleInput}
+					{oninput}
 					placeholder="¿Que está pasando?"
 				>
-					<Replacer content={$content} />
+					<Replacer content={content.value} />
 				</div>
 			{/key}
 
 			<hr />
 
 			<div class="counter">
-				{#if MAX_LENGTH - $content.length <= 10}
-					<span transition:fade>{MAX_LENGTH - $content.length}</span>
+				{#if MAX_LENGTH - content.value.length <= 10}
+					<span transition:fade>{MAX_LENGTH - content.value.length}</span>
 				{/if}
 				<svg
 					class="icon"
@@ -271,8 +270,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: start;
+	}
 
-		> :global(:nth-child(1)) {
+	:global(.actions) {
+		:nth-child(1) {
 			margin: -0.5rem;
 		}
 	}

@@ -15,16 +15,17 @@
 
 	const key = { key: "indicator" };
 
-	const [send, receive] = crossfade({ duration: 200 });
+	const [send, receive] = crossfade({ duration: 20000 });
 </script>
 
-<Button disableBorder disableActive disableUpperCase on:click={() => handleClick(tabs.tab1)}>
+<Button disableBorder disableActive disableUpperCase onclick={() => handleClick(tabs.tab1)}>
 	Para ti
 	{#if $tab.active === tabs.tab1}
 		<div class="indicator" in:receive={key} out:send={key} />
 	{/if}
 </Button>
-<Button disableBorder disableActive disableUpperCase on:click={() => handleClick(tabs.tab2)}>
+
+<Button disableBorder disableActive disableUpperCase onclick={() => handleClick(tabs.tab2)}>
 	Siguiendo
 	{#if $tab.active === tabs.tab2}
 		<div class="indicator" in:receive={key} out:send={key} />

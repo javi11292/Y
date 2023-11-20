@@ -2,7 +2,6 @@
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/root-layout.astro";
-import Content from "./_home/content.svelte";
 import Load from "./_home/load.astro";
 import Tabs from "./_home/tabs.svelte";
 
@@ -17,10 +16,6 @@ if (!Astro.locals.user) {
 			<Header>
 				<div class="tabs"><Tabs client:idle /></div>
 			</Header>
-
-			<div class="content">
-				<Content client:idle />
-			</div>
 		</div>
 	</div>
 

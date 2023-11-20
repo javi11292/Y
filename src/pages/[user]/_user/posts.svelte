@@ -5,7 +5,9 @@
 	import { users } from "$lib/stores";
 	import { data, load, loading } from "./load";
 
-	export let name: string;
+	type Props = { name: string };
+
+	let { name } = $props<Props>();
 
 	load(`[user] ${name}`);
 </script>

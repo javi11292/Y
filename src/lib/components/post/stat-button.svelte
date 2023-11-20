@@ -1,10 +1,12 @@
 <script lang="ts">
 	import Icon from "$lib/commons/components/icon";
 
-	export let icon: string;
+	type Props = { icon: string; onclick?: (event: Event) => void };
+
+	let { icon, onclick } = $props<Props>();
 </script>
 
-<button class="button" on:click>
+<button class="button" {onclick}>
 	<span class="icon">
 		<Icon {icon} />
 	</span>

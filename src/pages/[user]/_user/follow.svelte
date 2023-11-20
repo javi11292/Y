@@ -5,9 +5,11 @@
 	import { invalidateUsers, users } from "$lib/stores";
 	import { data } from "./load";
 
-	let invalidateLoading = false;
+	type Props = { currentUser: string };
 
-	export let currentUser: string;
+	let { currentUser } = $props<Props>();
+
+	let invalidateLoading = $state(false);
 
 	const handleFollowClick = async () => {
 		if (!$data?.user) {

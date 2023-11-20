@@ -3,15 +3,30 @@
 	import Input from "$lib/commons/components/input";
 	import { addError } from "$lib/commons/components/snackbar";
 	import { post } from "$lib/commons/utils/fetch";
+	import { createStore } from "$lib/commons/utils/state.svelte";
 	import { navigate } from "astro:transitions/client";
 	import type { ComponentProps } from "svelte";
 
-	export let fields: Record<string, { name: string } & ComponentProps<Input>>;
-	export let api: "login" | "register";
+	type Props = {
+		fields: Record<string, { name: string } & ComponentProps<Input>>;
+		api: "login" | "register";
+	};
 
-	let values: Record<string, string> = {};
-	let elements: HTMLInputElement[] = [];
-	let loading = false;
+	let { fields, api } = $props<Props>();
+
+	let loading = $state(false);
+
+	const values = createStore(
+		Object.values(fields).reduce<Record<string, string>>((acc, { name }) => {
+			acc[name] = "";
+
+			return acc;
+		}, {}),
+	);
+
+	const elements = createStore<HTMLElement[]>(
+		Array.from({ length: Object.keys(fields).length + 1 }),
+	);
 
 	const handleClick = async () => {
 		loading = true;
@@ -32,7 +47,7 @@
 		loading = false;
 	};
 
-	const handleKeyPress = (index: number) => (event: KeyboardEvent) => {
+	const handleKeypress = (index: number) => (event: KeyboardEvent) => {
 		if (event.key !== "Enter") {
 			return;
 		}
@@ -49,9 +64,11 @@
 	<Input
 		bind:element={elements[index]}
 		bind:value={values[name]}
-		on:keypress={handleKeyPress(index + 1)}
+		onkeypress={handleKeypress(index + 1)}
 		{...field}
 	/>
 {/each}
 
-<Button bind:element={elements[elements.length]} {loading} on:click={handleClick}>Continuar</Button>
+<Button bind:element={elements[elements.length - 1]} {loading} onclick={handleClick}
+	>Continuar</Button
+>

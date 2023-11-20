@@ -7,15 +7,18 @@
 	import Replacer from "../replacer";
 	import StatButton from "./stat-button.svelte";
 
-	export let thread = false;
-	export let id: number;
-	export let onIntersection: null | ((id: number) => Promise<void>) = null;
+	type Props = {
+		thread?: boolean;
+		id: number;
+		onintersection?: (id: number) => Promise<void>;
+	};
 
-	let loading = false;
+	let { thread, id, onintersection } = $props<Props>();
 
-	$: currentPost = $posts.elements[id];
+	let loading = $state(false);
+	let currentPost = $derived($posts.elements[id]);
 
-	const last = (node: HTMLElement, callback: typeof onIntersection) => {
+	const last = (node: HTMLElement, callback: typeof onintersection) => {
 		const ref = { callback };
 
 		const observer = new IntersectionObserver(async ([{ isIntersecting }]) => {
@@ -76,14 +79,14 @@
 		$posts = { ...$posts };
 	};
 
-	const handleLike = (event: Event) => {
+	const handleClick = (event: Event) => {
 		event.stopPropagation();
 		toggleLike();
 		post("/api/post/like", { post: id }).catch(toggleLike);
 	};
 </script>
 
-<div use:last={onIntersection} class:post={!thread} on:keydown role="button" tabindex="0">
+<div use:last={onintersection} class:post={!thread}>
 	<div class="meta">
 		<span class="author">@<a href={`/${currentPost.author}`}>{currentPost.author}</a></span>
 		<span class="date">{getDate(currentPost.date)}</span>
@@ -94,7 +97,7 @@
 	{#if !thread}
 		<div class="stats">
 			<span class:liked={currentPost.liked}>
-				<StatButton icon={currentPost.liked ? "favorite" : "favorite-border"} on:click={handleLike}>
+				<StatButton icon={currentPost.liked ? "favorite" : "favorite-border"} onclick={handleClick}>
 					{currentPost.likes}
 				</StatButton>
 			</span>
