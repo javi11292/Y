@@ -3,7 +3,7 @@ import { defineMiddleware } from "astro:middleware";
 
 export const onRequest = defineMiddleware(async (context, next) => {
 	const { locals, cookies } = context;
-
+	console.log(import.meta.env.SUPABASE_URL);
 	locals.supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
 		cookies: {
 			get(key) {
