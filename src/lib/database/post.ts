@@ -1,4 +1,5 @@
-import { supabase, type Data } from ".";
+import type { Data } from ".";
+import { supabase } from "./supabase";
 
 const PAGE_SIZE = 20;
 

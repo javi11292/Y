@@ -26,7 +26,7 @@ const workbox = {
 export default defineConfig({
 	scopedStyleStrategy: "class",
 	output: "server",
-	adapter: cloudflare({ mode: "directory" }),
+	adapter: cloudflare(),
 	integrations: [svelte()],
 	server: {
 		port: 3000,

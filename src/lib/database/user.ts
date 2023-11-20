@@ -1,4 +1,4 @@
-import { supabase } from ".";
+import { supabase } from "./supabase";
 
 export const addUser = async (value: { id: string; email: string; name: string }) => {
 	const { data, error } = await supabase.from("user").insert(value).select().single();
