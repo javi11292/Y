@@ -23,7 +23,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			},
 		);
 	} catch {
-		console.log("LALALA");
+		console.log("LALALA", import.meta.env.SUPABASE_URL);
 	}
 
 	const { data } = await locals.supabase.auth.getSession();

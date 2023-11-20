@@ -14,7 +14,7 @@
 		"@types/dom-view-transitions": "^1.0.4",
 		"astro": "^3.4.3",
 		"sass": "^1.69.5",
-		"svelte": "^5.0.0-next.4",
+		"svelte": "^5.0.0-next.8",
 		"typescript": "^5.2.2",
 		"workbox-build": "^7.0.0"
 	},
