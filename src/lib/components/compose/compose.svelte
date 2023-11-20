@@ -4,7 +4,7 @@
 	import { post } from "$lib/commons/utils/fetch";
 	import { MAX_LENGTH } from "$lib/constants";
 	import type { Post } from "$lib/database";
-	import { posts } from "$lib/stores";
+	import { store } from "$lib/stores.svelte";
 	import type { FormEventHandler } from "svelte/elements";
 	import { fade, fly } from "svelte/transition";
 	import Replacer from "../replacer";
@@ -31,9 +31,9 @@
 		try {
 			const response = await post<Post>("/api/post/add", { content: content.value });
 
-			$posts.elements[response.id] = response;
-			$posts.all.unshift(response.id);
-			$posts = { ...$posts };
+			store.posts.elements[response.id] = response;
+			store.posts.all.unshift(response.id);
+			store.posts = { ...store.posts };
 			content.value = "";
 		} catch (error) {
 			if (error instanceof Error) {

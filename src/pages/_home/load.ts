@@ -1,9 +1,7 @@
-import { getData } from "$lib/commons/utils/data";
+import { getData } from "$lib/commons/utils/data.svelte";
 import type { Post } from "$lib/database";
-import { updatePosts } from "$lib/stores";
+import { updatePosts } from "$lib/stores.svelte";
 
-const { load, loading } = getData<{ all: null | Post[]; following: null | Post[] }>((data) => {
+export const data = getData<{ all: null | Post[]; following: null | Post[] }>((data) => {
 	updatePosts(data);
 });
-
-export { load, loading };

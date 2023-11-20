@@ -6,7 +6,7 @@ import type { LoggedAstroGlobal } from "$lib/types";
 
 const [user, posts] = await Promise.all([
 	GETUser(Astro as LoggedAstroGlobal).then((response) => response.json()),
-	GETPosts(Astro).then((response) => response.json()),
+	GETPosts(Astro as LoggedAstroGlobal).then((response) => response.json()),
 ]);
 ---
 

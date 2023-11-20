@@ -1,31 +1,22 @@
-import { getData } from "$lib/commons/utils/data";
+import { getData } from "$lib/commons/utils/data.svelte";
 import type { Post, User } from "$lib/database";
-import { posts as storePosts, users as storeUsers } from "$lib/stores";
+import { store } from "$lib/stores.svelte";
 
-const { data, load, loading } = getData<{ user: User | null; posts: Post[] | null }>(
-	({ user, posts }) => {
-		storeUsers.update((users) => {
-			if (!user || !posts) {
-				return users;
-			}
+export const data = getData<{ user: User | null; posts: Post[] | null }>(({ user, posts }) => {
+	if (!user || !posts) {
+		return;
+	}
 
-			if (!users[user.id]) {
-				users[user.id] = {
-					...user,
-					posts: posts.map((post) => {
-						storePosts.update((value) => {
-							value.elements[post.id] = post;
-							return value;
-						});
+	if (store.users[user.id]) {
+		return;
+	}
 
-						return post.id;
-					}),
-				};
-			}
-
-			return users;
-		});
-	},
-);
-
-export { data, load, loading };
+	store.users[user.id] = {
+		...user,
+		posts: posts.map((post) => {
+			store.posts.elements[post.id] = post;
+			store.posts = { ...store.posts };
+			return post.id;
+		}),
+	};
+});

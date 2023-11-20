@@ -2,23 +2,23 @@
 	import Fade from "$lib/commons/components/fade";
 	import Loading from "$lib/components/loading";
 	import PostComponent from "$lib/components/post";
-	import { users } from "$lib/stores";
-	import { data, load, loading } from "./load";
+	import { store } from "$lib/stores.svelte";
+	import { data } from "./load";
 
 	type Props = { name: string };
 
 	let { name } = $props<Props>();
 
-	load(`[user] ${name}`);
+	data.load(`[user] ${name}`);
 </script>
 
-{#if $loading}
+{#if data.loading}
 	<Loading />
-{:else if $data?.user}
+{:else if data.response?.user}
 	<Fade>
 		<div><hr /></div>
 
-		{#each $users[$data.user.id].posts as post}
+		{#each store.users[data.response.user.id].posts as post}
 			<PostComponent id={post} />
 		{/each}
 	</Fade>

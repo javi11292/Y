@@ -2,7 +2,7 @@
 	import { get } from "$lib/commons/utils/fetch";
 	import PostComponent from "$lib/components/post";
 	import type { Post } from "$lib/database";
-	import { posts } from "$lib/stores";
+	import { store } from "$lib/stores.svelte";
 	import { tabs } from "./store.svelte";
 
 	type Props = {
@@ -11,18 +11,20 @@
 
 	let { active } = $props<Props>();
 
-	let filteredPosts: number[] = $derived(active === tabs.tab1 ? $posts.all : $posts.following);
+	let filteredPosts: number[] = $derived(
+		active === tabs.tab1 ? store.posts.all : store.posts.following,
+	);
 
 	const handleIntersection = async (id: number) => {
 		const api = active === tabs.tab1 ? "all" : "following";
 		const response = await get<Post[]>(`/api/post/${api}/${id}`);
 
 		response.forEach((post) => {
-			$posts.elements[post.id] = post;
-			$posts[api].push(post.id);
+			store.posts.elements[post.id] = post;
+			store.posts[api].push(post.id);
 		});
 
-		$posts = { ...$posts };
+		store.posts = { ...store.posts };
 	};
 </script>
 

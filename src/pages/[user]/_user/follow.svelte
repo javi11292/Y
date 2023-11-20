@@ -2,7 +2,7 @@
 	import Button from "$lib/commons/components/button";
 	import Fade from "$lib/commons/components/fade";
 	import { post } from "$lib/commons/utils/fetch";
-	import { invalidateUsers, users } from "$lib/stores";
+	import { invalidateUsers, store } from "$lib/stores.svelte";
 	import { data } from "./load";
 
 	type Props = { currentUser: string };
@@ -12,21 +12,21 @@
 	let invalidateLoading = $state(false);
 
 	const handleFollowClick = async () => {
-		if (!$data?.user) {
+		if (!data.response?.user) {
 			return;
 		}
 
 		invalidateLoading = true;
-		await post("/api/follow", { id: $data.user.id });
-		await invalidateUsers($data.user.name);
+		await post("/api/follow", { id: data.response.user.id });
+		await invalidateUsers(data.response.user.name);
 		invalidateLoading = false;
 	};
 </script>
 
-{#if $data?.user}
-	{@const updatedUser = $users[$data.user.id] || $data.user}
+{#if data.response?.user}
+	{@const updatedUser = store.users[data.response.user.id] || data.response.user}
 
-	{#if $data.user.id !== currentUser}
+	{#if data.response.user.id !== currentUser}
 		<Fade>
 			<div class="button">
 				<Button
@@ -35,7 +35,7 @@
 					size="sm"
 					color="neutral"
 					disableUpperCase
-					on:click={handleFollowClick}
+					onclick={handleFollowClick}
 				>
 					{updatedUser.followed ? "Dejar de seguir" : "Seguir"}
 				</Button>

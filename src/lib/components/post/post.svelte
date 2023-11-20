@@ -2,7 +2,7 @@
 
 <script lang="ts">
 	import { post } from "$lib/commons/utils/fetch";
-	import { posts } from "$lib/stores";
+	import { store } from "$lib/stores.svelte";
 	import Loading from "../loading";
 	import Replacer from "../replacer";
 	import StatButton from "./stat-button.svelte";
@@ -16,7 +16,7 @@
 	let { thread, id, onintersection } = $props<Props>();
 
 	let loading = $state(false);
-	let currentPost = $derived($posts.elements[id]);
+	let currentPost = $derived(store.posts.elements[id]);
 
 	const last = (node: HTMLElement, callback: typeof onintersection) => {
 		const ref = { callback };
@@ -71,12 +71,12 @@
 	};
 
 	const toggleLike = () => {
-		$posts.elements[id] = {
+		store.posts.elements[id] = {
 			...currentPost,
 			likes: currentPost.likes + (currentPost.liked ? -1 : 1),
 			liked: !currentPost.liked,
 		};
-		$posts = { ...$posts };
+		store.posts = { ...store.posts };
 	};
 
 	const handleClick = (event: Event) => {

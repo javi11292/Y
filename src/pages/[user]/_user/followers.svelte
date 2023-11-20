@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Fade from "$lib/commons/components/fade";
-	import { users } from "$lib/stores";
+	import { store } from "$lib/stores.svelte";
 	import { data } from "./load";
 </script>
 
-{#if $data?.user}
-	{@const updatedUser = $users[$data.user.id]}
+{#if data.response?.user}
+	{@const updatedUser = store.users[data.response.user.id]}
 
 	<Fade>
 		{updatedUser.following}

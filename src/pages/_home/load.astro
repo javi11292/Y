@@ -13,7 +13,7 @@ const [all, following] = await Promise.all([
 <AstroLoad id="home" data={{ all, following }} />
 
 <script>
-	import { load } from "./load";
+	import { data } from "./load";
 
-	load("home");
+	data.load("home");
 </script>
