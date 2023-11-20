@@ -1,13 +1,21 @@
 import type { Database } from "$lib/supabase";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-export const supabase = createClient<Database>(
-	import.meta.env.SUPABASE_URL,
-	import.meta.env.SUPABASE_ADMIN,
-	{
-		auth: {
-			autoRefreshToken: false,
-			persistSession: false,
-		},
-	},
-);
+let supabase: SupabaseClient<Database>;
+
+export const getClient = () => {
+	if (!supabase) {
+		supabase = createClient<Database>(
+			import.meta.env.SUPABASE_URL,
+			import.meta.env.SUPABASE_ADMIN,
+			{
+				auth: {
+					autoRefreshToken: false,
+					persistSession: false,
+				},
+			},
+		);
+	}
+
+	return supabase;
+};

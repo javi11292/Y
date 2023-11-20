@@ -1,4 +1,4 @@
-import { supabase } from "$lib/database/supabase";
+import { getClient } from "$lib/database/supabase";
 import { addUser } from "$lib/database/user";
 import { errorResponse } from "$lib/utils/api";
 import type { AstroGlobal } from "astro";
@@ -57,7 +57,7 @@ export const POST = async ({ request, locals }: AstroGlobal) => {
 		await addUser({ id: data.user.id, email, name });
 	} catch (error) {
 		await locals.supabase.auth.signOut();
-		await supabase.auth.admin.deleteUser(data.user.id);
+		await getClient().auth.admin.deleteUser(data.user.id);
 		return errorResponse(getDBError(error), 400);
 	}
 

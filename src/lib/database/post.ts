@@ -1,10 +1,10 @@
 import type { Data } from ".";
-import { supabase } from "./supabase";
+import { getClient } from "./supabase";
 
 const PAGE_SIZE = 20;
 
 const selectPosts = () =>
-	supabase
+	getClient()
 		.from("post")
 		.select("*, user!post_author_fkey!inner (author:name), like (user)")
 		.limit(PAGE_SIZE);
@@ -23,7 +23,7 @@ const formatPost = ({ data, user }: { data: Data<typeof selectPosts>; user: stri
 	});
 
 export const addPost = async (value: { content: string; author: string }) => {
-	const { data } = await supabase
+	const { data } = await getClient()
 		.from("post")
 		.insert({ ...value, date: new Date().toISOString() })
 		.select("*, user!post_author_fkey (author:name), like (user)");
@@ -34,12 +34,12 @@ export const addPost = async (value: { content: string; author: string }) => {
 };
 
 export const likePost = async ({ post, user }: { post: number; user: string }) => {
-	const { data } = await supabase.from("like").select().match({ post, user }).single();
+	const { data } = await getClient().from("like").select().match({ post, user }).single();
 
 	if (!data) {
-		await supabase.from("like").insert({ post, user });
+		await getClient().from("like").insert({ post, user });
 	} else {
-		await supabase.from("like").delete().match({ post, user });
+		await getClient().from("like").delete().match({ post, user });
 	}
 };
 
@@ -68,7 +68,7 @@ export const getPosts = async ({
 };
 
 export const getFollowingPosts = async ({ user, id }: { user: string; id?: string }) => {
-	let query = supabase
+	let query = getClient()
 		.from("post")
 		.select(
 			"*, user!post_author_fkey!inner (author:name, follow!follow_id_fkey!inner ()), like (user)",

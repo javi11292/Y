@@ -7,7 +7,7 @@
 		"generate": "supabase gen types typescript --project-id daislqwxhhgdcrkfthho --schema public > src/lib/supabase.ts"
 	},
 	"dependencies": {
-		"@astrojs/cloudflare": "7.6.4",
+		"@astrojs/cloudflare": "^7.6.4",
 		"@astrojs/svelte": "^4.0.4",
 		"@supabase/ssr": "^0.0.9",
 		"@supabase/supabase-js": "^2.38.4",
