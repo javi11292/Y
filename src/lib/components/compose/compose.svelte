@@ -219,6 +219,7 @@
 		inset: 0;
 		pointer-events: none;
 		overflow: hidden;
+		view-transition-name: footer;
 	}
 
 	.counter {
