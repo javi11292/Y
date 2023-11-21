@@ -49,6 +49,8 @@ const name = Astro.params.user as string;
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
+		border-left: 1px solid theme.$colorNeutralDark;
+		border-right: 1px solid theme.$colorNeutralDark;
 
 		> :global(:last-child) {
 			flex: 1;
