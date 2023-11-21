@@ -136,11 +136,11 @@
 
 	.post {
 		@extend %root;
+		@include hover.hover(0.03);
+
 		border-bottom: 1px solid theme.$colorNeutralDark;
 		padding: 1rem 1rem 0;
 		cursor: pointer;
-
-		@include hover.hover(0.03);
 	}
 
 	.meta {
