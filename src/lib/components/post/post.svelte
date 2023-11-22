@@ -3,6 +3,7 @@
 <script lang="ts">
 	import { post } from "$lib/commons/utils/fetch";
 	import { store } from "$lib/stores.svelte";
+	import Avatar from "../avatar";
 	import Loading from "../loading";
 	import Replacer from "../replacer";
 	import StatButton from "./stat-button.svelte";
@@ -17,6 +18,7 @@
 
 	let loading = $state(false);
 	let currentPost = $derived(store.posts.elements[id]);
+	let transition = $state(false);
 
 	const last = (node: HTMLElement, callback: typeof onintersection) => {
 		const ref = { callback };
@@ -86,25 +88,36 @@
 	};
 </script>
 
-<div use:last={onintersection} class:post={!thread}>
-	<div class="meta">
-		<span class="author">@<a href={`/${currentPost.author}`}>{currentPost.author}</a></span>
-		<span class="date">{getDate(currentPost.date)}</span>
-	</div>
+<div use:last={onintersection} class="post">
+	<div class:transition><Avatar initial={currentPost.author[0]} /></div>
 
-	<Replacer content={currentPost.content} withLink />
-
-	{#if !thread}
-		<div class="stats">
-			<span class:liked={currentPost.liked}>
-				<StatButton icon={currentPost.liked ? "favorite" : "favorite-border"} onclick={handleClick}>
-					{currentPost.likes}
-				</StatButton>
+	<div>
+		<div class="meta">
+			<span class="author">
+				@<a onclick={() => (transition = true)} href={`/${currentPost.author}`}>
+					{currentPost.author}
+				</a>
 			</span>
-
-			<StatButton icon="chat">0</StatButton>
+			<span class="date">{getDate(currentPost.date)}</span>
 		</div>
-	{/if}
+
+		<Replacer content={currentPost.content} withLink />
+
+		{#if !thread}
+			<div class="stats">
+				<span class:liked={currentPost.liked}>
+					<StatButton
+						icon={currentPost.liked ? "favorite" : "favorite-border"}
+						onclick={handleClick}
+					>
+						{currentPost.likes}
+					</StatButton>
+				</span>
+
+				<StatButton icon="chat">0</StatButton>
+			</div>
+		{/if}
+	</div>
 </div>
 
 {#if loading}
@@ -134,13 +147,20 @@
 		}
 	}
 
+	.transition {
+		view-transition-name: avatar;
+	}
+
 	.post {
 		@extend %root;
 		@include hover.hover(0.03);
 
 		border-bottom: 1px solid theme.$colorNeutralDark;
-		padding: 1rem 1rem 0;
+		padding: 0.75rem 0.75rem 0;
 		cursor: pointer;
+		display: grid;
+		grid-template-columns: 40px 1fr;
+		gap: 0.75rem;
 	}
 
 	.meta {

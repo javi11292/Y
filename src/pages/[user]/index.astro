@@ -3,6 +3,7 @@ import { GET as GETPosts } from "$api/post/[user]/[...page]";
 import { GET as GETUser } from "$api/user/[user]";
 import AstroLoad from "$lib/commons/components/astro-load";
 import Button from "$lib/commons/components/button";
+import Avatar from "$lib/components/avatar";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/root-layout.astro";
@@ -28,7 +29,11 @@ const name = Astro.params.user as string;
 			</Header>
 
 			<div class="content">
-				@{name}
+				<div class="avatar">
+					<Avatar initial={name[0]} />
+				</div>
+
+				 @{name}
 
 				<div class="followers">
 					<Followers client:idle />
@@ -64,6 +69,12 @@ const name = Astro.params.user as string;
 
 	.content {
 		padding: 0 1rem 1rem;
+	}
+
+	.avatar {
+		view-transition-name: avatar;
+		width: 100px;
+		margin-bottom: 1rem;
 	}
 
 	.buttons {
