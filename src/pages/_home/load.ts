@@ -13,7 +13,7 @@ export const data = getData({
 
 	fetch: () => {
 		if (data.response) {
-			throw null;
+			return;
 		}
 
 		return Promise.all([

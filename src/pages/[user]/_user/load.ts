@@ -5,7 +5,7 @@ import { store } from "$lib/stores.svelte";
 
 type Data = [User | null, Post[] | null];
 
-const cache: Record<string, Data> = {};
+const cache: Record<string, Promise<Data>> = {};
 
 export const data = getData({
 	id: "user",
@@ -17,11 +17,11 @@ export const data = getData({
 			return;
 		}
 
-		if (cache[id]) {
+		if (id in cache) {
 			return response;
 		}
 
-		cache[id] = [user, posts];
+		cache[id] = Promise.resolve([user, posts]);
 
 		store.users[user.id] = {
 			...user,
@@ -36,13 +36,9 @@ export const data = getData({
 	},
 
 	fetch: (id: string) => {
-		if (cache[id]) {
-			return cache[id];
-		}
-
-		return Promise.all([
-			get<User | null>(`/api/user/${id}`),
-			get<Post[] | null>(`/api/post/${id}`),
-		]);
+		return (
+			cache[id] ||
+			Promise.all([get<User | null>(`/api/user/${id}`), get<Post[] | null>(`/api/post/${id}`)])
+		);
 	},
 });
