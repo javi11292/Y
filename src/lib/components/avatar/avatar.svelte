@@ -26,11 +26,12 @@
 	}
 
 	.avatar {
-		background: theme.$colorNeutralLight;
+		background: theme.$colorNeutralDark;
 	}
 
 	text {
 		font-size: 18px;
 		translate: 50% 50%;
+		fill: white;
 	}
 </style>

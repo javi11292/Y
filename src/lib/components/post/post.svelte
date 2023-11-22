@@ -86,15 +86,21 @@
 		toggleLike();
 		post("/api/post/like", { post: id }).catch(toggleLike);
 	};
+
+	const handleNavigate = () => {
+		transition = true;
+	};
 </script>
 
 <div use:last={onintersection} class="post">
-	<div class:transition><Avatar initial={currentPost.author[0]} /></div>
+	<a onclick={handleNavigate} href={`/${currentPost.author}`} class:transition>
+		<Avatar initial={currentPost.author[0]} />
+	</a>
 
 	<div>
 		<div class="meta">
 			<span class="author">
-				@<a onclick={() => (transition = true)} href={`/${currentPost.author}`}>
+				@<a onclick={handleNavigate} href={`/${currentPost.author}`}>
 					{currentPost.author}
 				</a>
 			</span>
@@ -160,6 +166,7 @@
 		cursor: pointer;
 		display: grid;
 		grid-template-columns: 40px 1fr;
+		align-items: start;
 		gap: 0.75rem;
 	}
 
