@@ -1,9 +1,11 @@
 ---
+import { GET as GETAll } from "$api/post/all/[...page]";
+import { GET as GetFollowing } from "$api/post/following/[...page]";
+import AstroLoad from "$lib/commons/components/astro-load";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/root-layout.astro";
 import Content from "./_home/content.svelte";
-import Load from "./_home/load.astro";
 import Tabs from "./_home/tabs.svelte";
 
 if (!Astro.locals.user) {
@@ -27,7 +29,7 @@ if (!Astro.locals.user) {
 	<Compose client:idle />
 </Layout>
 
-<Load />
+<AstroLoad id="home" apis={[GETAll, GetFollowing]} />
 
 <style lang="scss">
 	@use "$lib/commons/theme";

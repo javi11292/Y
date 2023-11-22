@@ -1,11 +1,13 @@
 ---
+import { GET as GETPosts } from "$api/post/[user]/[...page]";
+import { GET as GETUser } from "$api/user/[user]";
+import AstroLoad from "$lib/commons/components/astro-load";
 import Button from "$lib/commons/components/button";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/root-layout.astro";
 import Follow from "./_user/follow.svelte";
 import Followers from "./_user/followers.svelte";
-import Load from "./_user/load.astro";
 import Posts from "./_user/posts.svelte";
 
 if (!Astro.locals.user) {
@@ -40,7 +42,7 @@ const name = Astro.params.user as string;
 	<Compose client:idle />
 </Layout>
 
-<Load />
+<AstroLoad id="user" apis={[GETUser, GETPosts]} args={Astro.params.user} />
 
 <style lang="scss">
 	@use "$lib/commons/theme";
