@@ -17,11 +17,11 @@ export const data = getData({
 			return;
 		}
 
-		cache[id] = [user, posts];
-
-		if (store.users[user.id]) {
+		if (cache[id]) {
 			return response;
 		}
+
+		cache[id] = [user, posts];
 
 		store.users[user.id] = {
 			...user,
