@@ -13,15 +13,15 @@ export const data = getData({
 	load: ({ args: id, data: [user, posts] }: { args: string; data: Data }) => {
 		const response = { user, posts };
 
-		if (!user || !posts) {
-			return;
-		}
-
 		if (id in cache) {
 			return response;
 		}
 
 		cache[id] = Promise.resolve([user, posts]);
+
+		if (!user || !posts) {
+			return response;
+		}
 
 		store.users[user.id] = {
 			...user,
