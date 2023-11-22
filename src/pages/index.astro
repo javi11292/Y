@@ -27,9 +27,9 @@ if (!Astro.locals.user) {
 	</div>
 
 	<Compose client:idle />
-</Layout>
 
-<AstroLoad id="home" apis={[GETAll, GetFollowing]} />
+	<AstroLoad id="home" apis={[GETAll, GetFollowing]} />
+</Layout>
 
 <style lang="scss">
 	@use "$lib/commons/theme";

@@ -40,9 +40,9 @@ const name = Astro.params.user as string;
 	</div>
 
 	<Compose client:idle />
-</Layout>
 
-<AstroLoad id="user" apis={[GETUser, GETPosts]} args={Astro.params.user} />
+	<AstroLoad id="user" apis={[GETUser, GETPosts]} args={Astro.params.user} />
+</Layout>
 
 <style lang="scss">
 	@use "$lib/commons/theme";
