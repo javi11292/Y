@@ -190,5 +190,9 @@
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		justify-items: start;
+
+		@media screen and (max-width: 640px) {
+			margin: 0.5rem 0;
+		}
 	}
 </style>
