@@ -2,24 +2,24 @@
 	import Button from "$lib/commons/components/button";
 	import { addError } from "$lib/commons/components/snackbar";
 	import { post } from "$lib/commons/utils/fetch";
+	import PostComponent from "$lib/components/post";
 	import { MAX_LENGTH } from "$lib/constants";
 	import type { Post } from "$lib/database";
 	import { store } from "$lib/stores.svelte";
 	import type { FormEventHandler } from "svelte/elements";
 	import { fade, fly } from "svelte/transition";
 	import Replacer from "../replacer";
-	import { content } from "./store.svelte";
+	import { compose } from "./store.svelte";
 
-	let open = $state(false);
 	let loading = $state(false);
-	let amount = $derived(Math.max(1 - content.value.length / MAX_LENGTH, 0));
+	let amount = $derived(Math.max(1 - compose.value.length / MAX_LENGTH, 0));
 
 	let input: HTMLDivElement;
 	let cursor = 0;
 	let focusEnabled = false;
 
 	const handlePopState = () => {
-		if (open) {
+		if (compose.open) {
 			history.pushState(null, "", document.URL);
 			closeModal();
 		}
@@ -29,12 +29,23 @@
 		loading = true;
 
 		try {
-			const response = await post<Post>("/api/post/add", { content: content.value });
+			const response = await post<Post>("/api/post/add", {
+				content: compose.value,
+				thread: compose.thread?.id,
+			});
 
-			store.posts.elements[response.id] = response;
-			store.posts.all.unshift(response.id);
+			const nextPost = compose.thread
+				? { ...compose.thread, replies: compose.thread.replies + 1 }
+				: response;
+
+			if (!compose.thread) {
+				store.posts.all.unshift(response.id);
+			}
+
+			store.posts.elements[response.id] = nextPost;
 			store.posts = { ...store.posts };
-			content.value = "";
+
+			compose.value = "";
 		} catch (error) {
 			if (error instanceof Error) {
 				addError(error.message);
@@ -46,16 +57,12 @@
 	};
 
 	const openModal = () => {
-		document.documentElement.style.setProperty("--overflow", "hidden");
-		history.replaceState(null, "", document.URL);
-		history.pushState(null, "", document.URL);
-		open = true;
+		compose.open = true;
+		compose.thread = null;
 	};
 
 	const closeModal = () => {
-		document.documentElement.style.setProperty("--overflow", "auto");
-		open = false;
-		focusEnabled = false;
+		compose.open = false;
 	};
 
 	const findNode = (
@@ -107,7 +114,7 @@
 	};
 
 	const oninput: FormEventHandler<HTMLDivElement> = (event) => {
-		content.value = event.currentTarget.textContent || "";
+		compose.value = event.currentTarget.textContent || "";
 		const selection = document.getSelection() as Selection;
 
 		const offset = findOffset(input, selection.anchorNode as Node);
@@ -134,6 +141,17 @@
 			removeEventListener("popstate", handlePopState);
 		};
 	});
+
+	$effect(() => {
+		if (compose.open) {
+			document.documentElement.style.setProperty("--overflow", "hidden");
+			history.replaceState(null, "", document.URL);
+			history.pushState(null, "", document.URL);
+		} else {
+			document.documentElement.style.setProperty("--overflow", "auto");
+			focusEnabled = false;
+		}
+	});
 </script>
 
 <div class="container">
@@ -143,7 +161,7 @@
 		</div>
 	</div>
 
-	{#if open}
+	{#if compose.open}
 		<div
 			class="post"
 			transition:fly={{ y: "100%" }}
@@ -160,31 +178,35 @@
 					variant="contained"
 					disableUpperCase
 					size="sm"
-					disabled={!content.value || content.value.length > MAX_LENGTH}
+					disabled={!compose.value || compose.value.length > MAX_LENGTH}
 					{loading}
 				>
 					Enviar
 				</Button>
 			</div>
 
-			{#key content.value}
+			{#if compose.thread}
+				<PostComponent id={compose.thread.id} thread />
+			{/if}
+
+			{#key compose.value}
 				<div
 					use:focus
 					contenteditable
 					class="editable"
 					bind:this={input}
 					{oninput}
-					placeholder="¿Que está pasando?"
+					placeholder={compose.thread ? "Envía tu respuesta" : "¿Que está pasando?"}
 				>
-					<Replacer content={content.value} />
+					<Replacer content={compose.value} />
 				</div>
 			{/key}
 
 			<hr />
 
 			<div class="counter">
-				{#if MAX_LENGTH - content.value.length <= 10}
-					<span transition:fade>{MAX_LENGTH - content.value.length}</span>
+				{#if MAX_LENGTH - compose.value.length <= 10}
+					<span transition:fade>{MAX_LENGTH - compose.value.length}</span>
 				{/if}
 				<svg
 					class="icon"

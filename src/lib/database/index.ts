@@ -11,6 +11,7 @@ export type Post = {
 	id: number;
 	likes: number;
 	liked: boolean;
+	replies: number;
 };
 
 export type User = {

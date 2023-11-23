@@ -4,6 +4,7 @@
 	import { post } from "$lib/commons/utils/fetch";
 	import { store } from "$lib/stores.svelte";
 	import Avatar from "../avatar";
+	import { compose } from "../compose/store.svelte";
 	import Loading from "../loading";
 	import Replacer from "../replacer";
 	import StatButton from "./stat-button.svelte";
@@ -88,19 +89,21 @@
 	};
 
 	const handleNavigate = () => {
-		transition = true;
+		if (location.pathname !== `/${currentPost.author}`) {
+			transition = true;
+		}
 	};
 </script>
 
-<div use:last={onintersection} class="post">
-	<a onclick={handleNavigate} href={`/${currentPost.author}`} class:transition>
+<div use:last={onintersection} class="post" class:thread>
+	<a onclick={handleNavigate} href={`/${currentPost.author}`} class:transition class:thread>
 		<Avatar initial={currentPost.author[0]} />
 	</a>
 
 	<div>
 		<div class="meta">
 			<span class="author">
-				@<a onclick={handleNavigate} href={`/${currentPost.author}`}>
+				@<a onclick={handleNavigate} href={`/${currentPost.author}`} class:thread>
 					{currentPost.author}
 				</a>
 			</span>
@@ -120,7 +123,15 @@
 					</StatButton>
 				</span>
 
-				<StatButton icon="chat">0</StatButton>
+				<StatButton
+					icon="chat"
+					onclick={() => {
+						compose.thread = currentPost;
+						compose.open = true;
+					}}
+				>
+					{currentPost.replies}
+				</StatButton>
 			</div>
 		{/if}
 	</div>
@@ -168,6 +179,12 @@
 		grid-template-columns: 40px 1fr;
 		align-items: start;
 		gap: 0.75rem;
+	}
+
+	.thread {
+		border-bottom: none;
+		padding-bottom: 0.75rem;
+		pointer-events: none;
 	}
 
 	.meta {
