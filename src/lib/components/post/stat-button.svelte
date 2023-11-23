@@ -28,11 +28,16 @@
 		overflow: hidden;
 		padding: 0.5rem;
 		margin-left: -0.5rem;
-		font-size: 1.5rem;
+		font-size: 1.25rem;
+
+		@media screen and (max-width: 640px) {
+			padding: 0.25rem;
+		}
 	}
 
 	.value {
 		color: theme.$colorNeutral;
+		font-size: 0.9em;
 	}
 
 	.button {
@@ -61,6 +66,10 @@
 
 		&:active {
 			color: theme.$colorPrimary;
+
+			.value {
+				color: theme.$colorPrimary;
+			}
 
 			.icon {
 				scale: 95%;

@@ -188,7 +188,7 @@
 		margin: 0.25rem 0;
 		color: theme.$colorNeutral;
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 		justify-items: start;
 	}
 </style>
