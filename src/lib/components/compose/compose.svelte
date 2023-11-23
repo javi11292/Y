@@ -34,15 +34,15 @@
 				thread: compose.thread?.id,
 			});
 
-			const nextPost = compose.thread
-				? { ...compose.thread, replies: compose.thread.replies + 1 }
-				: response;
-
-			if (!compose.thread) {
-				store.posts.all.unshift(response.id);
+			if (compose.thread) {
+				store.posts.elements[compose.thread.id] = {
+					...compose.thread,
+					replies: compose.thread.replies + 1,
+				};
 			}
 
-			store.posts.elements[response.id] = nextPost;
+			store.posts.all.unshift(response.id);
+			store.posts.elements[response.id] = response;
 			store.posts = { ...store.posts };
 
 			compose.value = "";
