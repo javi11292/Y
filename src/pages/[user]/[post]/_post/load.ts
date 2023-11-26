@@ -3,7 +3,7 @@ import { getData } from "$lib/commons/utils/load.svelte";
 import type { Post } from "$lib/database";
 import { store } from "$lib/stores.svelte";
 
-type Data = [{ post: Post; replies: Post[] }] | null;
+type Data = [{ post: Post | null; replies: Post[] | null } | null];
 
 const cache: Record<string, Promise<Data>> = {};
 
@@ -11,11 +11,15 @@ export const data = getData({
 	id: "thread",
 
 	load: ({ args: id, data }: { args: string; data: Data }) => {
-		if (!data) {
+		if (!data[0]) {
 			return;
 		}
 
 		const [{ post, replies }] = data;
+
+		if (!post || !replies) {
+			return;
+		}
 
 		if (!(id in cache)) {
 			cache[id] = Promise.resolve(data);

@@ -8,13 +8,14 @@ import Layout from "$lib/layouts/root-layout.astro";
 import Posts from "./_post/posts.svelte";
 
 const id = parseInt(Astro.params.post as string);
+const name = Astro.params.user as string;
 
 if (!Astro.locals.user) {
 	return Astro.redirect("/i/login");
 }
 ---
 
-<Layout title="TMP">
+<Layout title={`${name} Post`}>
 	<div>
 		<div class="container">
 			<Header>
