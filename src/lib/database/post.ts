@@ -7,7 +7,7 @@ const selectPosts = () =>
 	getClient()
 		.from("post")
 		.select(
-			"*, user!post_author_fkey!inner (author:name), like (user), thread!thread_thread_fkey (thread)",
+			"*, user!post_author_fkey!inner (author:name), like (user), thread!thread_thread_fkey (*)",
 		)
 		.limit(PAGE_SIZE);
 
@@ -37,9 +37,7 @@ export const addPost = async ({
 	const { data } = await getClient()
 		.from("post")
 		.insert({ content, author, date: new Date().toISOString() })
-		.select(
-			"*, user!post_author_fkey (author:name), like (user), thread!thread_thread_fkey (thread)",
-		);
+		.select("*, user!post_author_fkey (author:name), like (user), thread!thread_thread_fkey (*)");
 
 	if (thread && data?.[0]) {
 		await getClient().from("thread").insert({ id: data[0].id, thread });
@@ -82,6 +80,38 @@ export const getPosts = async ({
 	const { data } = await query.order("id", { ascending: false });
 
 	return formatPost({ data, user });
+};
+
+export const getPost = async ({
+	id,
+	thread,
+	user,
+}: {
+	thread: string;
+	user: string;
+	id?: string;
+}) => {
+	const { data: post } = await selectPosts().eq("id", thread).single();
+
+	if (!post) {
+		return null;
+	}
+
+	let query = selectPosts().in(
+		"id",
+		post.thread.map(({ id }) => id),
+	);
+
+	if (id) {
+		query = query.lt("id", id);
+	}
+
+	const { data } = await query;
+
+	return {
+		post: formatPost({ data: [post], user })?.[0],
+		replies: formatPost({ data: data, user }),
+	};
 };
 
 export const getFollowingPosts = async ({ user, id }: { user: string; id?: string }) => {

@@ -38,7 +38,7 @@ export const data = getData({
 	fetch: (id: string) => {
 		return (
 			cache[id] ||
-			Promise.all([get<User | null>(`/api/user/${id}`), get<Post[] | null>(`/api/post/${id}`)])
+			Promise.all([get<User | null>(`/api/user/${id}`), get<Post[] | null>(`/api/post/user/${id}`)])
 		);
 	},
 });

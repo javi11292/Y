@@ -1,9 +1,9 @@
 ---
-import { GET as GETPosts } from "$api/post/[user]/[...page]";
+import { GET as GETPosts } from "$api/post/user/[user]/[...page]";
 import { GET as GETUser } from "$api/user/[user]";
 import AstroLoad from "$lib/commons/components/astro-load";
-import Button from "$lib/commons/components/button";
 import Avatar from "$lib/components/avatar";
+import BackButton from "$lib/components/back-button";
 import Compose from "$lib/components/compose";
 import Header from "$lib/components/header";
 import Layout from "$lib/layouts/root-layout.astro";
@@ -23,7 +23,7 @@ const name = Astro.params.user as string;
 		<div class="container">
 			<Header>
 				<div class="buttons">
-					<Button icon="arrow-right" mirror href="/" />
+					<BackButton client:idle />
 					<Follow client:idle currentUser={Astro.locals.user.id} />
 				</div>
 			</Header>

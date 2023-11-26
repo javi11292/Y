@@ -1,18 +1,18 @@
 <script lang="ts">
 	import Icon from "$lib/commons/components/icon";
 
-	type Props = { icon: string; onclick?: (event: Event) => void };
+	type Props = { children: () => any; icon: string; onclick?: (event: Event) => void };
 
-	let { icon, onclick } = $props<Props>();
+	let { icon, onclick, children } = $props<Props>();
 </script>
 
-<button class="button" {onclick}>
+<button class="button" onclickcapture={onclick}>
 	<span class="icon">
 		<Icon {icon} />
 	</span>
 
 	<div class="value">
-		<slot />
+		{@render children()}
 	</div>
 </button>
 

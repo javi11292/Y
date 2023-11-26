@@ -24,7 +24,7 @@
 </script>
 
 {#if data.response?.user}
-	{@const updatedUser = store.users[data.response.user.id] || data.response.user}
+	{@const updatedUser = store.users[data.response.user.id]}
 
 	{#if data.response.user.id !== currentUser}
 		<Fade>

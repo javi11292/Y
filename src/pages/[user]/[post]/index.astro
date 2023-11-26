@@ -1,0 +1,60 @@
+---
+import { GET } from "$api/post/thread/[post]/[...page]";
+import AstroLoad from "$lib/commons/components/astro-load";
+import BackButton from "$lib/components/back-button";
+import Compose from "$lib/components/compose";
+import Header from "$lib/components/header";
+import Layout from "$lib/layouts/root-layout.astro";
+import Posts from "./_post/posts.svelte";
+
+const id = parseInt(Astro.params.post as string);
+
+if (!Astro.locals.user) {
+	return Astro.redirect("/i/login");
+}
+---
+
+<Layout title="TMP">
+	<div>
+		<div class="container">
+			<Header>
+				<div class="buttons">
+					<BackButton client:idle />
+					 Post
+				</div>
+			</Header>
+
+			<Posts client:idle {id} />
+		</div>
+	</div>
+
+	<Compose client:idle />
+</Layout>
+
+<AstroLoad id="thread" apis={[GET]} args={id} />
+
+<style lang="scss">
+	@use "$lib/commons/theme";
+
+	.buttons {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.5rem;
+	}
+
+	.container {
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+
+		@media screen and (min-width: 640px) {
+			border-left: 1px solid theme.$colorNeutralDark;
+			border-right: 1px solid theme.$colorNeutralDark;
+		}
+
+		> :global(:last-child) {
+			flex: 1;
+		}
+	}
+</style>

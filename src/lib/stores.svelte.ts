@@ -8,6 +8,7 @@ class Store {
 		following: [],
 	});
 	users = $state<Record<string, User & { posts: number[] }>>({});
+	transition = $state(false);
 }
 
 export const store = new Store();

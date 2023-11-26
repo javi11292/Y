@@ -48,3 +48,15 @@ if (!skipCache) {
 		}
 	}
 </style>
+
+<script>
+	import { store } from "$lib/stores.svelte";
+
+	document.addEventListener("astro:before-preparation", () => {
+		store.transition = true;
+	});
+
+	document.addEventListener("astro:after-swap", () => {
+		store.transition = false;
+	});
+</script>
