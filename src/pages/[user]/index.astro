@@ -23,7 +23,7 @@ const name = Astro.params.user as string;
 		<div class="container">
 			<Header>
 				<div class="buttons">
-					<BackButton client:idle />
+					<BackButton client:idle>{name}</BackButton>
 					<Follow client:idle currentUser={Astro.locals.user.id} />
 				</div>
 			</Header>
@@ -80,11 +80,7 @@ const name = Astro.params.user as string;
 	.buttons {
 		display: flex;
 		justify-content: space-between;
-		padding: 1rem;
-
-		> :global(:nth-child(1)) {
-			margin: -0.5rem;
-		}
+		margin: 0.5rem;
 	}
 
 	.followers {

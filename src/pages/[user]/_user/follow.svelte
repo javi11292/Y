@@ -28,7 +28,7 @@
 
 	{#if data.response.user.id !== currentUser}
 		<Fade>
-			<div class="button">
+			<div>
 				<Button
 					loading={invalidateLoading}
 					variant="contained"
@@ -43,10 +43,3 @@
 		</Fade>
 	{/if}
 {/if}
-
-<style lang="scss">
-	.button {
-		position: absolute;
-		right: 1rem;
-	}
-</style>

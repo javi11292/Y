@@ -6,4 +6,15 @@
 	};
 </script>
 
-<Button icon="arrow-right" mirror onclick={handleClick} />
+<div class="button">
+	<Button icon="arrow-right" mirror onclick={handleClick} />
+	<slot />
+</div>
+
+<style lang="scss">
+	.button {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+</style>

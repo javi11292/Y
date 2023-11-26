@@ -296,12 +296,8 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: start;
-	}
-
-	:global(.actions) {
-		:nth-child(1) {
-			margin: -0.5rem;
-		}
+		margin: -0.5rem;
+		margin-bottom: 0;
 	}
 
 	.button {

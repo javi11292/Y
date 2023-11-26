@@ -19,9 +19,8 @@ if (!Astro.locals.user) {
 	<div>
 		<div class="container">
 			<Header>
-				<div class="buttons">
-					<BackButton client:idle />
-					 Post
+				<div class="button">
+					<BackButton client:idle>Post</BackButton>
 				</div>
 			</Header>
 
@@ -37,11 +36,8 @@ if (!Astro.locals.user) {
 <style lang="scss">
 	@use "$lib/commons/theme";
 
-	.buttons {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		padding: 0.5rem;
+	.button {
+		margin: 0.5rem;
 	}
 
 	.container {
