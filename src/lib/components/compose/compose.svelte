@@ -145,7 +145,7 @@
 	$effect(() => {
 		if (compose.open) {
 			document.documentElement.style.setProperty("--overflow", "hidden");
-			history.replaceState(null, "", document.URL);
+			history.pushState(null, "", document.URL);
 			history.pushState(null, "", document.URL);
 		} else {
 			document.documentElement.style.setProperty("--overflow", "auto");
@@ -169,7 +169,10 @@
 				input.focus();
 				focusEnabled = true;
 			}}
-			on:outroend={() => history.back()}
+			on:outroend={() => {
+				history.back();
+				history.back();
+			}}
 		>
 			<div class="actions">
 				<Button icon="arrow-right" mirror onclick={closeModal} />
